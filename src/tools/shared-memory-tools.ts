@@ -12,7 +12,7 @@
  * @see https://github.com/anthropics/oh-my-codebuddy/issues/1119
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { validateWorkingDirectory } from '../lib/worktree-paths.js';
 import { getCodebuddyConfigDir } from '../utils/config-dir.js'
 import {

@@ -5,7 +5,7 @@
  * wiki_ingest, wiki_query, wiki_lint, wiki_add, wiki_list, wiki_read, wiki_delete
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import {
   validateWorkingDirectoryOrLinkedWorktree,
 } from '../lib/worktree-paths.js';

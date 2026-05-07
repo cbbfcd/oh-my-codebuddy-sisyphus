@@ -77,6 +77,14 @@ npm test
 
 ---
 
+## 致谢
+
+本项目 fork 自 [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode)，感谢 [Yeachan Heo](https://github.com/Yeachan-Heo) 的开创性工作。
+
+灵感来源：[oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) • [Superpowers](https://github.com/obra/superpowers) • [everything-claude-code](https://github.com/affaan-m/everything-claude-code)
+
+---
+
 ## License
 
 MIT

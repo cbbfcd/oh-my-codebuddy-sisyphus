@@ -5,7 +5,7 @@
  * All paths are validated to stay within the worktree boundary.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { existsSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import {

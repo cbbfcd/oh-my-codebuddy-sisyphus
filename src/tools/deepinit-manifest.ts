@@ -13,7 +13,7 @@
  * @see https://github.com/cbbfcd/oh-my-codebuddy/issues/1719
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { readdirSync, statSync, readFileSync, existsSync, realpathSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { validateWorkingDirectory, getOmcRoot } from '../lib/worktree-paths.js';

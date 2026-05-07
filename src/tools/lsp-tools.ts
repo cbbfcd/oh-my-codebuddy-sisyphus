@@ -11,7 +11,7 @@
  * - Code actions
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import {
   lspClientManager,
   getAllServers,

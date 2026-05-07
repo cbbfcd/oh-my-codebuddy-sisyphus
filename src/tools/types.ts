@@ -5,7 +5,7 @@
  * state-tools, notepad-tools, memory-tools, and lsp-tools.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { ToolCategory } from '../constants/index.js';
 
 /**

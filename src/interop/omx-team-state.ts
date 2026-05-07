@@ -16,7 +16,7 @@ import { readFile, readdir, appendFile, mkdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { existsSync } from 'fs';
 import { randomUUID } from 'crypto';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { atomicWriteJson } from '../lib/atomic-write.js';
 
 // ============================================================================

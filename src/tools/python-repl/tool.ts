@@ -13,7 +13,7 @@
  * @module python-repl/tool
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type {
   PythonReplInput,
   ExecuteResult,

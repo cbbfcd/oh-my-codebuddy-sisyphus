@@ -5,7 +5,7 @@
  * from local (.omc/skills/) and global (~/.omc/skills/) directories.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { resolve, normalize, sep } from 'path';
 import { homedir } from 'os';
 import { getCodebuddyConfigDir } from '../utils/config-dir.js';

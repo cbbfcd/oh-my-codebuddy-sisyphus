@@ -7,7 +7,7 @@
  * - Support for 25+ programming languages
  */
 
-import { z } from "zod";
+import { z } from "zod/v3";
 import { readFileSync, readdirSync, statSync, writeFileSync } from "fs";
 import { join, extname, resolve, normalize, relative, isAbsolute } from "path";
 import { createRequire } from "module";

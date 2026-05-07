@@ -5,7 +5,7 @@
  * Tools allow sending tasks and messages between the two systems.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from '../tools/types.js';
 import type { ArtifactDescriptor } from '../shared/artifact-descriptor.js';
 import {

@@ -10,7 +10,7 @@
  * Sensitive hooks use strict allowlists; others pass through unknown fields.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { HookInput } from './bridge.js';
 import { resolveTranscriptPath } from '../lib/worktree-paths.js';
 

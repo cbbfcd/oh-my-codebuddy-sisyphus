@@ -60,10 +60,10 @@ Configure omcb for the current project only:
 /oh-my-codebuddy:omc-setup --local
 ```
 
-- Creates `./.claude/CLAUDE.md` in your current project
+- Creates `./.codebuddy/CODEBUDDY.md` in your current project
 - Configuration applies only to this project
 - Won't affect other projects or global settings
-- **Safe**: Preserves your global CLAUDE.md
+- **Safe**: Preserves your global CODEBUDDY.md
 
 ### Global Configuration
 
@@ -73,10 +73,10 @@ Configure omcb for all CodeBuddy Code sessions:
 /oh-my-codebuddy:omc-setup
 ```
 
-- Creates `~/.codebuddy/CLAUDE.md` globally
+- Creates `~/.codebuddy/CODEBUDDY.md` globally
 - Configuration applies to all projects
-- **Default**: explicitly overwrites existing `~/.codebuddy/CLAUDE.md`
-- **Optional preserve mode**: keeps the base file, writes OMC to `~/.codebuddy/CLAUDE-omc.md`, and lets `omc` force-load that companion config at launch while plain `claude` stays unchanged
+- **Default**: explicitly overwrites existing `~/.codebuddy/CODEBUDDY.md`
+- **Optional preserve mode**: keeps the base file, writes OMC to `~/.codebuddy/CODEBUDDY-omc.md`, and lets `omcb` force-load that companion config at launch while plain `claude` stays unchanged
 
 ### What Configuration Enables
 
@@ -93,7 +93,7 @@ Configure omcb for all CodeBuddy Code sessions:
 If both configurations exist, **project-scoped takes precedence** over global:
 
 ```
-./.claude/CLAUDE.md  (project)   →  Overrides  →  ~/.codebuddy/CLAUDE.md  (global)
+./.codebuddy/CODEBUDDY.md  (project)   →  Overrides  →  ~/.codebuddy/CODEBUDDY.md  (global)
 ```
 
 ### Environment Variables
@@ -115,7 +115,7 @@ By default, OMC stores state in `{worktree}/.omc/`. This is lost when worktrees 
 
 ```bash
 # In your shell profile (~/.bashrc, ~/.zshrc, etc.)
-export OMC_STATE_DIR="$HOME/.claude/omc"
+export OMC_STATE_DIR="$HOME/.codebuddy/omc"
 ```
 
 This resolves to `~/.codebuddy/omc/{project-identifier}/` where the project identifier uses a hash of the git remote URL (stable across worktrees/clones) with a fallback to the directory path hash for local-only repos.
@@ -127,9 +127,9 @@ If both a legacy `{worktree}/.omc/` directory and a centralized directory exist,
 - **First time**: Run after installation (choose project or global)
 - **After updates**: Re-run to get the latest configuration
 - **Different machines**: Run on each machine where you use CodeBuddy Code
-- **New projects**: Run `/oh-my-codebuddy:omc-setup --local` in each project that needs omc
+- **New projects**: Run `/oh-my-codebuddy:omc-setup --local` in each project that needs omcb
 
-> **NOTE**: After updating the plugin (via `npm update`, `git pull`, or CodeBuddy Code's plugin update), you MUST re-run `/oh-my-codebuddy:omc-setup` to apply the latest CLAUDE.md changes.
+> **NOTE**: After updating the plugin (via `npm update`, `git pull`, or CodeBuddy Code's plugin update), you MUST re-run `/oh-my-codebuddy:omc-setup` to apply the latest CODEBUDDY.md changes.
 
 ### Remote OMC / Remote MCP Access
 
@@ -164,8 +164,8 @@ OMC also supports a narrow company-context contract on top of the existing MCP s
 
 Configure it in the standard OMC config files:
 
-- Project: `.claude/omc.jsonc`
-- User: `~/.config/claude-omc/config.jsonc`
+- Project: `.codebuddy/omcb.jsonc`
+- User: `~/.config/codebuddy-omcb/config.jsonc`
 
 ```jsonc
 {
@@ -202,7 +202,7 @@ Bundled OMC agent prompts currently do **not** ship an `effort:` frontmatter fie
 
 ### Project-Level Config
 
-Create `.claude/CLAUDE.md` in your project for project-specific instructions:
+Create `.codebuddy/CODEBUDDY.md` in your project for project-specific instructions:
 
 ```markdown
 # Project Context
@@ -265,11 +265,11 @@ omcb --plugin-dir /path/to/oh-my-codebuddy setup --plugin-dir-mode
 - **Non-consuming**: The flag stays in the argument list so CodeBuddy Code's plugin loader still sees it.
 - **Precedence**: Explicit `--plugin-dir` flag wins over any pre-existing `OMC_PLUGIN_ROOT` env var (with a warning if they disagree).
 - **Resolution**: Relative paths are resolved to absolute via `path.resolve()`. Note: `~` is **not** expanded — use `$HOME` or an absolute path instead.
-- **Pair with setup**: `--plugin-dir` alone only affects the current Claude session. You must **also** run `omcb setup --plugin-dir-mode` (or let auto-detection kick in from `OMC_PLUGIN_ROOT`) so HUD, hooks, and CLAUDE.md are installed for the linked checkout. Skipping this step leaves `~/.codebuddy/` pointing at a stale plugin root.
+- **Pair with setup**: `--plugin-dir` alone only affects the current CodeBuddy session. You must **also** run `omcb setup --plugin-dir-mode` (or let auto-detection kick in from `OMC_PLUGIN_ROOT`) so HUD, hooks, and CODEBUDDY.md are installed for the linked checkout. Skipping this step leaves `~/.codebuddy/` pointing at a stale plugin root.
 
 ### `claude --plugin-dir <path>` (direct)
 
-**Usage**: When you launch CodeBuddy Code directly without the `omc` shim.
+**Usage**: When you launch CodeBuddy Code directly without the `omcb` shim.
 
 ```bash
 export OMC_PLUGIN_ROOT=/path/to/oh-my-codebuddy
@@ -278,7 +278,7 @@ claude --plugin-dir /path/to/oh-my-codebuddy
 
 - **Requirement**: You must manually set `OMC_PLUGIN_ROOT` environment variable so the HUD wrapper and other env-aware components can resolve the same path as the plugin loader.
 - **Why**: The HUD bundle needs to know where agents/skills/commands are located so they stay in sync with the plugin instance.
-- **Note**: Plain `claude` (without `omc`) does not automatically capture `--plugin-dir` for you.
+- **Note**: Plain `claude` (without `omcb`) does not automatically capture `--plugin-dir` for you.
 
 ### `omcb setup --plugin-dir-mode`
 

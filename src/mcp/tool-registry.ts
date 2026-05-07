@@ -27,7 +27,7 @@ import { sharedMemoryTools } from '../tools/shared-memory-tools.js';
 import { deepinitManifestTool } from '../tools/deepinit-manifest.js';
 import { wikiTools } from '../tools/wiki-tools.js';
 import { skillsTools } from '../tools/skills-tools.js';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 /** Minimal tool definition shape shared across all tool families. */
 export interface ToolDef {

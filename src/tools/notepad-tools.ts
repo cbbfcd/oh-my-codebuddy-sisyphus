@@ -5,7 +5,7 @@
  * (Priority Context, Working Memory, MANUAL).
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import {
   getWorktreeNotepadPath,
   ensureOmcDir,

@@ -4,7 +4,7 @@
  * Provides tools for reading and writing project memory.
  */
 
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import {
   getWorktreeProjectMemoryPath,
   ensureOmcDir,

@@ -9,7 +9,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { randomUUID } from 'node:crypto';
 import { spawn } from 'child_process';
 import { join } from 'path';
