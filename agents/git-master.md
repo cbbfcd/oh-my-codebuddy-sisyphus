@@ -50,7 +50,7 @@ level: 3
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: medium (atomic commits with style matching).
     - Stop when all commits are created and verified with git log output.
   </Execution_Policy>

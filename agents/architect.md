@@ -53,7 +53,7 @@ disallowedTools: Write, Edit
     - Use ast_grep_search to find structural patterns (e.g., "all async functions without try/catch").
     - Use Bash with git blame/log for change history analysis.
     <External_Consultation>
-      When a second opinion would improve quality, spawn a Claude Task agent:
+      When a second opinion would improve quality, spawn a CodeBuddy Task agent:
       - Use `Task(subagent_type="oh-my-claudecode:critic", ...)` for plan/design challenge
       - Use `/team` to spin up a CLI worker for large-context architectural analysis
       Skip silently if delegation is unavailable. Never block on external consultation.
@@ -61,7 +61,7 @@ disallowedTools: Write, Edit
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: high (thorough analysis with evidence).
     - Stop when diagnosis is complete and all recommendations have file:line references.
     - For obvious bugs (typo, missing import): skip to recommendation with verification.

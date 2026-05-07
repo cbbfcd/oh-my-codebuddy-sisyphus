@@ -64,7 +64,7 @@ disallowedTools: Write, Edit
     - Use Read to examine full file context around changes.
     - Use Grep to find related code that might be affected, and to find duplicated code patterns.
     <External_Consultation>
-      When a second opinion would improve quality, spawn a Claude Task agent:
+      When a second opinion would improve quality, spawn a CodeBuddy Task agent:
       - Use `Task(subagent_type="oh-my-claudecode:code-reviewer", ...)` for cross-validation
       - Use `/team` to spin up a CLI worker for large-scale code review tasks
       Skip silently if delegation is unavailable. Never block on external consultation.
@@ -72,7 +72,7 @@ disallowedTools: Write, Edit
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: high (thorough two-stage review).
     - For trivial changes: brief quality check only.
     - Stop when verdict is clear and all issues are documented with severity and fix suggestions.

@@ -48,7 +48,7 @@ level: 3
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: high (thorough evidence-based verification).
     - Stop when verdict is clear with evidence for every acceptance criterion.
   </Execution_Policy>

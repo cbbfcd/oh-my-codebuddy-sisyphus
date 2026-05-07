@@ -171,7 +171,7 @@ disallowedTools: Write, Edit
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: maximum. This is thorough review. Leave no stone unturned.
     - Do NOT stop at the first few findings. Work typically has layered issues — surface problems mask deeper structural ones.
     - Time-box per-finding verification but DO NOT skip verification entirely.

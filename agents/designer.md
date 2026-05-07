@@ -50,7 +50,7 @@ level: 2
     - Use Write/Edit for creating and modifying components.
     - Use Bash to run dev server or build to verify implementation.
     <External_Consultation>
-      When a second opinion would improve quality, spawn a Claude Task agent:
+      When a second opinion would improve quality, spawn a CodeBuddy Task agent:
       - Use `Task(subagent_type="oh-my-claudecode:designer", ...)` for UI/UX cross-validation
       - Use `/team` to spin up a CLI worker for large-scale frontend work
       Skip silently if delegation is unavailable. Never block on external consultation.
@@ -58,7 +58,7 @@ level: 2
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: high (visual quality is non-negotiable).
     - Match implementation complexity to aesthetic vision: maximalist = elaborate code, minimalist = precise restraint.
     - Stop when the UI is functional, visually intentional, and verified.

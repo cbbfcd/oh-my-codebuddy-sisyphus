@@ -62,7 +62,7 @@ level: 2
     - Use lsp_diagnostics_directory for project-wide verification before completion on complex tasks.
     - Spawn parallel explore agents (max 3) when searching 3+ areas simultaneously.
     <External_Consultation>
-      When a second opinion would improve quality, spawn a Claude Task agent:
+      When a second opinion would improve quality, spawn a CodeBuddy Task agent:
       - Use `Task(subagent_type="oh-my-claudecode:architect", ...)` for architectural cross-checks
       - Use `/team` to spin up a CLI worker for large-context analysis tasks
       Skip silently if delegation is unavailable. Never block on external consultation.
@@ -70,7 +70,7 @@ level: 2
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: match complexity to task classification.
     - Trivial tasks: skip extensive exploration, verify only modified file.
     - Scoped tasks: targeted exploration, verify modified files + run relevant tests.

@@ -64,7 +64,7 @@ disallowedTools: Write, Edit
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: medium (3-5 parallel searches from different angles).
     - Quick lookups: 1-2 targeted searches.
     - Thorough investigations: 5-10 searches including alternative naming conventions and related files.

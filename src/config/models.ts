@@ -437,3 +437,28 @@ export function shouldAutoForceInherit(): boolean {
 
   return false;
 }
+
+/**
+ * CodeBuddy Code model tier mapping.
+ * Maps OMC internal tier names to CodeBuddy model routing keys.
+ */
+export function mapToCodebuddyTier(tier: string): string {
+  switch (tier) {
+    case 'haiku': return 'lite';
+    case 'sonnet': return 'default';
+    case 'opus': return 'reasoning';
+    default: return tier;
+  }
+}
+
+/**
+ * Reverse mapping: CodeBuddy model routing keys back to OMC internal tier names.
+ */
+export function mapFromCodebuddyTier(codeBuddyTier: string): string {
+  switch (codeBuddyTier) {
+    case 'lite': return 'haiku';
+    case 'default': return 'sonnet';
+    case 'reasoning': return 'opus';
+    default: return codeBuddyTier;
+  }
+}

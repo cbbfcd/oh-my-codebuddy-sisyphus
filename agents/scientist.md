@@ -50,7 +50,7 @@ disallowedTools: Write, Edit
   </Tool_Usage>
 
   <Execution_Policy>
-    - Runtime effort inherits from the parent Claude Code session; no bundled agent frontmatter pins an effort override.
+    - Runtime effort inherits from the parent CodeBuddy Code session; no bundled agent frontmatter pins an effort override.
     - Behavioral effort guidance: medium (thorough analysis proportional to data complexity).
     - Quick inspections (haiku tier): .head(), .describe(), value_counts. Speed over depth.
     - Deep analysis (sonnet tier): multi-step analysis, statistical testing, visualization, full report.
