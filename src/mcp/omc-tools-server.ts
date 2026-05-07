@@ -1,11 +1,11 @@
 /**
  * OMC Tools Server - In-process MCP server for custom tools
  *
- * Exposes 18 custom tools (12 LSP, 2 AST, 1 python_repl, 3 skills) via the Claude Agent SDK's
- * createSdkMcpServer helper for use by subagents.
+ * Exposes 18 custom tools (12 LSP, 2 AST, 1 python_repl, 3 skills) via the CodeBuddy Agent SDK's
+ * createSdkMcpServer helper (see sdk-compat.ts) for use by subagents.
  */
 
-import { createSdkMcpServer, tool } from "@anthropic-ai/claude-agent-sdk";
+import { createSdkMcpServer, tool } from "./sdk-compat.js";
 import { lspTools } from "../tools/lsp-tools.js";
 import { astTools } from "../tools/ast-tools.js";
 import { pythonReplTool } from "../tools/python-repl/index.js";

@@ -249,7 +249,7 @@ export interface OmcSession {
  * @example
  * ```typescript
  * import { createOmcSession } from 'oh-my-claudecode';
- * import { query } from '@anthropic-ai/claude-agent-sdk';
+ * import { query } from '@tencent-ai/agent-sdk';
  *
  * const session = createOmcSession();
  *
