@@ -25,7 +25,7 @@ import {
 vi.mock('fs');
 vi.mock('os');
 vi.mock('../utils/config-dir.js', () => ({
-  getClaudeConfigDir: () => '/home/testuser/.claude',
+  getCodebuddyConfigDir: () => '/home/testuser/.codebuddy',
 }));
 
 describe('Task System Support', () => {
@@ -44,7 +44,7 @@ describe('Task System Support', () => {
     it('should return correct path for session ID', () => {
       const sessionId = 'abc123';
       const result = getTaskDirectory(sessionId);
-      expect(result).toBe(path.join(mockHomedir, '.claude', 'tasks', sessionId));
+      expect(result).toBe(path.join(mockHomedir, '.codebuddy', 'tasks', sessionId));
     });
 
     it('should handle session ID with special characters', () => {
@@ -874,7 +874,7 @@ describe('Task System Support', () => {
     it('should return valid path for valid session ID', () => {
       const result = getTaskDirectory('valid-session-123');
       expect(result).toContain('valid-session-123');
-      expect(result).toContain(path.join('.claude', 'tasks'));
+      expect(result).toContain(path.join('.codebuddy', 'tasks'));
     });
   });
 

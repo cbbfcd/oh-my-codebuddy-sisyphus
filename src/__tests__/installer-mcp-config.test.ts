@@ -31,7 +31,7 @@ vi.mock('fs', async () => {
 
 async function loadInstallerWithEnv(claudeConfigDir: string, homeDir: string, codexHome: string, omcHome: string) {
   vi.resetModules();
-  process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+  process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
   process.env.HOME = homeDir;
   process.env.CODEX_HOME = codexHome;
   process.env.OMC_HOME = omcHome;
@@ -51,7 +51,7 @@ describe('installer MCP config ownership (issue #1802)', () => {
   beforeEach(() => {
     tempRoot = mkdtempSync(join(tmpdir(), 'omc-installer-mcp-config-'));
     homeDir = join(tempRoot, 'home');
-    claudeConfigDir = join(homeDir, '.claude');
+    claudeConfigDir = join(homeDir, '.codebuddy');
     codexHome = join(tempRoot, '.codex');
     omcHome = join(tempRoot, '.omc');
 

@@ -31,12 +31,12 @@ function mkWorktree(): string {
 }
 
 function readSettings(worktreePath: string): Record<string, unknown> {
-  const p = join(worktreePath, '.claude', 'settings.json');
+  const p = join(worktreePath, '.codebuddy', 'settings.json');
   return JSON.parse(readFileSync(p, 'utf-8')) as Record<string, unknown>;
 }
 
 // ---------------------------------------------------------------------------
-// 1. settings.json shape — must match Claude Code hook schema
+// 1. settings.json shape — must match CodeBuddy Code hook schema
 // ---------------------------------------------------------------------------
 
 describe('installPostToolUseHook – settings.json shape', () => {
@@ -50,7 +50,7 @@ describe('installPostToolUseHook – settings.json shape', () => {
     rmSync(worktreePath, { recursive: true, force: true });
   });
 
-  it('creates .claude/settings.json with correct Claude Code hook schema', async () => {
+  it('creates .codebuddy/settings.json with correct CodeBuddy Code hook schema', async () => {
     await installPostToolUseHook(worktreePath, 'writer');
 
     const settings = readSettings(worktreePath);
@@ -126,12 +126,12 @@ describe('installPostToolUseHook – settings.json shape', () => {
     await installPostToolUseHook(worktreePath, 'writer');
 
     // settings.json should not have been created
-    expect(existsSync(join(worktreePath, '.claude', 'settings.json'))).toBe(false);
+    expect(existsSync(join(worktreePath, '.codebuddy', 'settings.json'))).toBe(false);
   });
 
   it('merges into existing settings.json without clobbering other keys', async () => {
     // Pre-create a settings.json with an existing key
-    const claudeDir = join(worktreePath, '.claude');
+    const claudeDir = join(worktreePath, '.codebuddy');
     mkdirSync(claudeDir, { recursive: true });
     writeFileSync(
       join(claudeDir, 'settings.json'),

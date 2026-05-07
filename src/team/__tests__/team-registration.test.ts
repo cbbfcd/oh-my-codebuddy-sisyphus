@@ -6,12 +6,12 @@ import {
   readProbeResult, writeProbeResult, getRegistrationStrategy,
   registerMcpWorker, unregisterMcpWorker, isMcpWorker, listMcpWorkers
 } from '../team-registration.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import type { ConfigProbeResult } from '../types.js';
 
 const TEST_DIR = join(tmpdir(), '__test_team_reg__');
 const TEST_TEAM = 'test-team-reg-team';
-const CONFIG_DIR = join(getClaudeConfigDir(), 'teams', TEST_TEAM);
+const CONFIG_DIR = join(getCodebuddyConfigDir(), 'teams', TEST_TEAM);
 
 beforeEach(() => {
   mkdirSync(TEST_DIR, { recursive: true });

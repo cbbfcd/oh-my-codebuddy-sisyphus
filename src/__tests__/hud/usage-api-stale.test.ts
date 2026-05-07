@@ -9,13 +9,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { EventEmitter } from 'events';
 
-const CLAUDE_CONFIG_DIR = '/tmp/test-claude';
-const CACHE_PATH = `${CLAUDE_CONFIG_DIR}/plugins/oh-my-codebuddy/.usage-cache-zai.json`;
-const CACHE_DIR = `${CLAUDE_CONFIG_DIR}/plugins/oh-my-codebuddy`;
+const CODEBUDDY_CONFIG_DIR = '/tmp/test-claude';
+const CACHE_PATH = `${CODEBUDDY_CONFIG_DIR}/plugins/oh-my-codebuddy/.usage-cache-zai.json`;
+const CACHE_DIR = `${CODEBUDDY_CONFIG_DIR}/plugins/oh-my-codebuddy`;
 
 function createFsMock(initialFiles: Record<string, string>) {
   const files = new Map(Object.entries(initialFiles));
-  const directories = new Set<string>([CLAUDE_CONFIG_DIR, CACHE_DIR]);
+  const directories = new Set<string>([CODEBUDDY_CONFIG_DIR, CACHE_DIR]);
 
   const existsSync = vi.fn((path: string) => files.has(String(path)) || directories.has(String(path)));
   const readFileSync = vi.fn((path: string) => {
@@ -71,7 +71,7 @@ function createFsMock(initialFiles: Record<string, string>) {
 
 function setupMocks(fsModule: ReturnType<typeof createFsMock>['fsModule'], httpStatus: number, httpBody: string) {
   vi.doMock('../../utils/config-dir.js', () => ({
-    getClaudeConfigDir: () => CLAUDE_CONFIG_DIR,
+    getCodebuddyConfigDir: () => CODEBUDDY_CONFIG_DIR,
   }));
   vi.doMock('../../utils/ssrf-guard.js', () => ({
     validateAnthropicBaseUrl: () => ({ allowed: true }),
@@ -228,7 +228,7 @@ describe('usage API stale data handling', () => {
 
     const { fsModule } = createFsMock({ [CACHE_PATH]: validRateLimitedCache });
     vi.doMock('../../utils/paths.js', () => ({
-      getClaudeConfigDir: () => CLAUDE_CONFIG_DIR,
+      getCodebuddyConfigDir: () => CODEBUDDY_CONFIG_DIR,
     }));
     vi.doMock('../../utils/ssrf-guard.js', () => ({
       validateAnthropicBaseUrl: () => ({ allowed: true }),

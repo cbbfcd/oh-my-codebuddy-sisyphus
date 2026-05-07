@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+const originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
 const originalPluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
 const originalHome = process.env.HOME;
 
@@ -25,7 +25,7 @@ describe('install() CLAUDE.md target resolution', () => {
     mkdirSync(testClaudeDir, { recursive: true });
     mkdirSync(testHomeDir, { recursive: true });
 
-    process.env.CLAUDE_CONFIG_DIR = testClaudeDir;
+    process.env.CODEBUDDY_CONFIG_DIR = testClaudeDir;
     process.env.HOME = testHomeDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;
   });
@@ -34,9 +34,9 @@ describe('install() CLAUDE.md target resolution', () => {
     rmSync(tempRoot, { recursive: true, force: true });
 
     if (originalClaudeConfigDir !== undefined) {
-      process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
     } else {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     }
 
     if (originalPluginRoot !== undefined) {
@@ -52,7 +52,7 @@ describe('install() CLAUDE.md target resolution', () => {
     }
   });
 
-  it('updates ~/.claude/CLAUDE.md even when ~/CLAUDE.md exists', async () => {
+  it('updates ~/.codebuddy/CLAUDE.md even when ~/CLAUDE.md exists', async () => {
     const configClaudePath = join(testClaudeDir, 'CLAUDE.md');
     const homeClaudePath = join(testHomeDir, 'CLAUDE.md');
 
@@ -81,7 +81,7 @@ describe('install() CLAUDE.md target resolution', () => {
   });
 
   it('preserves project-scoped behavior by skipping global CLAUDE.md writes', async () => {
-    process.env.CLAUDE_PLUGIN_ROOT = join(tempRoot, 'project', '.claude', 'plugins', 'oh-my-codebuddy');
+    process.env.CLAUDE_PLUGIN_ROOT = join(tempRoot, 'project', '.codebuddy', 'plugins', 'oh-my-codebuddy');
     writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# Home CLAUDE\nkeep me\n');
 
     const { install } = await loadInstaller();

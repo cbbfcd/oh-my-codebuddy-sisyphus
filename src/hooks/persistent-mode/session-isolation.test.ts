@@ -7,9 +7,9 @@ import { checkPersistentModes } from "./index.js";
 import { activateUltrawork, deactivateUltrawork } from "../ultrawork/index.js";
 
 function writePendingTodo(tempDir: string, content: string): void {
-  mkdirSync(join(tempDir, '.claude'), { recursive: true });
+  mkdirSync(join(tempDir, '.codebuddy'), { recursive: true });
   writeFileSync(
-    join(tempDir, '.claude', 'todos.json'),
+    join(tempDir, '.codebuddy', 'todos.json'),
     JSON.stringify({
       todos: [
         {

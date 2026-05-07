@@ -3,7 +3,7 @@
  *
  * Verifies that the Windows hook-patching logic correctly rewrites
  * sh+find-node.sh commands to the run.cjs wrapper with shell-expanded
- * CLAUDE_PLUGIN_ROOT segments so that
+ * CODEBUDDY_PLUGIN_ROOT segments so that
  * Claude Code UI bug #17088 (false "hook error" labels on MSYS2/Git Bash)
  * is avoided.
  */

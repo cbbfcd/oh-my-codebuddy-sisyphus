@@ -174,7 +174,7 @@ describe('isClaudeAvailable', () => {
     mockedExecFileSync.mockReturnValue(Buffer.from('2.1.116'));
 
     expect(isClaudeAvailable()).toBe(true);
-    expect(mockedExecFileSync).toHaveBeenCalledWith('claude', ['--version'], {
+    expect(mockedExecFileSync).toHaveBeenCalledWith('codebuddy', ['--version'], {
       stdio: 'ignore',
       shell: true,
     });

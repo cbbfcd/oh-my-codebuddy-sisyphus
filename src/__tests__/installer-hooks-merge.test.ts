@@ -86,36 +86,36 @@ function userGroup(command: string): HookGroup {
   return { hooks: [{ type: 'command', command }] };
 }
 
-const OMC_CMD = 'node "$HOME/.claude/hooks/keyword-detector.mjs"';
+const OMC_CMD = 'node "$HOME/.codebuddy/hooks/keyword-detector.mjs"';
 const USER_CMD = '/usr/local/bin/my-custom-hook.sh';
-const NEW_OMC_CMD = 'node "$HOME/.claude/hooks/session-start.mjs"';
+const NEW_OMC_CMD = 'node "$HOME/.codebuddy/hooks/session-start.mjs"';
 
 // ---------------------------------------------------------------------------
 // isOmcHook unit tests
 // ---------------------------------------------------------------------------
 describe('isOmcHook()', () => {
   it('recognises OMC keyword-detector command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/keyword-detector.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/keyword-detector.mjs"')).toBe(true);
   });
 
   it('recognises OMC session-start command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/session-start.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/session-start.mjs"')).toBe(true);
   });
 
   it('recognises OMC pre-tool-use command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/pre-tool-use.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"')).toBe(true);
   });
 
   it('recognises OMC post-tool-use command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/post-tool-use.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/post-tool-use.mjs"')).toBe(true);
   });
 
   it('recognises OMC persistent-mode command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/persistent-mode.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/persistent-mode.mjs"')).toBe(true);
   });
 
   it('recognises OMC code-simplifier command', () => {
-    expect(isOmcHook('node "$HOME/.claude/hooks/code-simplifier.mjs"')).toBe(true);
+    expect(isOmcHook('node "$HOME/.codebuddy/hooks/code-simplifier.mjs"')).toBe(true);
   });
 
   it('recognises Windows-style OMC path', () => {
@@ -126,9 +126,9 @@ describe('isOmcHook()', () => {
     expect(isOmcHook('node "/tmp/custom-claude/hooks/keyword-detector.mjs"')).toBe(true);
   });
 
-  it('recognises CLAUDE_CONFIG_DIR-aware hook commands', () => {
-    expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/keyword-detector.mjs"')).toBe(true);
-    expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/persistent-mode.mjs"')).toBe(true);
+  it('recognises CODEBUDDY_CONFIG_DIR-aware hook commands', () => {
+    expect(isOmcHook('node "${CODEBUDDY_CONFIG_DIR:-$HOME/.claude}/hooks/keyword-detector.mjs"')).toBe(true);
+    expect(isOmcHook('node "${CODEBUDDY_CONFIG_DIR:-$HOME/.claude}/hooks/persistent-mode.mjs"')).toBe(true);
   });
 
   it('recognises oh-my-codebuddy in command path', () => {

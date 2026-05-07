@@ -22,7 +22,7 @@ import { OMC_PLUGIN_ROOT_ENV } from '../../lib/env-vars.js';
 const CACHE_STUB_MARKER = 'FROM_CACHE_STUB_99_99_99';
 
 /**
- * Build an isolated CLAUDE_CONFIG_DIR with a stub HUD at
+ * Build an isolated CODEBUDDY_CONFIG_DIR with a stub HUD at
  * `<configDir>/plugins/cache/omc/oh-my-codebuddy/99.99.99/dist/hud/index.js`.
  * Used to pin the cache-fallback step (step 2 in the wrapper) so tests can
  * assert the wrapper actually executed that branch instead of accidentally
@@ -130,11 +130,11 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
 
   it('case 1: OMC_PLUGIN_ROOT set + dist/hud/index.js exists → loads from there', () => {
     const s = staged!;
-    // Point CLAUDE_CONFIG_DIR at a non-existent dir so cache/marketplace branches
+    // Point CODEBUDDY_CONFIG_DIR at a non-existent dir so cache/marketplace branches
     // cannot accidentally fire.
     const isolatedConfig = join(s.dir, 'isolated-config');
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: isolatedConfig,
+      CODEBUDDY_CONFIG_DIR: isolatedConfig,
       [OMC_PLUGIN_ROOT_ENV]: s.fakePluginRoot,
     }));
     expect(result.status).toBe(0);
@@ -150,7 +150,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     const emptyRoot = join(s.dir, 'empty-root');
     mkdirSync(emptyRoot, { recursive: true });
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: isolatedConfig,
+      CODEBUDDY_CONFIG_DIR: isolatedConfig,
       [OMC_PLUGIN_ROOT_ENV]: emptyRoot,
     }));
     expect(result.status).toBe(0);
@@ -164,7 +164,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     const s = staged!;
     const isolatedConfig = makeStubConfigDir(s.dir);
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: isolatedConfig,
+      CODEBUDDY_CONFIG_DIR: isolatedConfig,
       // OMC_PLUGIN_ROOT intentionally omitted
     }));
     expect(result.status).toBe(0);
@@ -179,7 +179,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     const isolatedConfig = makeStubConfigDir(s.dir);
     const ghostRoot = join(s.dir, 'does-not-exist-anywhere');
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: isolatedConfig,
+      CODEBUDDY_CONFIG_DIR: isolatedConfig,
       [OMC_PLUGIN_ROOT_ENV]: ghostRoot,
     }));
     expect(result.status).toBe(0);
@@ -211,7 +211,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     );
 
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: configDir,
+      CODEBUDDY_CONFIG_DIR: configDir,
       // OMC_PLUGIN_ROOT intentionally omitted → cache step fires
     }));
     expect(result.status).toBe(0);
@@ -241,7 +241,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     );
 
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: configDir,
+      CODEBUDDY_CONFIG_DIR: configDir,
     }));
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('FROM_RC_10');
@@ -270,7 +270,7 @@ describe('HUD wrapper — OMC_PLUGIN_ROOT resolution', () => {
     );
 
     const result = runWrapper(s.wrapperPath, scrubbedEnv({
-      CLAUDE_CONFIG_DIR: configDir,
+      CODEBUDDY_CONFIG_DIR: configDir,
       // OMC_PLUGIN_ROOT intentionally omitted → cache step fires
     }));
 

@@ -564,9 +564,9 @@ describe('runtime v2 startup inbox dispatch', () => {
 
   it('routes inferred review work through alias-keyed resolved snapshot entries', async () => {
     cwd = await mkdtemp(join(tmpdir(), 'omc-runtime-v2-alias-routing-'));
-    await mkdir(join(cwd, '.claude'), { recursive: true });
+    await mkdir(join(cwd, '.codebuddy'), { recursive: true });
     await writeFile(
-      join(cwd, '.claude', 'omc.jsonc'),
+      join(cwd, '.codebuddy', 'omc.jsonc'),
       JSON.stringify({
         team: {
           roleRouting: {

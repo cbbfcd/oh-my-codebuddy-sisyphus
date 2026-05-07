@@ -3,7 +3,7 @@
  *
  * Unlike `plugin-dir-mode.test.ts`, which exercises the CLI precedence helper
  * in isolation, this suite calls the real `install()` function from
- * `src/installer/index.ts` against a throwaway `CLAUDE_CONFIG_DIR` and asserts
+ * `src/installer/index.ts` against a throwaway `CODEBUDDY_CONFIG_DIR` and asserts
  * the resulting on-disk shape matches the documented contract.
  *
  * Scope: installer contract only. The CLI auto-detection log message and the
@@ -18,9 +18,9 @@ import { join } from 'node:path';
 import { OMC_PLUGIN_ROOT_ENV } from '../../lib/env-vars.js';
 
 const SAVED_ENV_KEYS = [
-  'CLAUDE_CONFIG_DIR',
+  'CODEBUDDY_CONFIG_DIR',
   OMC_PLUGIN_ROOT_ENV,
-  'CLAUDE_PLUGIN_ROOT',
+  'CODEBUDDY_PLUGIN_ROOT',
   'OMC_DEV',
 ] as const;
 
@@ -45,7 +45,7 @@ beforeEach(() => {
     savedEnv[key] = process.env[key];
     delete process.env[key];
   }
-  process.env.CLAUDE_CONFIG_DIR = testDir;
+  process.env.CODEBUDDY_CONFIG_DIR = testDir;
 });
 
 afterEach(() => {

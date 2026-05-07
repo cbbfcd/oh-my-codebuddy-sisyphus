@@ -69,8 +69,10 @@ describe('Skill Finder', () => {
 
   it('should get skills directory for user scope', () => {
     const userDir = getSkillsDir('user');
-    expect(userDir).toContain('.claude');
+    // Directory is under the active CodeBuddy config dir (may be .codebuddy or a
+    // custom path set via CODEBUDDY_CONFIG_DIR / CLAUDE_CONFIG_DIR).
     expect(userDir).toContain('omc-learned');
+
   });
 
   it('should get skills directory for project scope', () => {

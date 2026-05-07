@@ -92,18 +92,18 @@ describe('post-tool-verifier preemptive compaction warnings', () => {
     );
 
     expect(commands).not.toContain(
-      'node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs "$CLAUDE_PLUGIN_ROOT"/scripts/preemptive-compaction.mjs',
+      'node "$CODEBUDDY_PLUGIN_ROOT"/scripts/run.cjs "$CODEBUDDY_PLUGIN_ROOT"/scripts/preemptive-compaction.mjs',
     );
     expect(
       commands.some(
         command =>
-          command.includes('"$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs') &&
-          command.includes('"$CLAUDE_PLUGIN_ROOT"/scripts/post-tool-verifier.mjs'),
+          command.includes('"$CODEBUDDY_PLUGIN_ROOT"/scripts/run.cjs') &&
+          command.includes('"$CODEBUDDY_PLUGIN_ROOT"/scripts/post-tool-verifier.mjs'),
       ),
     ).toBe(true);
     expect(
       commands.some(command =>
-        command.includes('"$CLAUDE_PLUGIN_ROOT"/scripts/preemptive-compaction.mjs'),
+        command.includes('"$CODEBUDDY_PLUGIN_ROOT"/scripts/preemptive-compaction.mjs'),
       ),
     ).toBe(false);
   });

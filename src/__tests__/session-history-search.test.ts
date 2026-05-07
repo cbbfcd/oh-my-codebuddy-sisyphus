@@ -18,7 +18,7 @@ function writeTranscript(filePath: string, entries: Array<Record<string, unknown
 
 describe('session history search', () => {
   const repoRoot = process.cwd();
-  const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
+  const originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
   let tempRoot: string;
   let claudeDir: string;
   let otherProject: string;
@@ -29,7 +29,7 @@ describe('session history search', () => {
     claudeDir = join(tempRoot, 'claude');
     otherProject = join(tempRoot, 'other-project');
     tildeClaudeDir = join(homedir(), `.omc-session-search-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-    process.env.CLAUDE_CONFIG_DIR = claudeDir;
+    process.env.CODEBUDDY_CONFIG_DIR = claudeDir;
     process.env.OMC_STATE_DIR = join(tempRoot, 'omc-state');
 
     const currentProjectDir = join(claudeDir, 'projects', encodeProjectPath(repoRoot));
@@ -75,9 +75,9 @@ describe('session history search', () => {
 
   afterEach(() => {
     if (originalConfigDir === undefined) {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
     }
     delete process.env.OMC_STATE_DIR;
     rmSync(tempRoot, { recursive: true, force: true });
@@ -132,8 +132,8 @@ describe('session history search', () => {
     expect(report.results[0].sessionId).toBe('session-current');
   });
 
-  it('uses a ~-prefixed CLAUDE_CONFIG_DIR for transcript discovery', async () => {
-    process.env.CLAUDE_CONFIG_DIR = `~/${basename(tildeClaudeDir)}`;
+  it('uses a ~-prefixed CODEBUDDY_CONFIG_DIR for transcript discovery', async () => {
+    process.env.CODEBUDDY_CONFIG_DIR = `~/${basename(tildeClaudeDir)}`;
 
     const tildeProjectDir = join(tildeClaudeDir, 'projects', encodeProjectPath(repoRoot));
     writeTranscript(join(tildeProjectDir, 'session-tilde.jsonl'), [

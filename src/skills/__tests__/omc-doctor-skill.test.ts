@@ -7,16 +7,16 @@ describe('omc-doctor skill (issue #2254)', () => {
     const skillPath = join(process.cwd(), 'skills', 'omc-doctor', 'SKILL.md');
     const content = readFileSync(skillPath, 'utf8');
 
-    expect(content).toContain('CLAUDE.md OMC version:');
+    expect(content).toContain('CODEBUDDY.md OMC version:');
     expect(content).toContain('OMC version source:');
     expect(content).toContain('Latest cached plugin version:');
-    expect(content).toContain('VERSION DRIFT: CLAUDE.md and plugin versions differ');
-    expect(content).toContain('VERSION CHECK SKIPPED: missing CLAUDE marker or plugin cache');
+    expect(content).toContain('VERSION DRIFT: CODEBUDDY.md and plugin versions differ');
+    expect(content).toContain('VERSION CHECK SKIPPED: missing CODEBUDDY marker or plugin cache');
     expect(content).toContain('VERSION MATCH: CLAUDE and plugin cache are aligned');
     expect(content).toContain('CLAUDE-*.md');
     expect(content).toContain('deterministic companion');
-    expect(content).toContain('scanned deterministic CLAUDE sources');
+    expect(content).toContain('scanned deterministic CODEBUDDY sources');
     expect(content).not.toContain('!==');
-    expect(content).toContain('If `CLAUDE.md OMC version` != `Latest cached plugin version`: WARN - version drift detected');
+    expect(content).toContain('If `CODEBUDDY.md OMC version` != `Latest cached plugin version`: WARN - version drift detected');
   });
 });

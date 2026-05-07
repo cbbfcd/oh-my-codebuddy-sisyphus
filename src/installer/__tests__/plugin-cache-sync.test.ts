@@ -37,8 +37,8 @@ describe('syncInstalledPluginPayload', () => {
 
   beforeEach(() => {
     tempRoot = mkdtempSync(join(tmpdir(), 'omc-plugin-cache-sync-'));
-    process.env.CLAUDE_CONFIG_DIR = join(tempRoot, '.claude');
-    delete process.env.CLAUDE_PLUGIN_ROOT;
+    process.env.CODEBUDDY_CONFIG_DIR = join(tempRoot, '.codebuddy');
+    delete process.env.CODEBUDDY_PLUGIN_ROOT;
     delete process.env.OMC_PLUGIN_ROOT;
   });
 
@@ -52,7 +52,7 @@ describe('syncInstalledPluginPayload', () => {
   });
 
   it('repairs incomplete cache installs from the known marketplace source instead of reusing the installed root', async () => {
-    const configDir = process.env.CLAUDE_CONFIG_DIR as string;
+    const configDir = process.env.CODEBUDDY_CONFIG_DIR as string;
     const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.12.0');
     const sourceRoot = join(tempRoot, 'marketplace-source');
 
@@ -94,7 +94,7 @@ describe('syncInstalledPluginPayload', () => {
   });
 
   it('repairs incomplete cache installs during setup before plugin-provided file detection runs', async () => {
-    const configDir = process.env.CLAUDE_CONFIG_DIR as string;
+    const configDir = process.env.CODEBUDDY_CONFIG_DIR as string;
     const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.12.0');
     const sourceRoot = join(tempRoot, 'marketplace-source-install');
 
@@ -144,7 +144,7 @@ describe('syncInstalledPluginPayload', () => {
   });
 
   it('rejects cache install roots that escape the cache directory via .. segments', async () => {
-    const configDir = process.env.CLAUDE_CONFIG_DIR as string;
+    const configDir = process.env.CODEBUDDY_CONFIG_DIR as string;
     const cacheBase = join(configDir, 'plugins', 'cache');
     const escapedInstallPath = `${cacheBase}/../../../escaped-target`;
     const escapedResolvedRoot = join(tempRoot, 'escaped-target');

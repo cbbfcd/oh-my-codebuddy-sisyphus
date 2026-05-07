@@ -31,7 +31,7 @@ vi.mock('fs', async () => {
 import { execSync, execFileSync } from 'child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { install, isProjectScopedPlugin, checkNodeVersion, CLAUDE_CONFIG_DIR } from '../installer/index.js';
+import { install, isProjectScopedPlugin, checkNodeVersion, CODEBUDDY_CONFIG_DIR } from '../installer/index.js';
 import {
   reconcileUpdateRuntime,
   performUpdate,
@@ -156,7 +156,7 @@ describe('auto-update reconciliation', () => {
 
   it('syncs active plugin cache roots and logs when copy occurs', () => {
     const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const activeRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
+    const activeRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
 
     mockedReadFileSync.mockImplementation((path: Parameters<typeof readFileSync>[0]) => {
       const normalized = String(path).replace(/\\/g, '/');
@@ -233,7 +233,7 @@ describe('auto-update reconciliation', () => {
 
   it('syncs the plugin cache directory when cache root exists', () => {
     const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const cacheRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const versionedCacheRoot = `${cacheRoot}/4.9.0`;
 
     mockedExecSync.mockImplementation((command: string) => {
@@ -292,7 +292,7 @@ describe('auto-update reconciliation', () => {
   });
 
   it('skips plugin cache sync gracefully when cache dir does not exist', () => {
-    const cacheRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     mockedExistsSync.mockImplementation((path: Parameters<typeof existsSync>[0]) => {
       const normalized = String(path).replace(/\\/g, '/');
       if (normalized === cacheRoot) {
@@ -310,7 +310,7 @@ describe('auto-update reconciliation', () => {
 
   it('handles plugin cache sync errors non-fatally', () => {
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const cacheRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const versionedCacheRoot = `${cacheRoot}/4.9.0`;
 
     mockedExecSync.mockImplementation((command: string) => {
@@ -369,7 +369,7 @@ describe('auto-update reconciliation', () => {
     delete process.env.CLAUDECODE_SESSION_ID;
     expect(shouldBlockStandaloneUpdateInCurrentSession()).toBe(false);
 
-    process.env.CLAUDE_PLUGIN_ROOT = '/tmp/.claude/plugins/cache/omc/oh-my-codebuddy/4.1.5';
+    process.env.CLAUDE_PLUGIN_ROOT = '/tmp/.codebuddy/plugins/cache/omc/oh-my-codebuddy/4.1.5';
     expect(shouldBlockStandaloneUpdateInCurrentSession()).toBe(false);
 
     process.env.CLAUDE_CODE_ENTRYPOINT = 'hook';
@@ -382,8 +382,8 @@ describe('auto-update reconciliation', () => {
 
   it('dedupes plugin roots and ignores missing targets during sync', () => {
     const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const activeRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
-    const staleRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.4');
+    const activeRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
+    const staleRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.4');
     process.env.CLAUDE_PLUGIN_ROOT = activeRoot;
 
     mockedReadFileSync.mockImplementation((path: Parameters<typeof readFileSync>[0]) => {
@@ -433,8 +433,8 @@ describe('auto-update reconciliation', () => {
   });
 
   it('allows standalone update when CLAUDE_PLUGIN_ROOT is inherited without an active Claude session', async () => {
-    const pluginRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
-    const cacheRoot = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const pluginRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.1.5');
+    const cacheRoot = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     process.env.OMC_UPDATE_RECONCILE = '1';
     process.env.CLAUDE_PLUGIN_ROOT = pluginRoot;
     delete process.env.CLAUDE_CODE_ENTRYPOINT;
@@ -489,7 +489,7 @@ describe('auto-update reconciliation', () => {
     // (simulates being in the re-exec'd process after npm install)
     process.env.OMC_UPDATE_RECONCILE = '1';
     process.env.CLAUDE_PLUGIN_ROOT = join(
-      CLAUDE_CONFIG_DIR,
+      CODEBUDDY_CONFIG_DIR,
       'plugins',
       'cache',
       'omc',

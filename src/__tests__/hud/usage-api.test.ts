@@ -18,7 +18,7 @@ vi.mock('../../lib/file-lock.js', () => ({
 
 // Mock dependencies that touch filesystem / keychain / network
 vi.mock('../../utils/paths.js', () => ({
-  getClaudeConfigDir: () => '/tmp/test-claude',
+  getCodebuddyConfigDir: () => '/tmp/test-claude',
 }));
 
 vi.mock('fs', async (importOriginal) => {
@@ -419,13 +419,13 @@ describe('getUsage routing', () => {
     expect(httpsModule.default.request).not.toHaveBeenCalled();
   });
 
-  it('uses the raw ~-prefixed CLAUDE_CONFIG_DIR value for Keychain service lookup', async () => {
-    process.env.CLAUDE_CONFIG_DIR = '~/.claude-personal';
+  it('uses the raw ~-prefixed CODEBUDDY_CONFIG_DIR value for Keychain service lookup', async () => {
+    process.env.CODEBUDDY_CONFIG_DIR = '~/.claude-personal';
 
     const oneHourFromNow = Date.now() + 60 * 60 * 1000;
     const execFileMock = vi.mocked(childProcess.execFileSync);
     const username = os.userInfo().username;
-    const expectedService = expectedServiceName(process.env.CLAUDE_CONFIG_DIR);
+    const expectedService = expectedServiceName(process.env.CODEBUDDY_CONFIG_DIR);
 
     execFileMock.mockImplementation((_file, args) => {
       const argsArr = args as string[];
@@ -475,13 +475,13 @@ describe('getUsage routing', () => {
     expect(execFileMock).toHaveBeenCalledOnce();
   });
 
-  it('uses a different Keychain service when CLAUDE_CONFIG_DIR is already expanded', async () => {
-    process.env.CLAUDE_CONFIG_DIR = '/Users/test/.claude-personal';
+  it('uses a different Keychain service when CODEBUDDY_CONFIG_DIR is already expanded', async () => {
+    process.env.CODEBUDDY_CONFIG_DIR = '/Users/test/.claude-personal';
 
     const oneHourFromNow = Date.now() + 60 * 60 * 1000;
     const execFileMock = vi.mocked(childProcess.execFileSync);
     const username = os.userInfo().username;
-    const expectedService = expectedServiceName(process.env.CLAUDE_CONFIG_DIR);
+    const expectedService = expectedServiceName(process.env.CODEBUDDY_CONFIG_DIR);
 
     execFileMock.mockImplementation((_file, args) => {
       const argsArr = args as string[];

@@ -14,8 +14,8 @@ describe('bridge-entry security', () => {
     expect(source).toContain('validateBridgeWorkingDirectory');
   });
 
-  it('validates config path is under ~/.claude/ or .omc/', () => {
-    expect(source).toContain('.claude/');
+  it('validates config path is under ~/.codebuddy/ or .omc/', () => {
+    expect(source).toContain('.codebuddy/');
     expect(source).toContain('.omc/');
   });
 
@@ -72,7 +72,7 @@ describe('bridge-entry security', () => {
 
 describe('validateConfigPath', () => {
   const home = '/home/user';
-  const claudeConfigDir = '/home/user/.claude';
+  const claudeConfigDir = '/home/user/.codebuddy';
 
   it('should reject paths outside home directory', () => {
     expect(validateConfigPath('/tmp/.omc/config.json', home, claudeConfigDir)).toBe(false);
@@ -82,8 +82,8 @@ describe('validateConfigPath', () => {
     expect(validateConfigPath('/home/user/project/config.json', home, claudeConfigDir)).toBe(false);
   });
 
-  it('should accept paths under ~/.claude/', () => {
-    expect(validateConfigPath('/home/user/.claude/teams/foo/config.json', home, claudeConfigDir)).toBe(true);
+  it('should accept paths under ~/.codebuddy/', () => {
+    expect(validateConfigPath('/home/user/.codebuddy/teams/foo/config.json', home, claudeConfigDir)).toBe(true);
   });
 
   it('should accept paths under project/.omc/', () => {
@@ -91,11 +91,11 @@ describe('validateConfigPath', () => {
   });
 
   it('should reject path that matches subpath but not home', () => {
-    expect(validateConfigPath('/other/.claude/config.json', home, claudeConfigDir)).toBe(false);
+    expect(validateConfigPath('/other/.codebuddy/config.json', home, claudeConfigDir)).toBe(false);
   });
 
   it('should reject path traversal via ../ that escapes trusted subpath', () => {
-    // ~/foo/.claude/../../evil.json resolves to ~/evil.json (no trusted subpath)
-    expect(validateConfigPath('/home/user/foo/.claude/../../evil.json', home, claudeConfigDir)).toBe(false);
+    // ~/foo/.codebuddy/../../evil.json resolves to ~/evil.json (no trusted subpath)
+    expect(validateConfigPath('/home/user/foo/.codebuddy/../../evil.json', home, claudeConfigDir)).toBe(false);
   });
 });

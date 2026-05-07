@@ -31,7 +31,7 @@ function buildHookEnv(extraEnv: Record<string, string> = {}): Record<string, str
   }
   // Remove OMC_STATE_DIR from parent env so only extraEnv controls it.
   delete env.OMC_STATE_DIR;
-  return { ...env, CLAUDE_PLUGIN_ROOT: REPO_ROOT, ...extraEnv };
+  return { ...env, CODEBUDDY_PLUGIN_ROOT: REPO_ROOT, ...extraEnv };
 }
 
 /** Run a hook script synchronously and return the parsed JSON output. */
@@ -239,7 +239,7 @@ describe('OMC_STATE_DIR state-root resolution (issue #2532)', () => {
     runHookViaRunner(SESSION_START, {
       hook_event_name: 'SessionStart',
       session_id: priorSessionId,
-      transcript_path: join(fakeProject, '.claude', 'projects', 'prior.jsonl'),
+      transcript_path: join(fakeProject, '.codebuddy', 'projects', 'prior.jsonl'),
       source: 'startup',
       model: 'claude-sonnet-4-6',
       cwd: fakeProject,
@@ -254,7 +254,7 @@ describe('OMC_STATE_DIR state-root resolution (issue #2532)', () => {
     runHookViaRunner(SESSION_START, {
       hook_event_name: 'SessionStart',
       session_id: currentSessionId,
-      transcript_path: join(fakeProject, '.claude', 'projects', 'current.jsonl'),
+      transcript_path: join(fakeProject, '.codebuddy', 'projects', 'current.jsonl'),
       source: 'startup',
       model: 'claude-sonnet-4-6',
       cwd: fakeProject,

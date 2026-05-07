@@ -8,7 +8,7 @@ const RUN_CJS_PATH = join(__dirname, '..', '..', 'scripts', 'run.cjs');
 const NODE = process.execPath;
 
 /**
- * Regression tests for run.cjs graceful fallback when CLAUDE_PLUGIN_ROOT
+ * Regression tests for run.cjs graceful fallback when CODEBUDDY_PLUGIN_ROOT
  * points to a stale/deleted/broken plugin cache directory.
  *
  * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/1007
@@ -71,13 +71,13 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
     }
   });
 
-  it('exits 0 when target script does not exist (stale CLAUDE_PLUGIN_ROOT)', () => {
+  it('exits 0 when target script does not exist (stale CODEBUDDY_PLUGIN_ROOT)', () => {
     const staleVersion = join(fakeCacheBase, '4.2.14');
     const staleTarget = join(staleVersion, 'scripts', 'persistent-mode.cjs');
 
     // Do NOT create the version directory — simulates deleted cache
     const result = runCjs(staleTarget, {
-      CLAUDE_PLUGIN_ROOT: staleVersion,
+      CODEBUDDY_PLUGIN_ROOT: staleVersion,
     });
 
     // Must exit 0, not propagate MODULE_NOT_FOUND
@@ -142,7 +142,7 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
     const target = join(symlinkVersion, 'scripts', 'test-hook.cjs');
 
     const result = runCjs(target, {
-      CLAUDE_PLUGIN_ROOT: symlinkVersion,
+      CODEBUDDY_PLUGIN_ROOT: symlinkVersion,
     });
 
     expect(result.status).toBe(0);
@@ -158,16 +158,16 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
     const target = join(versionDir, 'scripts', 'test-hook.cjs');
 
     const result = runCjs(target, {
-      CLAUDE_PLUGIN_ROOT: versionDir,
+      CODEBUDDY_PLUGIN_ROOT: versionDir,
     });
 
     expect(result.status).toBe(0);
     expect(readFileSync(markerPath, 'utf-8')).toBe('direct-ok');
   });
 
-  it('exits 0 when no CLAUDE_PLUGIN_ROOT is set and target is missing', () => {
+  it('exits 0 when no CODEBUDDY_PLUGIN_ROOT is set and target is missing', () => {
     const result = runCjs('/nonexistent/path/to/hook.mjs', {
-      CLAUDE_PLUGIN_ROOT: '',
+      CODEBUDDY_PLUGIN_ROOT: '',
     });
 
     expect(result.status).toBe(0);
@@ -179,7 +179,7 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
 
     // Cache base exists but has no version directories
     const result = runCjs(staleTarget, {
-      CLAUDE_PLUGIN_ROOT: staleVersion,
+      CODEBUDDY_PLUGIN_ROOT: staleVersion,
     });
 
     expect(result.status).toBe(0);
@@ -195,7 +195,7 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
     const staleTarget = join(staleVersion, 'scripts', 'test-hook.cjs');
 
     const result = runCjs(staleTarget, {
-      CLAUDE_PLUGIN_ROOT: staleVersion,
+      CODEBUDDY_PLUGIN_ROOT: staleVersion,
     });
 
     // No version has test-hook.cjs, so exit 0 gracefully
@@ -224,7 +224,7 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
               hooks: [
                 {
                   type: 'command',
-                  command: 'node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs "$CLAUDE_PLUGIN_ROOT"/scripts/slow-stop-hook.cjs',
+                  command: 'node "$CODEBUDDY_PLUGIN_ROOT"/scripts/run.cjs "$CODEBUDDY_PLUGIN_ROOT"/scripts/slow-stop-hook.cjs',
                   timeout: 1,
                 },
               ],
@@ -236,7 +236,7 @@ describe('run.cjs — graceful fallback for stale plugin paths', () => {
 
     const startedAt = Date.now();
     const result = runCjs(slowTarget, {
-      CLAUDE_PLUGIN_ROOT: pluginRoot,
+      CODEBUDDY_PLUGIN_ROOT: pluginRoot,
     });
     const elapsedMs = Date.now() - startedAt;
 

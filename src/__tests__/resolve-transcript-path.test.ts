@@ -48,14 +48,14 @@ describe('resolveTranscriptPath', () => {
   });
 
   it('resolves worktree-encoded transcript path to original project path', () => {
-    // Simulate: ~/.claude/projects/-Users-user-project/<session>.jsonl (real)
+    // Simulate: ~/.codebuddy/projects/-Users-user-project/<session>.jsonl (real)
     const projectDir = join(tempDir, 'projects', '-Users-user-project');
     mkdirSync(projectDir, { recursive: true });
     const realTranscript = join(projectDir, 'abc123.jsonl');
     writeFileSync(realTranscript, '{}');
 
     // Worktree-encoded path that doesn't exist:
-    // ~/.claude/projects/-Users-user-project--claude-worktrees-refactor/<session>.jsonl
+    // ~/.codebuddy/projects/-Users-user-project--claude-worktrees-refactor/<session>.jsonl
     const worktreeDir = join(tempDir, 'projects', '-Users-user-project--claude-worktrees-refactor');
     const worktreePath = join(worktreeDir, 'abc123.jsonl');
 
@@ -129,8 +129,8 @@ describe('resolveTranscriptPath', () => {
     let origClaudeConfigDir: string | undefined;
 
     beforeEach(() => {
-      // Save and override CLAUDE_CONFIG_DIR so Strategy 3 finds our fake projects dir
-      origClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+      // Save and override CODEBUDDY_CONFIG_DIR so Strategy 3 finds our fake projects dir
+      origClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
 
       // Create a real git repo with a linked worktree
       mainRepoDir = join(tempDir, 'main-repo');
@@ -153,9 +153,9 @@ describe('resolveTranscriptPath', () => {
         stdio: 'pipe',
       });
 
-      // Simulate ~/.claude/projects/ with a transcript at the main repo's encoded path
+      // Simulate ~/.codebuddy/projects/ with a transcript at the main repo's encoded path
       fakeClaudeDir = join(tempDir, 'fake-claude');
-      process.env.CLAUDE_CONFIG_DIR = fakeClaudeDir;
+      process.env.CODEBUDDY_CONFIG_DIR = fakeClaudeDir;
       const encodedMain = mainRepoDir.replace(/[/\\]/g, '-');
       const projectDir = join(fakeClaudeDir, 'projects', encodedMain);
       mkdirSync(projectDir, { recursive: true });
@@ -163,11 +163,11 @@ describe('resolveTranscriptPath', () => {
     });
 
     afterEach(() => {
-      // Restore CLAUDE_CONFIG_DIR
+      // Restore CODEBUDDY_CONFIG_DIR
       if (origClaudeConfigDir === undefined) {
-        delete process.env.CLAUDE_CONFIG_DIR;
+        delete process.env.CODEBUDDY_CONFIG_DIR;
       } else {
-        process.env.CLAUDE_CONFIG_DIR = origClaudeConfigDir;
+        process.env.CODEBUDDY_CONFIG_DIR = origClaudeConfigDir;
       }
 
       // Clean up worktree before the main afterEach removes tempDir

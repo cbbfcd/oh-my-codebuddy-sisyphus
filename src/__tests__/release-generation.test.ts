@@ -56,11 +56,11 @@ describe('release generation', () => {
     );
 
     expect(contributors).toEqual([
+      'anthropic-ai',
       'blue-int',
       'DdangJin',
       'EthanJStark',
       'tjsingleton',
-      'anthropic-ai',
     ]);
   });
 

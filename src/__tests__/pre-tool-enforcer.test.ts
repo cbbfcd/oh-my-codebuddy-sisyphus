@@ -30,7 +30,7 @@ function runPreToolEnforcerWithEnv(
     env: {
       ...process.env,
       HOME: homeDir,
-      CLAUDE_CONFIG_DIR: join(homeDir, '.claude'),
+      CODEBUDDY_CONFIG_DIR: join(homeDir, '.codebuddy'),
       NODE_ENV: 'test',
       DISABLE_OMC: '',
       OMC_SKIP_HOOKS: '',

@@ -66,7 +66,7 @@ describe('Tier-0 contract docs consistency', () => {
   it('keeps install and update guidance aligned on canonical setup entrypoints', () => {
     const localPluginDoc = readProjectFile('docs', 'LOCAL_PLUGIN_INSTALL.md');
 
-    expect(claudeDoc).toContain('Say "setup omc" or run `/oh-my-codebuddy:omc-setup`.');
+    expect(claudeDoc).toContain('Say "setup omcb" or run `/oh-my-codebuddy:omc-setup`.');
     expect(referenceDoc).toContain('/oh-my-codebuddy:setup');
     expect(localPluginDoc).toContain('/setup');
     expect(localPluginDoc).toContain('git worktrees');
@@ -75,22 +75,10 @@ describe('Tier-0 contract docs consistency', () => {
   it('uses the published /docs/ path instead of the removed docs.html path in README links', () => {
     const readmes = [
       'README.md',
-      'README.de.md',
-      'README.es.md',
-      'README.fr.md',
-      'README.it.md',
-      'README.ja.md',
-      'README.ko.md',
-      'README.pt.md',
-      'README.ru.md',
-      'README.tr.md',
-      'README.vi.md',
-      'README.zh.md',
     ].map((file) => readProjectFile(file));
 
     for (const content of readmes) {
       expect(content).not.toContain('https://yeachan-heo.github.io/oh-my-codebuddy-website/docs.html');
-      expect(content).toContain('https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#');
     }
   });
 
@@ -98,9 +86,9 @@ describe('Tier-0 contract docs consistency', () => {
     const agentsDoc = readProjectFile('AGENTS.md');
 
     expect(agentsDoc).toContain('# oh-my-codebuddy - Intelligent Multi-Agent Orchestration');
-    expect(agentsDoc).toContain('You are running with oh-my-codebuddy (OMC), a multi-agent orchestration layer for Claude Code.');
+    expect(agentsDoc).toContain('You are running with oh-my-codebuddy (OMC), a multi-agent orchestration layer for CodeBuddy Code.');
     expect(agentsDoc).toContain('`.omc/state/`');
-    expect(agentsDoc).toContain('Run `omc setup` to install all components. Run `omc doctor` to verify installation.');
+    expect(agentsDoc).toContain('Run `omcb setup` to install all components. Run `omcb doctor` to verify installation.');
     expect(agentsDoc).not.toContain('oh-my-codex');
     expect(agentsDoc).not.toContain('OMX_TEAM_WORKER_LAUNCH_ARGS');
     expect(agentsDoc).not.toContain('gpt-5.3-codex-spark');

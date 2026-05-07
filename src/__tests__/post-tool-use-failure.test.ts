@@ -14,7 +14,7 @@ function runHook(input: Record<string, unknown>) {
     encoding: 'utf-8',
     env: {
       ...process.env,
-      CLAUDE_PLUGIN_ROOT: REPO_ROOT,
+      CODEBUDDY_PLUGIN_ROOT: REPO_ROOT,
       NODE_ENV: 'test',
     },
     timeout: 15000,

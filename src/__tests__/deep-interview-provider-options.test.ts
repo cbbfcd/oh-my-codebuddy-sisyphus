@@ -14,7 +14,7 @@ import { clearSkillsCache, getBuiltinSkill } from '../features/builtin-skills/sk
 import { renderSkillRuntimeGuidance } from '../features/builtin-skills/runtime-guidance.js';
 
 describe('deep-interview provider-aware execution recommendations', () => {
-  const originalPluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+  const originalPluginRoot = process.env.CODEBUDDY_PLUGIN_ROOT;
   const originalPath = process.env.PATH;
 
   beforeEach(() => {
@@ -22,9 +22,9 @@ describe('deep-interview provider-aware execution recommendations', () => {
     availability.codex = false;
     availability.gemini = false;
     if (originalPluginRoot === undefined) {
-      delete process.env.CLAUDE_PLUGIN_ROOT;
+      delete process.env.CODEBUDDY_PLUGIN_ROOT;
     } else {
-      process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
+      process.env.CODEBUDDY_PLUGIN_ROOT = originalPluginRoot;
     }
     if (originalPath === undefined) {
       delete process.env.PATH;
@@ -36,9 +36,9 @@ describe('deep-interview provider-aware execution recommendations', () => {
 
   afterEach(() => {
     if (originalPluginRoot === undefined) {
-      delete process.env.CLAUDE_PLUGIN_ROOT;
+      delete process.env.CODEBUDDY_PLUGIN_ROOT;
     } else {
-      process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
+      process.env.CODEBUDDY_PLUGIN_ROOT = originalPluginRoot;
     }
     if (originalPath === undefined) {
       delete process.env.PATH;

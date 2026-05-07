@@ -10,10 +10,10 @@ const NODE = process.execPath;
 /**
  * Integration tests for the plugin cache cleanup logic in session-start.mjs.
  *
- * The script's cleanup block scans ~/.claude/plugins/cache/omc/oh-my-codebuddy/
+ * The script's cleanup block scans ~/.codebuddy/plugins/cache/omc/oh-my-codebuddy/
  * for version directories, keeps the latest 2 real directories, and replaces
  * older versions with symlinks pointing to the latest version. This prevents
- * "Cannot find module" errors when a running session's CLAUDE_PLUGIN_ROOT
+ * "Cannot find module" errors when a running session's CODEBUDDY_PLUGIN_ROOT
  * still points to an old (now-removed) version directory.
  */
 describe('session-start.mjs — plugin cache cleanup uses symlinks', () => {
@@ -25,7 +25,7 @@ describe('session-start.mjs — plugin cache cleanup uses symlinks', () => {
   beforeEach(() => {
     tmpDir = mkdtempSync(join(tmpdir(), 'omc-cache-test-'));
     fakeHome = join(tmpDir, 'home');
-    fakeCacheBase = join(fakeHome, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    fakeCacheBase = join(fakeHome, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     fakeProject = join(tmpDir, 'project');
 
     // Create fake project directory with .omc
@@ -63,8 +63,8 @@ describe('session-start.mjs — plugin cache cleanup uses symlinks', () => {
           ...process.env,
           HOME: fakeHome,
           USERPROFILE: fakeHome, // Windows compat
-          CLAUDE_CONFIG_DIR: join(fakeHome, '.claude'), // Override to use fake home
-          CLAUDE_PLUGIN_ROOT: join(fakeCacheBase, '4.4.3'),
+          CODEBUDDY_CONFIG_DIR: join(fakeHome, '.codebuddy'), // Override to use fake home
+          CODEBUDDY_PLUGIN_ROOT: join(fakeCacheBase, '4.4.3'),
           ...env,
         },
         timeout: 15000,

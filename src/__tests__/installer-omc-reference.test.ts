@@ -45,7 +45,7 @@ vi.mock('fs', async () => {
 
 async function loadInstallerWithEnv(claudeConfigDir: string, homeDir: string) {
   vi.resetModules();
-  process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+  process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
   process.env.HOME = homeDir;
   return import('../installer/index.js');
 }
@@ -91,19 +91,19 @@ describe('installer bundled + standalone skill sync', () => {
   beforeEach(() => {
     tempRoot = mkdtempSync(join(tmpdir(), 'omc-installer-omc-reference-'));
     homeDir = join(tempRoot, 'home');
-    claudeConfigDir = join(homeDir, '.claude');
+    claudeConfigDir = join(homeDir, '.codebuddy');
     mkdirSync(homeDir, { recursive: true });
     mkdirSync(claudeConfigDir, { recursive: true });
 
-    originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+    originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
     originalHome = process.env.HOME;
   });
 
   afterEach(() => {
     if (originalClaudeConfigDir === undefined) {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
     }
 
     if (originalHome === undefined) {
@@ -116,7 +116,7 @@ describe('installer bundled + standalone skill sync', () => {
     vi.resetModules();
   });
 
-  it('installs standalone slash skills into ~/.claude/skills during legacy install', async () => {
+  it('installs standalone slash skills into ~/.codebuddy/skills during legacy install', async () => {
     const installer = await loadInstallerWithEnv(claudeConfigDir, homeDir);
     const result = installer.install({
       skipClaudeCheck: true,

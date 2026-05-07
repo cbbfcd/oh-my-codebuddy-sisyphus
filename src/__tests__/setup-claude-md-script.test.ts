@@ -83,7 +83,7 @@ Use the real docs file.
 
     expect(result.status).toBe(0);
 
-    const installedPath = join(fixture.projectRoot, '.claude', 'CLAUDE.md');
+    const installedPath = join(fixture.projectRoot, '.codebuddy', 'CLAUDE.md');
     expect(existsSync(installedPath)).toBe(true);
 
     const installed = readFileSync(installedPath, 'utf-8');
@@ -92,7 +92,7 @@ Use the real docs file.
     expect(installed).toContain('<!-- OMC:VERSION:9.9.9 -->');
     expect(installed).toContain('# Canonical CLAUDE');
 
-    const installedSkillPath = join(fixture.projectRoot, '.claude', 'skills', 'omc-reference', 'SKILL.md');
+    const installedSkillPath = join(fixture.projectRoot, '.codebuddy', 'skills', 'omc-reference', 'SKILL.md');
     expect(existsSync(installedSkillPath)).toBe(true);
     expect(readFileSync(installedSkillPath, 'utf-8')).toContain('# Test OMC Reference');
   });
@@ -114,7 +114,7 @@ This is a summarized CLAUDE.md without markers.
 
     expect(result.status).not.toBe(0);
     expect(`${result.stdout}\n${result.stderr}`).toContain('missing required OMC markers');
-    expect(existsSync(join(fixture.projectRoot, '.claude', 'CLAUDE.md'))).toBe(false);
+    expect(existsSync(join(fixture.projectRoot, '.codebuddy', 'CLAUDE.md'))).toBe(false);
   });
 
   it('adds a local git exclude block for .omc artifacts while preserving .omc/skills', () => {
@@ -307,7 +307,7 @@ Use the real docs file.
     expect(excludeContents.match(/# BEGIN OMC local artifacts/g)).toHaveLength(1);
   });
 
-  it('uses CLAUDE_CONFIG_DIR for global setup targets and plugin verification', () => {
+  it('uses CODEBUDDY_CONFIG_DIR for global setup targets and plugin verification', () => {
     const fixture = createPluginFixture(`<!-- OMC:START -->
 <!-- OMC:VERSION:9.9.9 -->
 
@@ -326,7 +326,7 @@ Use the real docs file.
       env: {
         ...process.env,
         HOME: fixture.homeRoot,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
       },
       encoding: 'utf-8',
     });
@@ -357,7 +357,7 @@ Use the real docs file.
       env: {
         ...process.env,
         HOME: fixture.homeRoot,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
       },
       encoding: 'utf-8',
     });
@@ -391,7 +391,7 @@ Use the real docs file.
       env: {
         ...process.env,
         HOME: fixture.homeRoot,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
       },
       encoding: 'utf-8',
     });
@@ -431,7 +431,7 @@ Use the real docs file.
     const env = {
       ...process.env,
       HOME: fixture.homeRoot,
-      CLAUDE_CONFIG_DIR: configDir,
+      CODEBUDDY_CONFIG_DIR: configDir,
     };
 
     const first = spawnSync('bash', [fixture.scriptPath, 'global', 'preserve'], {
@@ -471,7 +471,7 @@ Use the real docs file.
     const env = {
       ...process.env,
       HOME: fixture.homeRoot,
-      CLAUDE_CONFIG_DIR: configDir,
+      CODEBUDDY_CONFIG_DIR: configDir,
     };
 
     // Run 1: preserve mode — creates companion + import block
@@ -529,7 +529,7 @@ Use the real docs file.
       env: {
         ...process.env,
         HOME: fixture.homeRoot,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
       },
       encoding: 'utf-8',
     });
@@ -540,12 +540,12 @@ Use the real docs file.
   });
 });
 
-describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
+describe('setup-claude-md.sh stale CODEBUDDY_PLUGIN_ROOT resolution', () => {
   it('does not prefer a newer cache directory when it is missing required plugin assets', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-invalid-newer-cache-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newerInvalid = join(cacheBase, '4.9.0');
     const projectRoot = join(root, 'project');
@@ -564,9 +564,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     // Newer directory exists but is missing docs/CLAUDE.md
     mkdirSync(newerInvalid, { recursive: true });
 
-    mkdirSync(join(homeRoot, '.claude', 'plugins'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy', 'plugins'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'plugins', 'installed_plugins.json'),
+      join(homeRoot, '.codebuddy', 'plugins', 'installed_plugins.json'),
       JSON.stringify({
         'oh-my-codebuddy@omc': [
           {
@@ -578,22 +578,22 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     mkdirSync(projectRoot, { recursive: true });
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
-    writeFileSync(join(homeRoot, '.claude', 'settings.json'), JSON.stringify({ plugins: ['oh-my-codebuddy'] }));
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
+    writeFileSync(join(homeRoot, '.codebuddy', 'settings.json'), JSON.stringify({ plugins: ['oh-my-codebuddy'] }));
 
     const result = spawnSync('bash', [join(oldVersion, 'scripts', 'setup-claude-md.sh'), 'local'], {
       cwd: projectRoot,
       env: {
         ...process.env,
         HOME: homeRoot,
-        CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+        CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
       },
       encoding: 'utf-8',
     });
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     expect(installed).toContain('<!-- OMC:VERSION:4.8.2 -->');
     expect(installed).toContain('# Old Version');
   });
@@ -602,7 +602,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-ignore-non-semver-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newVersion = join(cacheBase, '4.9.0');
     const suffixedInvalid = join(cacheBase, '4.10.0.tmp');
@@ -623,9 +623,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     mkdirSync(suffixedInvalid, { recursive: true });
     writeFileSync(join(suffixedInvalid, 'junk.txt'), 'not a plugin root');
 
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
     mkdirSync(projectRoot, { recursive: true });
-    writeFileSync(join(homeRoot, '.claude', 'settings.json'), JSON.stringify({ plugins: ['oh-my-codebuddy'] }));
+    writeFileSync(join(homeRoot, '.codebuddy', 'settings.json'), JSON.stringify({ plugins: ['oh-my-codebuddy'] }));
 
     // No installed_plugins.json => fallback scan path
     const result = spawnSync('bash', [join(oldVersion, 'scripts', 'setup-claude-md.sh'), 'local'], {
@@ -633,14 +633,14 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
       env: {
         ...process.env,
         HOME: homeRoot,
-        CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+        CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
       },
       encoding: 'utf-8',
     });
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     expect(installed).toContain('<!-- OMC:VERSION:4.9.0 -->');
     expect(installed).not.toContain('4.10.0.tmp');
   });
@@ -649,7 +649,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-json-old-version-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newVersion = join(cacheBase, '4.9.0');
     const projectRoot = join(root, 'project');
@@ -674,9 +674,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     // installed_plugins.json still points at the old but existing path
-    mkdirSync(join(homeRoot, '.claude', 'plugins'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy', 'plugins'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'plugins', 'installed_plugins.json'),
+      join(homeRoot, '.codebuddy', 'plugins', 'installed_plugins.json'),
       JSON.stringify({
         'oh-my-codebuddy@omc': [
           {
@@ -688,9 +688,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     mkdirSync(projectRoot, { recursive: true });
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'settings.json'),
+      join(homeRoot, '.codebuddy', 'settings.json'),
       JSON.stringify({ plugins: ['oh-my-codebuddy'] }),
     );
 
@@ -702,7 +702,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
         env: {
           ...process.env,
           HOME: homeRoot,
-          CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+          CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
         },
         encoding: 'utf-8',
       },
@@ -710,7 +710,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     expect(installed).toContain('<!-- OMC:VERSION:4.9.0 -->');
     expect(installed).toContain('# New Version');
     expect(installed).not.toContain('<!-- OMC:VERSION:4.8.2 -->');
@@ -721,7 +721,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-root-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newVersion = join(cacheBase, '4.9.0');
     const projectRoot = join(root, 'project');
@@ -746,9 +746,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     // Create installed_plugins.json pointing to the new version
-    mkdirSync(join(homeRoot, '.claude', 'plugins'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy', 'plugins'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'plugins', 'installed_plugins.json'),
+      join(homeRoot, '.codebuddy', 'plugins', 'installed_plugins.json'),
       JSON.stringify({
         'oh-my-codebuddy@omc': [
           {
@@ -761,9 +761,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
 
     // Create project dir and settings.json (needed for plugin verification)
     mkdirSync(projectRoot, { recursive: true });
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'settings.json'),
+      join(homeRoot, '.codebuddy', 'settings.json'),
       JSON.stringify({ plugins: ['oh-my-codebuddy'] }),
     );
 
@@ -776,7 +776,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
         env: {
           ...process.env,
           HOME: homeRoot,
-          CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+          CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
         },
         encoding: 'utf-8',
       },
@@ -784,7 +784,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     // Should contain the NEW version, not the old one
     expect(installed).toContain('<!-- OMC:VERSION:4.9.0 -->');
     expect(installed).toContain('# New Version');
@@ -795,7 +795,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-wrapped-root-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newVersion = join(cacheBase, '4.9.0');
     const projectRoot = join(root, 'project');
@@ -817,9 +817,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
       `<!-- OMC:START -->\n<!-- OMC:VERSION:4.9.0 -->\n\n# New Version\n<!-- OMC:END -->\n`,
     );
 
-    mkdirSync(join(homeRoot, '.claude', 'plugins'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy', 'plugins'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'plugins', 'installed_plugins.json'),
+      join(homeRoot, '.codebuddy', 'plugins', 'installed_plugins.json'),
       JSON.stringify({
         plugins: {
           'oh-my-codebuddy@omc': [
@@ -833,9 +833,9 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     mkdirSync(projectRoot, { recursive: true });
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'settings.json'),
+      join(homeRoot, '.codebuddy', 'settings.json'),
       JSON.stringify({ plugins: ['oh-my-codebuddy'] }),
     );
 
@@ -847,7 +847,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
         env: {
           ...process.env,
           HOME: homeRoot,
-          CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+          CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
         },
         encoding: 'utf-8',
       },
@@ -855,7 +855,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     expect(installed).toContain('<!-- OMC:VERSION:4.9.0 -->');
     expect(installed).toContain('# New Version');
     expect(installed).not.toContain('<!-- OMC:VERSION:4.8.2 -->');
@@ -865,7 +865,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-stale-fallback-'));
     tempRoots.push(root);
 
-    const cacheBase = join(root, '.claude', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
+    const cacheBase = join(root, '.codebuddy', 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     const oldVersion = join(cacheBase, '4.8.2');
     const newVersion = join(cacheBase, '4.9.0');
     const projectRoot = join(root, 'project');
@@ -890,10 +890,10 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
     );
 
     // No installed_plugins.json — fallback to cache scan
-    mkdirSync(join(homeRoot, '.claude'), { recursive: true });
+    mkdirSync(join(homeRoot, '.codebuddy'), { recursive: true });
     mkdirSync(projectRoot, { recursive: true });
     writeFileSync(
-      join(homeRoot, '.claude', 'settings.json'),
+      join(homeRoot, '.codebuddy', 'settings.json'),
       JSON.stringify({ plugins: ['oh-my-codebuddy'] }),
     );
 
@@ -905,7 +905,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
         env: {
           ...process.env,
           HOME: homeRoot,
-          CLAUDE_CONFIG_DIR: join(homeRoot, '.claude'),
+          CODEBUDDY_CONFIG_DIR: join(homeRoot, '.codebuddy'),
         },
         encoding: 'utf-8',
       },
@@ -913,7 +913,7 @@ describe('setup-claude-md.sh stale CLAUDE_PLUGIN_ROOT resolution', () => {
 
     expect(result.status).toBe(0);
 
-    const installed = readFileSync(join(projectRoot, '.claude', 'CLAUDE.md'), 'utf-8');
+    const installed = readFileSync(join(projectRoot, '.codebuddy', 'CLAUDE.md'), 'utf-8');
     expect(installed).toContain('<!-- OMC:VERSION:4.9.0 -->');
     expect(installed).not.toContain('<!-- OMC:VERSION:4.8.2 -->');
   });

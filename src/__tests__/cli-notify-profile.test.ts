@@ -21,7 +21,7 @@ function runCli(args: string[], homeDir: string): CliRunResult {
     env: {
       ...process.env,
       HOME: homeDir,
-      CLAUDE_CONFIG_DIR: join(homeDir, '.claude'),
+      CODEBUDDY_CONFIG_DIR: join(homeDir, '.codebuddy'),
     },
     encoding: 'utf-8',
   });
@@ -40,8 +40,8 @@ function readConfig(configPath: string) {
 describe('omc config-stop-callback --profile', () => {
   it('creates a discord profile and stores it in notificationProfiles', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({ silentAutoUpdate: false }, null, 2));
 
     const result = runCli([
@@ -64,8 +64,8 @@ describe('omc config-stop-callback --profile', () => {
 
   it('creates a telegram profile', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({ silentAutoUpdate: false }, null, 2));
 
     const result = runCli([
@@ -86,8 +86,8 @@ describe('omc config-stop-callback --profile', () => {
 
   it('creates a discord-bot profile with --channel-id', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({ silentAutoUpdate: false }, null, 2));
 
     const result = runCli([
@@ -108,8 +108,8 @@ describe('omc config-stop-callback --profile', () => {
 
   it('adds multiple platforms to the same profile', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({ silentAutoUpdate: false }, null, 2));
 
     // Add discord first
@@ -136,8 +136,8 @@ describe('omc config-stop-callback --profile', () => {
 
   it('does not affect legacy stopHookCallbacks when using --profile', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({
       silentAutoUpdate: false,
       stopHookCallbacks: {
@@ -161,8 +161,8 @@ describe('omc config-stop-callback --profile', () => {
 
   it('shows profile config with --show', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({
       silentAutoUpdate: false,
       notificationProfiles: {
@@ -187,8 +187,8 @@ describe('omc config-stop-callback --profile', () => {
 describe('omc config-notify-profile', () => {
   it('lists all profiles', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({
       silentAutoUpdate: false,
       notificationProfiles: {
@@ -205,8 +205,8 @@ describe('omc config-notify-profile', () => {
 
   it('shows a specific profile', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({
       silentAutoUpdate: false,
       notificationProfiles: {
@@ -221,8 +221,8 @@ describe('omc config-notify-profile', () => {
 
   it('deletes a profile', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({
       silentAutoUpdate: false,
       notificationProfiles: {
@@ -242,8 +242,8 @@ describe('omc config-notify-profile', () => {
 
   it('shows helpful message when no profiles exist', () => {
     const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-profile-'));
-    const configPath = join(homeDir, '.claude', '.omc-config.json');
-    mkdirSync(join(homeDir, '.claude'), { recursive: true });
+    const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+    mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
     writeFileSync(configPath, JSON.stringify({ silentAutoUpdate: false }, null, 2));
 
     const result = runCli(['config-notify-profile', '--list'], homeDir);

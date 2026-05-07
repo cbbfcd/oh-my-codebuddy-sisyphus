@@ -344,7 +344,7 @@ describe('omc ask command', () => {
     }
   });
 
-  it('allows codex ask inside a Claude Code session', () => {
+  it('allows codex ask inside a CodeBuddy Code session', () => {
     const wd = mkdtempSync(join(tmpdir(), 'omc-ask-cli-codex-nested-'));
     try {
       const stubPath = writeAdvisorStub(wd);
@@ -374,7 +374,7 @@ describe('omc ask command', () => {
     }
   });
 
-  it('allows gemini ask inside a Claude Code session', () => {
+  it('allows gemini ask inside a CodeBuddy Code session', () => {
     const wd = mkdtempSync(join(tmpdir(), 'omc-ask-cli-gemini-nested-'));
     try {
       const stubPath = writeAdvisorStub(wd);

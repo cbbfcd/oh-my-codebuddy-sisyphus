@@ -9,16 +9,16 @@ describe('install() user-skill compatibility shims', () => {
 
   beforeEach(() => {
     tempDir = mkdtempSync(join(tmpdir(), 'omc-installer-user-skill-compat-'));
-    originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-    process.env.CLAUDE_CONFIG_DIR = tempDir;
+    originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+    process.env.CODEBUDDY_CONFIG_DIR = tempDir;
     vi.resetModules();
   });
 
   afterEach(() => {
     if (originalConfigDir === undefined) {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
     }
     rmSync(tempDir, { recursive: true, force: true });
     vi.resetModules();

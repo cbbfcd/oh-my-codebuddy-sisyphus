@@ -54,7 +54,6 @@ describe('Consolidation contracts', () => {
       const names = listBuiltinSkillNames();
 
       expect(names).not.toContain('analyze');
-      expect(names).not.toContain('build-fix');
       expect(names).not.toContain('tdd');
       expect(names).not.toContain('code-review');
       expect(names).not.toContain('omc-security-review');

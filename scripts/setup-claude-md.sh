@@ -128,9 +128,9 @@ EOF
 # Determine target path
 CONFIG_DIR="$(resolve_claude_config_dir)"
 if [ "$MODE" = "local" ]; then
-  mkdir -p .claude/skills/omc-reference
-  TARGET_PATH=".claude/CLAUDE.md"
-  SKILL_TARGET_PATH=".claude/skills/omc-reference/SKILL.md"
+  mkdir -p .codebuddy/skills/omc-reference
+  TARGET_PATH=".codebuddy/CLAUDE.md"
+  SKILL_TARGET_PATH=".codebuddy/skills/omc-reference/SKILL.md"
 elif [ "$MODE" = "global" ]; then
   mkdir -p "$CONFIG_DIR/skills/omc-reference"
   TARGET_PATH="$CONFIG_DIR/CLAUDE.md"

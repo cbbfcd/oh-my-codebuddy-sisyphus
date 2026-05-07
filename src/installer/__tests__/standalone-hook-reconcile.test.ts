@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+const originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
 const originalPluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
 const originalHome = process.env.HOME;
 
@@ -21,7 +21,7 @@ describe('install() standalone hook reconciliation', () => {
     testHomeDir = mkdtempSync(join(tmpdir(), 'omc-home-'));
     mkdirSync(testHomeDir, { recursive: true });
     writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# test home claude');
-    process.env.CLAUDE_CONFIG_DIR = testClaudeDir;
+    process.env.CODEBUDDY_CONFIG_DIR = testClaudeDir;
     process.env.HOME = testHomeDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;
   });
@@ -30,9 +30,9 @@ describe('install() standalone hook reconciliation', () => {
     rmSync(testClaudeDir, { recursive: true, force: true });
     rmSync(testHomeDir, { recursive: true, force: true });
     if (originalClaudeConfigDir !== undefined) {
-      process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
     } else {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     }
     if (originalPluginRoot !== undefined) {
       process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
@@ -78,17 +78,17 @@ describe('install() standalone hook reconciliation', () => {
       'const { getClaudeConfigDir } = await import(pathToFileURL(join(__dirname, "lib", "config-dir.mjs")).href);',
     );
     expect(readFileSync(join(testClaudeDir, 'hud', 'lib', 'config-dir.mjs'), 'utf-8')).toContain(
-      'export function getClaudeConfigDir()',
+      'export function getCodebuddyConfigDir()',
     );
     expect(readFileSync(join(testClaudeDir, 'hooks', 'lib', 'config-dir.mjs'), 'utf-8')).toContain(
-      'export function getClaudeConfigDir()',
+      'export function getCodebuddyConfigDir()',
     );
     expect(readFileSync(join(testClaudeDir, 'hooks', 'keyword-detector.mjs'), 'utf-8')).toContain('Ralph keywords');
     expect(readFileSync(join(testClaudeDir, 'hooks', 'pre-tool-use.mjs'), 'utf-8')).toContain('PreToolUse');
     expect(readFileSync(join(testClaudeDir, 'hooks', 'code-simplifier.mjs'), 'utf-8')).toContain('Code Simplifier');
   });
 
-  it('preserves non-OMC ~/.claude/hooks commands while adding standalone OMC hooks', async () => {
+  it('preserves non-OMC ~/.codebuddy/hooks commands while adding standalone OMC hooks', async () => {
     const settingsPath = join(testClaudeDir, 'settings.json');
     mkdirSync(testClaudeDir, { recursive: true });
     writeFileSync(settingsPath, JSON.stringify({
@@ -98,7 +98,7 @@ describe('install() standalone hook reconciliation', () => {
             hooks: [
               {
                 type: 'command',
-                command: 'node $HOME/.claude/hooks/other-plugin.mjs',
+                command: 'node $HOME/.codebuddy/hooks/other-plugin.mjs',
               },
             ],
           },
@@ -118,7 +118,7 @@ describe('install() standalone hook reconciliation', () => {
     const commands = writtenSettings.hooks.UserPromptSubmit.map(group => group.hooks[0]?.command);
 
     expect(result.success).toBe(true);
-    expect(commands).toContain('node $HOME/.claude/hooks/other-plugin.mjs');
+    expect(commands).toContain('node $HOME/.codebuddy/hooks/other-plugin.mjs');
     expect(commands).toContain(
       `node "${join(testClaudeDir, 'hooks', 'keyword-detector.mjs').replace(/\\/g, '/')}"`,
     );
@@ -144,7 +144,7 @@ describe('install() standalone hook reconciliation', () => {
             hooks: [
               {
                 type: 'command',
-                command: 'node $HOME/.claude/hooks/keyword-detector.mjs',
+                command: 'node $HOME/.codebuddy/hooks/keyword-detector.mjs',
               },
             ],
           },
@@ -152,7 +152,7 @@ describe('install() standalone hook reconciliation', () => {
             hooks: [
               {
                 type: 'command',
-                command: 'node $HOME/.claude/hooks/other-plugin.mjs',
+                command: 'node $HOME/.codebuddy/hooks/other-plugin.mjs',
               },
             ],
           },
@@ -175,7 +175,7 @@ describe('install() standalone hook reconciliation', () => {
 
     expect(result.success).toBe(true);
     expect(result.hooksConfigured).toBe(true);
-    expect(commands).toEqual(['node $HOME/.claude/hooks/other-plugin.mjs']);
+    expect(commands).toEqual(['node $HOME/.codebuddy/hooks/other-plugin.mjs']);
     expect(commands).not.toContain(
       `node "${join(testClaudeDir, 'hooks', 'keyword-detector.mjs').replace(/\\/g, '/')}"`,
     );
@@ -195,7 +195,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     testHomeDir = mkdtempSync(join(tmpdir(), 'omc-home-dedup-'));
     mkdirSync(testHomeDir, { recursive: true });
     writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# test home claude');
-    process.env.CLAUDE_CONFIG_DIR = testClaudeDir;
+    process.env.CODEBUDDY_CONFIG_DIR = testClaudeDir;
     process.env.HOME = testHomeDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;
   });
@@ -207,9 +207,9 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     rmSync(testClaudeDir, { recursive: true, force: true });
     rmSync(testHomeDir, { recursive: true, force: true });
     if (originalClaudeConfigDir !== undefined) {
-      process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
     } else {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     }
     if (originalPluginRoot !== undefined) {
       process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
@@ -263,7 +263,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     const { install } = await loadInstaller();
     install({ force: true, skipClaudeCheck: true });
 
-    // Standalone hook scripts should NOT be copied to ~/.claude/hooks/
+    // Standalone hook scripts should NOT be copied to ~/.codebuddy/hooks/
     expect(existsSync(join(testClaudeDir, 'hooks', 'keyword-detector.mjs'))).toBe(false);
     expect(existsSync(join(testClaudeDir, 'hooks', 'pre-tool-use.mjs'))).toBe(false);
     expect(existsSync(join(testClaudeDir, 'hooks', 'session-start.mjs'))).toBe(false);
@@ -294,7 +294,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
           {
             hooks: [{
               type: 'command',
-              command: 'node "$HOME/.claude/hooks/keyword-detector.mjs"',
+              command: 'node "$HOME/.codebuddy/hooks/keyword-detector.mjs"',
             }],
           },
         ],
@@ -302,7 +302,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
           {
             hooks: [{
               type: 'command',
-              command: 'node "$HOME/.claude/hooks/session-start.mjs"',
+              command: 'node "$HOME/.codebuddy/hooks/session-start.mjs"',
             }],
           },
         ],
@@ -336,13 +336,13 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
           {
             hooks: [{
               type: 'command',
-              command: 'node $HOME/.claude/hooks/other-plugin.mjs',
+              command: 'node $HOME/.codebuddy/hooks/other-plugin.mjs',
             }],
           },
           {
             hooks: [{
               type: 'command',
-              command: 'node "$HOME/.claude/hooks/keyword-detector.mjs"',
+              command: 'node "$HOME/.codebuddy/hooks/keyword-detector.mjs"',
             }],
           },
         ],
@@ -358,8 +358,8 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
 
     // Non-OMC hook should be preserved
     const commands = writtenSettings.hooks?.UserPromptSubmit?.map(g => g.hooks[0]?.command) ?? [];
-    expect(commands).toContain('node $HOME/.claude/hooks/other-plugin.mjs');
+    expect(commands).toContain('node $HOME/.codebuddy/hooks/other-plugin.mjs');
     // OMC hook should NOT be re-added
-    expect(commands).not.toContain('node "$HOME/.claude/hooks/keyword-detector.mjs"');
+    expect(commands).not.toContain('node "$HOME/.codebuddy/hooks/keyword-detector.mjs"');
   });
 });

@@ -630,9 +630,9 @@ describe('permission-handler', () => {
 
     describe('heredoc command handling (Issue #608)', () => {
       it('should respect explicit ask rules for git commit heredoc commands', () => {
-        fs.mkdirSync(path.join(testDir, '.claude'), { recursive: true });
+        fs.mkdirSync(path.join(testDir, '.codebuddy'), { recursive: true });
         fs.writeFileSync(
-          path.join(testDir, '.claude', 'settings.local.json'),
+          path.join(testDir, '.codebuddy', 'settings.local.json'),
           JSON.stringify({ permissions: { ask: ['Bash(git commit:*)'] } }, null, 2),
         );
 

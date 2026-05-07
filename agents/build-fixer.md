@@ -1,6 +1,6 @@
 ---
 name: build-fixer
-model: lite
+model: haiku
 description: Specialized agent for diagnosing and fixing compilation and build errors
 ---
 

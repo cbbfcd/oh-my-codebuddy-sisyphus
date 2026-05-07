@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('setup-progress.sh', () => {
-  it('writes setup completion metadata to CLAUDE_CONFIG_DIR', () => {
+  it('writes setup completion metadata to CODEBUDDY_CONFIG_DIR', () => {
     const root = mkdtempSync(join(tmpdir(), 'omc-setup-progress-'));
     tempRoots.push(root);
 

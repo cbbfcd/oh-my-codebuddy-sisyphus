@@ -8,7 +8,8 @@ vi.mock('../team/model-contract.js', () => ({
 }));
 
 const originalCwd = process.cwd();
-const originalPluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+const originalPluginRoot = process.env.CODEBUDDY_PLUGIN_ROOT;
+const originalClaudePluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
 const originalPath = process.env.PATH;
 let tempConfigDir: string;
 let tempProjectDir: string;
@@ -24,7 +25,7 @@ describe('auto slash aliases + skill guidance', () => {
     tempProjectDir = join(tmpdir(), `omc-auto-slash-project-${Date.now()}-${Math.random().toString(36).slice(2)}`);
     mkdirSync(tempConfigDir, { recursive: true });
     mkdirSync(tempProjectDir, { recursive: true });
-    process.env.CLAUDE_CONFIG_DIR = tempConfigDir;
+    process.env.CODEBUDDY_CONFIG_DIR = tempConfigDir;
     process.chdir(tempProjectDir);
   });
 
@@ -32,11 +33,16 @@ describe('auto slash aliases + skill guidance', () => {
     process.chdir(originalCwd);
     rmSync(tempConfigDir, { recursive: true, force: true });
     rmSync(tempProjectDir, { recursive: true, force: true });
-    delete process.env.CLAUDE_CONFIG_DIR;
+    delete process.env.CODEBUDDY_CONFIG_DIR;
     if (originalPluginRoot === undefined) {
+      delete process.env.CODEBUDDY_PLUGIN_ROOT;
+    } else {
+      process.env.CODEBUDDY_PLUGIN_ROOT = originalPluginRoot;
+    }
+    if (originalClaudePluginRoot === undefined) {
       delete process.env.CLAUDE_PLUGIN_ROOT;
     } else {
-      process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
+      process.env.CLAUDE_PLUGIN_ROOT = originalClaudePluginRoot;
     }
     if (originalPath === undefined) {
       delete process.env.PATH;
@@ -299,7 +305,7 @@ Deep interview body`
       .toContain('Skill("oh-my-codebuddy:autoresearch")');
   });
 
-  it('routes /ccg advisor asks through the plugin bridge inside an active Claude session when CLAUDE_PLUGIN_ROOT is set', async () => {
+  it('uses omcb ask invocations for ccg advisor runs inside an active Claude session when CLAUDE_PLUGIN_ROOT is set', async () => {
     process.env.CLAUDE_PLUGIN_ROOT = '/plugin-root';
     process.env.PATH = '';
     process.env.CLAUDECODE = '1';
@@ -313,8 +319,8 @@ Deep interview body`
     });
 
     expect(result.success).toBe(true);
-    expect(result.replacementText).toContain('`node "$CLAUDE_PLUGIN_ROOT"/bridge/cli.cjs ask codex "<codex prompt>"`');
-    expect(result.replacementText).toContain('`node "$CLAUDE_PLUGIN_ROOT"/bridge/cli.cjs ask gemini "<gemini prompt>"`');
+    expect(result.replacementText).toContain('`omcb ask codex "<codex prompt>"`');
+    expect(result.replacementText).toContain('`omcb ask gemini "<gemini prompt>"`');
     expect(result.replacementText).not.toContain('`omc ask codex "<codex prompt>"`');
     expect(result.replacementText).not.toContain('`omc ask gemini "<gemini prompt>"`');
   });

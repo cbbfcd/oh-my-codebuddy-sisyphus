@@ -8,6 +8,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import type * as FsType from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { execFileSync } from 'child_process';
@@ -19,6 +20,31 @@ import {
   HookType,
 } from '../bridge.js';
 import { flushPendingWrites } from '../subagent-tracker/index.js';
+
+// Intercept the Linux boot-id path so that hasDurableAbandonmentEvidence works
+// on non-Linux hosts (e.g. macOS, where /proc/sys/kernel/random/boot_id does not
+// exist).  All other fs operations pass through to the real implementation so that
+// the many tests that use actual temp-dir filesystem state are unaffected.
+// Use vi.hoisted() so the constant is available inside the hoisted vi.mock() factory.
+const { LINUX_BOOT_ID_PATH } = vi.hoisted(() => ({
+  LINUX_BOOT_ID_PATH: '/proc/sys/kernel/random/boot_id',
+}));
+vi.mock('fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof FsType>();
+  return {
+    ...actual,
+    existsSync: (p: FsType.PathLike, ...rest: unknown[]) =>
+      String(p) === LINUX_BOOT_ID_PATH
+        ? true
+        : actual.existsSync(p),
+    readFileSync: (p: unknown, ...rest: unknown[]) => {
+      if (String(p) === LINUX_BOOT_ID_PATH) {
+        return 'test-current-boot-id\n';
+      }
+      return (actual.readFileSync as (...a: unknown[]) => unknown)(p, ...rest);
+    },
+  };
+});
 
 function writeCanonicalTeamState(tempDir: string, sessionId: string, teamName: string, phase: string): void {
   const canonicalTeamDir = join(tempDir, '.omc', 'state', 'team', teamName);
@@ -1189,7 +1215,7 @@ $ ultrawork search the codebase`,
             session_id: priorSessionId,
             started_at: new Date().toISOString(),
             ppid: 999999,
-            transcript_path: join(tempDir, '.claude', 'projects', 'prior.jsonl'),
+            transcript_path: join(tempDir, '.codebuddy', 'projects', 'prior.jsonl'),
             source: 'startup',
             model: 'claude-sonnet-4-6',
           }),

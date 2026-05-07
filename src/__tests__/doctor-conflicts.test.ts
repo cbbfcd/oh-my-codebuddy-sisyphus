@@ -23,13 +23,13 @@ let TEST_PROJECT_CLAUDE_DIR = '';
 function resetTestDirs(): void {
   TEST_CLAUDE_DIR = mkdtempSync(join(tmpdir(), 'omc-doctor-conflicts-claude-'));
   TEST_PROJECT_DIR = mkdtempSync(join(tmpdir(), 'omc-doctor-conflicts-project-'));
-  TEST_PROJECT_CLAUDE_DIR = join(TEST_PROJECT_DIR, '.claude');
+  TEST_PROJECT_CLAUDE_DIR = join(TEST_PROJECT_DIR, '.codebuddy');
   TEST_DIRS.claudeDir = TEST_CLAUDE_DIR;
 }
 
-// Mock getClaudeConfigDir before importing the module under test
+// Mock getCodebuddyConfigDir before importing the module under test
 vi.mock('../utils/config-dir.js', () => ({
-  getClaudeConfigDir: () => TEST_DIRS.claudeDir,
+  getCodebuddyConfigDir: () => TEST_DIRS.claudeDir,
 }));
 
 // Mock builtin skills to return a known list for testing
@@ -63,14 +63,14 @@ describe('doctor-conflicts: hook ownership classification', () => {
     }
     resetTestDirs();
     mkdirSync(TEST_PROJECT_CLAUDE_DIR, { recursive: true });
-    process.env.CLAUDE_CONFIG_DIR = TEST_CLAUDE_DIR;
+    process.env.CODEBUDDY_CONFIG_DIR = TEST_CLAUDE_DIR;
     process.env.CLAUDE_MCP_CONFIG_PATH = join(TEST_CLAUDE_DIR, '..', '.claude.json');
     cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(TEST_PROJECT_DIR);
   });
 
   afterEach(() => {
     cwdSpy?.mockRestore();
-    delete process.env.CLAUDE_CONFIG_DIR;
+    delete process.env.CODEBUDDY_CONFIG_DIR;
     delete process.env.CLAUDE_MCP_CONFIG_PATH;
     delete process.env.OMC_HOME;
     delete process.env.CODEX_HOME;
@@ -88,31 +88,31 @@ describe('doctor-conflicts: hook ownership classification', () => {
         UserPromptSubmit: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/keyword-detector.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/keyword-detector.mjs"',
           }],
         }],
         SessionStart: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/session-start.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/session-start.mjs"',
           }],
         }],
         PreToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"',
           }],
         }],
         PostToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/post-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/post-tool-use.mjs"',
           }],
         }],
         Stop: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/persistent-mode.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/persistent-mode.mjs"',
           }],
         }],
       },
@@ -172,7 +172,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
         PreToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"',
           }],
         }],
         PostToolUse: [{
@@ -271,7 +271,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
         PreToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"',
           }],
         }],
       },
@@ -291,7 +291,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
         PreToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"',
           }],
         }],
       },
@@ -311,7 +311,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
         SessionStart: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/session-start.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/session-start.mjs"',
           }],
         }],
       },
@@ -346,7 +346,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
         PreToolUse: [{
           hooks: [{
             type: 'command',
-            command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"',
+            command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"',
           }],
         }],
       },
@@ -375,14 +375,14 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
     }
     resetTestDirs();
     mkdirSync(TEST_PROJECT_CLAUDE_DIR, { recursive: true });
-    process.env.CLAUDE_CONFIG_DIR = TEST_CLAUDE_DIR;
+    process.env.CODEBUDDY_CONFIG_DIR = TEST_CLAUDE_DIR;
     process.env.CLAUDE_MCP_CONFIG_PATH = join(TEST_CLAUDE_DIR, '..', '.claude.json');
     cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(TEST_PROJECT_DIR);
   });
 
   afterEach(() => {
     cwdSpy?.mockRestore();
-    delete process.env.CLAUDE_CONFIG_DIR;
+    delete process.env.CODEBUDDY_CONFIG_DIR;
     delete process.env.CLAUDE_MCP_CONFIG_PATH;
     delete process.env.OMC_HOME;
     delete process.env.CODEX_HOME;
@@ -539,7 +539,7 @@ describe('doctor-conflicts: config known fields (issue #1499)', () => {
     mkdirSync(TEST_PROJECT_CLAUDE_DIR, { recursive: true });
     mkdirSync(join(TEST_PROJECT_DIR, '.omc'), { recursive: true });
     mkdirSync(join(TEST_PROJECT_DIR, '.codex'), { recursive: true });
-    process.env.CLAUDE_CONFIG_DIR = TEST_CLAUDE_DIR;
+    process.env.CODEBUDDY_CONFIG_DIR = TEST_CLAUDE_DIR;
     process.env.CLAUDE_MCP_CONFIG_PATH = join(TEST_CLAUDE_DIR, '..', '.claude.json');
     process.env.OMC_HOME = join(TEST_PROJECT_DIR, '.omc');
     process.env.CODEX_HOME = join(TEST_PROJECT_DIR, '.codex');
@@ -548,7 +548,7 @@ describe('doctor-conflicts: config known fields (issue #1499)', () => {
 
   afterEach(() => {
     cwdSpy?.mockRestore();
-    delete process.env.CLAUDE_CONFIG_DIR;
+    delete process.env.CODEBUDDY_CONFIG_DIR;
     delete process.env.CLAUDE_MCP_CONFIG_PATH;
     delete process.env.OMC_HOME;
     delete process.env.CODEX_HOME;

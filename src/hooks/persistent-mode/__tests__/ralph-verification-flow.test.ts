@@ -19,15 +19,15 @@ describe('Ralph verification flow', () => {
     mkdirSync(claudeConfigDir, { recursive: true });
     execSync('git init', { cwd: testDir });
 
-    originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
-    process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+    originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+    process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
   });
 
   afterEach(() => {
     if (originalClaudeConfigDir === undefined) {
-      delete process.env.CLAUDE_CONFIG_DIR;
+      delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
     }
 
     if (existsSync(testDir)) {

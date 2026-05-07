@@ -1,6 +1,6 @@
 ---
 name: dependency-expert
-model: lite
+model: haiku
 description: Resolve dependency conflicts, missing packages, and version incompatibilities
 ---
 

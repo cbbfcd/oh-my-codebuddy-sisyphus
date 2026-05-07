@@ -31,7 +31,7 @@ afterEach(() => {
 });
 
 // plugin-setup.mjs rewrites hooks/hooks.json with an absolute node binary path
-// (it always resolves the path relative to its own __dirname, ignoring CLAUDE_CONFIG_DIR).
+// (it always resolves the path relative to its own __dirname, ignoring CODEBUDDY_CONFIG_DIR).
 // Restore the committed version after all tests in this file so sibling test
 // suites (e.g. setup-contracts-regression) don't see a mutated working tree.
 afterAll(() => {
@@ -54,7 +54,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -107,7 +107,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -120,7 +120,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -140,7 +140,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -160,7 +160,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
         OMC_PLUGIN_ROOT: pluginRoot,
         OMC_HUD_DISABLE_NPM_FALLBACK: '1',
@@ -201,7 +201,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -214,7 +214,7 @@ describe('HUD marketplace resolution', () => {
       cwd: outsideCwd,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
         npm_config_prefix: npmPrefix,
       },
@@ -245,7 +245,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',
@@ -265,7 +265,7 @@ describe('HUD marketplace resolution', () => {
       cwd: root,
       env: {
         ...process.env,
-        CLAUDE_CONFIG_DIR: configDir,
+        CODEBUDDY_CONFIG_DIR: configDir,
         HOME: fakeHome,
       },
       stdio: 'pipe',

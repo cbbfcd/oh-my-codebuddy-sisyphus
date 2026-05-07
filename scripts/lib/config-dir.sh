@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 resolve_claude_config_dir() {
-  configured="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+  configured="${CODEBUDDY_CONFIG_DIR:-${CLAUDE_CONFIG_DIR:-$HOME/.codebuddy}}"
   configured="${configured%/}"
   case "$configured" in
     \~)

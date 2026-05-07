@@ -93,7 +93,7 @@ describe('HUD CLI diagnostic (no stdin, no watch mode)', () => {
       getOmcRoot: vi.fn(() => '/tmp/.omc'),
     }));
     vi.doMock('../../utils/config-dir.js', () => ({
-      getClaudeConfigDir: vi.fn(() => overrides.configDir ?? tempConfigDir),
+      getCodebuddyConfigDir: vi.fn(() => overrides.configDir ?? tempConfigDir),
     }));
 
     return import('../../hud/index.js');
@@ -169,7 +169,7 @@ describe('HUD CLI diagnostic (no stdin, no watch mode)', () => {
     writeFileSync(join(tempConfigDir, 'hud', 'omc-hud.mjs'), '// stub');
     writeFileSync(
       join(tempConfigDir, 'settings.json'),
-      JSON.stringify({ statusLine: { type: 'command', command: 'node $HOME/.claude/hud/omc-hud.mjs' } }),
+      JSON.stringify({ statusLine: { type: 'command', command: 'node $HOME/.codebuddy/hud/omc-hud.mjs' } }),
     );
     const hud = await importHudModule();
     await hud.main(false, false);
@@ -194,7 +194,7 @@ describe('HUD CLI diagnostic (no stdin, no watch mode)', () => {
     writeFileSync(join(tempConfigDir, 'hud', 'omc-hud.mjs'), '// stub');
     writeFileSync(
       join(tempConfigDir, 'settings.json'),
-      JSON.stringify({ statusLine: '~/.claude/hud/omc-hud.mjs' }),
+      JSON.stringify({ statusLine: '~/.codebuddy/hud/omc-hud.mjs' }),
     );
     const hud = await importHudModule();
     await hud.main(false, false);

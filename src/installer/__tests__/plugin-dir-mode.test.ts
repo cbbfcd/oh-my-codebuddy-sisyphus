@@ -12,7 +12,7 @@
  *   5. Real OMC plugin enabled → existing skip behavior unchanged (independent
  *      of pluginDirMode).
  *
- * These tests run install() against a throwaway CLAUDE_CONFIG_DIR and assert on
+ * These tests run install() against a throwaway CODEBUDDY_CONFIG_DIR and assert on
  * the resulting filesystem layout. Module imports are reset between tests so
  * each call picks up the isolated config dir.
  */
@@ -33,9 +33,9 @@ async function freshInstaller() {
 beforeEach(() => {
   testDir = mkdtempSync(join(tmpdir(), 'omc-pdm-'));
   // Force a clean, isolated config dir for every test
-  process.env.CLAUDE_CONFIG_DIR = testDir;
+  process.env.CODEBUDDY_CONFIG_DIR = testDir;
   // Avoid plugin auto-detection from the developer's real ~/.claude
-  delete process.env.CLAUDE_PLUGIN_ROOT;
+  delete process.env.CODEBUDDY_PLUGIN_ROOT;
   delete process.env.OMC_PLUGIN_ROOT;
 });
 

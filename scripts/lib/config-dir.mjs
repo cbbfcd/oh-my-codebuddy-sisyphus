@@ -9,12 +9,12 @@ function stripTrailingSep(p) {
   return p === parse(p).root ? p : p.slice(0, -1);
 }
 
-export function getClaudeConfigDir() {
+export function getCodebuddyConfigDir() {
   const home = homedir();
-  const configured = process.env.CLAUDE_CONFIG_DIR?.trim();
+  const configured = (process.env.CODEBUDDY_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR)?.trim();
 
   if (!configured) {
-    return stripTrailingSep(normalize(join(home, '.claude')));
+    return stripTrailingSep(normalize(join(home, '.codebuddy')));
   }
 
   if (configured === '~') {
@@ -27,3 +27,6 @@ export function getClaudeConfigDir() {
 
   return stripTrailingSep(normalize(configured));
 }
+
+/** @deprecated Use getCodebuddyConfigDir instead */
+export const getClaudeConfigDir = getCodebuddyConfigDir;

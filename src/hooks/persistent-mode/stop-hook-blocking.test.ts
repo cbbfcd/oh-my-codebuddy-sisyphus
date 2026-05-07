@@ -45,19 +45,21 @@ function writeSubagentTrackingState(
 }
 
 function writePendingTodo(tempDir: string, content: string): void {
+  const todosData = JSON.stringify({
+    todos: [
+      {
+        content,
+        status: "pending",
+        priority: "high",
+      },
+    ],
+  });
+  // Write to .codebuddy for TS source (migrated path)
+  mkdirSync(join(tempDir, ".codebuddy"), { recursive: true });
+  writeFileSync(join(tempDir, ".codebuddy", "todos.json"), todosData);
+  // Write to .claude for CJS script (not yet migrated)
   mkdirSync(join(tempDir, ".claude"), { recursive: true });
-  writeFileSync(
-    join(tempDir, ".claude", "todos.json"),
-    JSON.stringify({
-      todos: [
-        {
-          content,
-          status: "pending",
-          priority: "high",
-        },
-      ],
-    }),
-  );
+  writeFileSync(join(tempDir, ".claude", "todos.json"), todosData);
 }
 
 function writeLegacyModeState(
@@ -348,9 +350,9 @@ describe("Stop Hook Blocking Contract", () => {
       const sessionId = "ultrawork-stale-awaiting-confirmation";
       const sessionDir = join(tempDir, ".omc", "state", "sessions", sessionId);
       mkdirSync(sessionDir, { recursive: true });
-      mkdirSync(join(tempDir, '.claude'), { recursive: true });
+      mkdirSync(join(tempDir, '.codebuddy'), { recursive: true });
       writeFileSync(
-        join(tempDir, '.claude', 'todos.json'),
+        join(tempDir, '.codebuddy', 'todos.json'),
         JSON.stringify({
           todos: [
             {
@@ -385,9 +387,9 @@ describe("Stop Hook Blocking Contract", () => {
       const sessionId = "ultrawork-fresh-last-checked-still-stale-confirmation";
       const sessionDir = join(tempDir, ".omc", "state", "sessions", sessionId);
       mkdirSync(sessionDir, { recursive: true });
-      mkdirSync(join(tempDir, '.claude'), { recursive: true });
+      mkdirSync(join(tempDir, '.codebuddy'), { recursive: true });
       writeFileSync(
-        join(tempDir, '.claude', 'todos.json'),
+        join(tempDir, '.codebuddy', 'todos.json'),
         JSON.stringify({
           todos: [
             {
@@ -419,9 +421,9 @@ describe("Stop Hook Blocking Contract", () => {
     it("blocks stop for active ultrawork while incomplete work remains (shouldBlock: true -> continue: false)", async () => {
       const sessionId = "test-session-block";
       activateUltrawork("Fix the bug", sessionId, tempDir);
-      mkdirSync(join(tempDir, '.claude'), { recursive: true });
+      mkdirSync(join(tempDir, '.codebuddy'), { recursive: true });
       writeFileSync(
-        join(tempDir, '.claude', 'todos.json'),
+        join(tempDir, '.codebuddy', 'todos.json'),
         JSON.stringify({
           todos: [
             {
@@ -1618,19 +1620,20 @@ describe("Stop Hook Blocking Contract", () => {
         })
       );
 
+      const pendingTodosData = JSON.stringify({
+        todos: [
+          {
+            content: 'keep working',
+            status: 'pending',
+            priority: 'high'
+          }
+        ]
+      });
+      mkdirSync(join(tempDir, '.codebuddy'), { recursive: true });
+      writeFileSync(join(tempDir, '.codebuddy', 'todos.json'), pendingTodosData);
+      // CJS script reads .claude/todos.json (not yet migrated)
       mkdirSync(join(tempDir, '.claude'), { recursive: true });
-      writeFileSync(
-        join(tempDir, '.claude', 'todos.json'),
-        JSON.stringify({
-          todos: [
-            {
-              content: 'keep working',
-              status: 'pending',
-              priority: 'high'
-            }
-          ]
-        }),
-      );
+      writeFileSync(join(tempDir, '.claude', 'todos.json'), pendingTodosData);
 
       const output = runScript({
         directory: tempDir,
