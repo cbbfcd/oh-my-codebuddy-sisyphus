@@ -5,7 +5,7 @@ import { normalizeToCcAlias } from '../features/delegation-enforcer.js';
 import { isBedrock, isVertexAI, isProviderSpecificModelId } from '../config/models.js';
 import { isExternalLLMDisabled } from '../lib/security-config.js';
 
-export type CliAgentType = 'claude' | 'codex' | 'gemini' | 'cursor';
+export type CliAgentType = 'claude' | 'codex' | 'gemini' | 'cursor' | 'codebuddy';
 
 export interface CliAgentContract {
   agentType: CliAgentType;
@@ -252,6 +252,20 @@ const CONTRACTS: Record<CliAgentType, CliAgentContract> = {
       // Minimal flags — cursor-agent owns its own session/auth state.
       // The model is selected interactively inside cursor-agent itself.
       return [...extraFlags];
+    },
+    parseOutput(rawOutput: string): string {
+      return rawOutput.trim();
+    },
+  },
+  codebuddy: {
+    agentType: 'codebuddy',
+    binary: 'codebuddy',
+    installInstructions: 'Install CodeBuddy Code: see https://codebuddy.com/download',
+    supportsPromptMode: true,
+    buildLaunchArgs(model?: string, extraFlags: string[] = []): string[] {
+      const args = ['--dangerously-skip-permissions'];
+      if (model) args.push('--model', model);
+      return [...args, ...extraFlags];
     },
     parseOutput(rawOutput: string): string {
       return rawOutput.trim();

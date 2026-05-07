@@ -15,7 +15,7 @@ import { tmuxExec, tmuxExecAsync, tmuxShell, tmuxCmdAsync } from '../cli/tmux-ut
 
 const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
-const TMUX_SESSION_PREFIX = 'omc-team';
+const TMUX_SESSION_PREFIX = 'omcb-team';
 
 export type TeamMultiplexerContext = 'tmux' | 'cmux' | 'none';
 
@@ -538,7 +538,7 @@ export async function createTeamSession(
 
   if (useDedicatedWindow) {
     const targetSession = sessionAndWindow.split(':')[0] ?? sessionAndWindow;
-    const windowName = `omc-${sanitizeName(teamName)}`.slice(0, 32);
+    const windowName = `omcb-${sanitizeName(teamName)}`.slice(0, 32);
     const newWindowResult = await tmuxExecAsync([
       'new-window', '-d', '-P', '-F', '#S:#I #{pane_id}',
       '-t', targetSession,

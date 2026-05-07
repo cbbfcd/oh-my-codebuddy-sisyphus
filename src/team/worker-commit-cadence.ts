@@ -24,7 +24,7 @@ export interface WorkerCadenceContext {
   teamName: string;
   workerName: string;
   worktreePath: string;
-  agentType: 'claude' | 'codex' | 'gemini' | 'cursor';
+  agentType: 'claude' | 'codex' | 'gemini' | 'cursor' | 'codebuddy';
   enabled: boolean;
 }
 
@@ -311,7 +311,7 @@ export async function installCommitCadence(
     return { method: 'none' };
   }
 
-  if (ctx.agentType === 'claude') {
+  if (ctx.agentType === 'claude' || ctx.agentType === 'codebuddy') {
     await installPostToolUseHook(ctx.worktreePath, ctx.workerName);
     return { method: 'hook' };
   }
@@ -325,7 +325,7 @@ export async function installCommitCadence(
  * For fallback-poll workers the caller is responsible for stopping the poller handle.
  */
 export async function uninstallCommitCadence(ctx: WorkerCadenceContext): Promise<void> {
-  if (ctx.agentType !== 'claude') return;
+  if (ctx.agentType !== 'claude' && ctx.agentType !== 'codebuddy') return;
 
   const settingsPath = join(ctx.worktreePath, '.codebuddy', 'settings.json');
   try {

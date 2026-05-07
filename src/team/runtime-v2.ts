@@ -943,15 +943,15 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
       missingBinaryReasons.push({ agentType: provider, reason });
     }
   }
-  // AC-8: guarantee at least the Claude fallback CLI is resolvable. If every
-  // declared provider is unavailable AND Claude is not resolvable either, the
+  // AC-8: guarantee at least the CodeBuddy fallback CLI is resolvable. If every
+  // declared provider is unavailable AND CodeBuddy is not resolvable either, the
   // caller gets a loud error rather than a silently-broken team.
-  if (!resolvedBinaryPaths.claude) {
+  if (!resolvedBinaryPaths.codebuddy) {
     try {
-      resolvedBinaryPaths.claude = resolveValidatedBinaryPath('claude');
+      resolvedBinaryPaths.codebuddy = resolveValidatedBinaryPath('codebuddy');
     } catch {
       // Keep going — startup will emit warnings below and spawnV2Worker may
-      // still succeed if Claude is resolvable via PATH at exec time.
+      // still succeed if CodeBuddy is resolvable via PATH at exec time.
     }
   }
 
@@ -968,7 +968,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
   );
   for (const { agentType, reason } of missingBinaryReasons) {
     process.stderr.write(
-      `[team/runtime-v2] cli_binary_missing:${agentType}: ${reason} — falling back to claude snapshot (AC-8)\n`,
+      `[team/runtime-v2] cli_binary_missing:${agentType}: ${reason} — falling back to codebuddy snapshot (AC-8)\n`,
     );
     await appendTeamEvent(sanitized, {
       type: 'team_leader_nudge',
@@ -1034,7 +1034,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
     const allocationWorkers: WorkerAllocationInput[] = workerNames.map((name, i) => ({
       name,
       role: config.workerRoles?.[i]
-        ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'claude') as string,
+        ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'codebuddy') as string,
       currentLoad: 0,
     }));
     for (const r of allocateTasksToWorkers(allocationTasks, allocationWorkers)) {
@@ -1046,7 +1046,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
   try {
     for (let i = 0; i < workerNames.length; i++) {
       const wName = workerNames[i];
-      const agentType = (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'claude') as CliAgentType;
+      const agentType = (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'codebuddy') as CliAgentType;
       await ensureWorkerStateDir(sanitized, wName, leaderCwd);
       const overlayPath = await writeWorkerOverlay({
         teamName: sanitized, workerName: wName, agentType,
@@ -1090,7 +1090,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
       name: wName,
       index: i + 1,
       role: config.workerRoles?.[i]
-        ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'claude') as string,
+        ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'codebuddy') as string,
       assigned_tasks: [] as string[],
       working_dir: worktree?.path ?? leaderCwd,
       team_state_root: teamStateRoot(leaderCwd, sanitized),
@@ -1108,7 +1108,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
   const teamConfig: TeamConfig = {
     name: sanitized,
     task: config.tasks.map(t => t.subject).join('; '),
-    agent_type: agentTypes[0] || 'claude',
+    agent_type: agentTypes[0] || 'codebuddy',
     worker_launch_mode: 'interactive',
     policy: DEFAULT_TEAM_TRANSPORT_POLICY,
     governance: DEFAULT_TEAM_GOVERNANCE,
@@ -1211,7 +1211,7 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
     // Route the task through the team's immutable snapshot (Option E).
     // Falls back to the round-robin agentType when the inferred role is
     // outside the canonical vocabulary (preserves pre-patch behavior).
-    const fallbackAgent = (agentTypes[workerIndex % agentTypes.length] ?? agentTypes[0] ?? 'claude') as CliAgentType;
+    const fallbackAgent = (agentTypes[workerIndex % agentTypes.length] ?? agentTypes[0] ?? 'codebuddy') as CliAgentType;
     const assignment = resolveTaskAssignment(
       task,
       resolvedRouting,
@@ -2190,7 +2190,7 @@ export async function resumeTeamV2(
 
   // Verify tmux session is alive
   try {
-    const sessionName = config.tmux_session || `omc-team-${sanitized}`;
+    const sessionName = config.tmux_session || `omcb-team-${sanitized}`;
     await tmuxExecAsync(['has-session', '-t', sessionName.split(':')[0]]);
 
     return {

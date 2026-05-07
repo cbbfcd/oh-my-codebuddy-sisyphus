@@ -54,7 +54,7 @@ import {
 // ── Environment gate ──────────────────────────────────────────────────────────
 
 const OMC_TEAM_SCALING_ENABLED_ENV = 'OMC_TEAM_SCALING_ENABLED';
-const CLI_AGENT_TYPES = new Set<CliAgentType>(['claude', 'codex', 'gemini']);
+const CLI_AGENT_TYPES = new Set<CliAgentType>(['codebuddy', 'claude', 'codex', 'gemini']);
 
 export function isScalingEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
   const raw = env[OMC_TEAM_SCALING_ENABLED_ENV];
@@ -307,7 +307,7 @@ export async function scaleUp(
         const fallbackPair = routedPair?.fallback;
         const fallbackProvider = fallbackPair
           ? (fallbackPair.provider as CliAgentType)
-          : ('claude' as CliAgentType);
+          : ('codebuddy' as CliAgentType);
         const fallbackModel = fallbackPair?.model;
 
         process.stderr.write(
