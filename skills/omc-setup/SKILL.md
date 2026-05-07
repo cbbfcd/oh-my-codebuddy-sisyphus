@@ -79,7 +79,7 @@ EXAMPLES:
   /oh-my-codebuddy:omc-setup --global  # Update all projects
   /oh-my-codebuddy:omc-setup --force   # Re-run full setup wizard
 
-For more info: https://github.com/anthropic-ai/oh-my-codebuddy
+For more info: https://github.com/cbbfcd/oh-my-codebuddy
 ```
 
 ## Pre-Setup Check: Already Configured?

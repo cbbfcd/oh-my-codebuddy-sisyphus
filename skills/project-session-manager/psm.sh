@@ -85,7 +85,7 @@ Reference formats:
 
 Examples:
   psm review omc#123
-  psm fix anthropic-ai/oh-my-codebuddy#42
+  psm fix cbbfcd/oh-my-codebuddy#42
   psm feature omc add-webhooks
   psm list
   psm attach omc:pr-123

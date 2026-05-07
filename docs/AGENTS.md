@@ -72,7 +72,7 @@ This directory contains documentation for end-users and developers:
 
 Use raw GitHub URLs for external accessibility:
 
-[Migration Guide](https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy/main/docs/MIGRATION.md)
+[Migration Guide](https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy/main/docs/MIGRATION.md)
 
 #### Version References
 

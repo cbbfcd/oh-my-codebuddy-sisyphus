@@ -10,7 +10,7 @@ set -euo pipefail
 
 MODE="${1:?Usage: setup-claude-md.sh <local|global> [overwrite|preserve]}"
 INSTALL_STYLE="${2:-overwrite}"
-DOWNLOAD_URL="https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy/main/docs/CLAUDE.md"
+DOWNLOAD_URL="https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy/main/docs/CLAUDE.md"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 . "$SCRIPT_DIR/lib/config-dir.sh"

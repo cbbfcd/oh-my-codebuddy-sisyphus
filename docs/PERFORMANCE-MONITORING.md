@@ -313,7 +313,7 @@ Visit the platform to:
 | Resource | Description | Link |
 |----------|-------------|------|
 | CodeBuddy Code Discord | Community support and tips | [discord.gg/anthropic](https://discord.gg/anthropic) |
-| OMC GitHub Issues | Bug reports and feature requests | [GitHub Issues](https://github.com/anthropic-ai/oh-my-codebuddy/issues) |
+| OMC GitHub Issues | Bug reports and feature requests | [GitHub Issues](https://github.com/cbbfcd/oh-my-codebuddy/issues) |
 | Anthropic Documentation | Official Claude documentation | [docs.anthropic.com](https://docs.anthropic.com) |
 
 ### Model Performance Benchmarks

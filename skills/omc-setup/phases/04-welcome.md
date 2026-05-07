@@ -134,7 +134,7 @@ gh auth status &>/dev/null
 **Before prompting, check if the repository is already starred:**
 
 ```bash
-gh api user/starred/anthropic-ai/oh-my-codebuddy &>/dev/null
+gh api user/starred/cbbfcd/oh-my-codebuddy &>/dev/null
 ```
 
 **If already starred (exit code 0):**
@@ -155,7 +155,7 @@ Use AskUserQuestion:
 If user chooses "Yes, star it!":
 
 ```bash
-gh api -X PUT /user/starred/anthropic-ai/oh-my-codebuddy 2>/dev/null && echo "Thanks for starring!" || true
+gh api -X PUT /user/starred/cbbfcd/oh-my-codebuddy 2>/dev/null && echo "Thanks for starring!" || true
 ```
 
 **Note:** Fail silently if the API call doesn't work - never block setup completion.
@@ -165,7 +165,7 @@ gh api -X PUT /user/starred/anthropic-ai/oh-my-codebuddy 2>/dev/null && echo "Th
 ```bash
 echo ""
 echo "If you enjoy oh-my-codebuddy, consider starring the repo:"
-echo "  https://github.com/anthropic-ai/oh-my-codebuddy"
+echo "  https://github.com/cbbfcd/oh-my-codebuddy"
 echo ""
 ```
 

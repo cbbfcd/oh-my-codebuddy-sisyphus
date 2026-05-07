@@ -14,7 +14,7 @@ describe('getIdleNotificationRepoState', () => {
 
   it('builds a stable zero-backlog signature from git and GitHub state', () => {
     vi.mocked(execFileSync)
-      .mockReturnValueOnce('git@github.com:anthropic-ai/oh-my-codebuddy.git\n')
+      .mockReturnValueOnce('git@github.com:cbbfcd/oh-my-codebuddy.git\n')
       .mockReturnValueOnce('abc123\n')
       .mockReturnValueOnce('')
       .mockReturnValueOnce('[]')
@@ -25,7 +25,7 @@ describe('getIdleNotificationRepoState', () => {
 
     expect(result).toEqual({
       signature: JSON.stringify({
-        repo: 'anthropic-ai/oh-my-codebuddy',
+        repo: 'cbbfcd/oh-my-codebuddy',
         headSha: 'abc123',
         dirty: false,
         openPrNumbers: [],
@@ -38,7 +38,7 @@ describe('getIdleNotificationRepoState', () => {
 
   it('returns non-zero backlog when PRs, issues, or failing runs exist', () => {
     vi.mocked(execFileSync)
-      .mockReturnValueOnce('https://github.com/anthropic-ai/oh-my-codebuddy.git\n')
+      .mockReturnValueOnce('https://github.com/cbbfcd/oh-my-codebuddy.git\n')
       .mockReturnValueOnce('def456\n')
       .mockReturnValueOnce(' M src/file.ts\n')
       .mockReturnValueOnce('[{"number":2472}]')
@@ -50,7 +50,7 @@ describe('getIdleNotificationRepoState', () => {
     expect(result?.backlogZero).toBe(false);
     expect(result?.signature).toBe(
       JSON.stringify({
-        repo: 'anthropic-ai/oh-my-codebuddy',
+        repo: 'cbbfcd/oh-my-codebuddy',
         headSha: 'def456',
         dirty: true,
         openPrNumbers: [2472],
@@ -68,7 +68,7 @@ describe('getIdleNotificationRepoState', () => {
 
   it('returns null when GitHub queries fail', () => {
     vi.mocked(execFileSync)
-      .mockReturnValueOnce('git@github.com:anthropic-ai/oh-my-codebuddy.git\n')
+      .mockReturnValueOnce('git@github.com:cbbfcd/oh-my-codebuddy.git\n')
       .mockReturnValueOnce('abc123\n')
       .mockReturnValueOnce('')
       .mockImplementationOnce(() => {

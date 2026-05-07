@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-const DEFAULT_REPO_URL = 'https://github.com/anthropic-ai/oh-my-codebuddy';
+const DEFAULT_REPO_URL = 'https://github.com/cbbfcd/oh-my-codebuddy';
 
 export interface ReleasePullRequest {
   number: string;

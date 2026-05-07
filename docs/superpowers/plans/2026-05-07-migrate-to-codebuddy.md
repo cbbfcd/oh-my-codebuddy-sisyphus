@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 将 oh-my-codebuddy（fork 自 anthropic-ai/oh-my-codebuddy）完整迁移为基于 CodeBuddy Code 的 oh-my-codebuddy，1:1 功能对等，移除原项目痕迹，保留中文文档。同时从 oh-my-codex 移植 5 项低成本高价值功能。
+**Goal:** 将 oh-my-codebuddy（fork 自 cbbfcd/oh-my-codebuddy）完整迁移为基于 CodeBuddy Code 的 oh-my-codebuddy，1:1 功能对等，移除原项目痕迹，保留中文文档。同时从 oh-my-codex 移植 5 项低成本高价值功能。
 
 **Architecture:** 
 - 将所有 Claude Code SDK 引用替换为 CodeBuddy SDK 等价物
@@ -62,7 +62,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anthropic-ai/oh-my-codebuddy.git"
+    "url": "git+https://github.com/cbbfcd/oh-my-codebuddy.git"
   },
   "keywords": ["codebuddy", "codebuddy-code", "ai", "agent", "multi-agent", "orchestration", "omcb", "llm"]
 }

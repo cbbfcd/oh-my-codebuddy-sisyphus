@@ -57,7 +57,7 @@ echo "HUD should display in your terminal prompt"
 5. **Demo 5: Ralph** - "For mission-critical tasks - never gives up until verified complete"
 
 ### Closing (1 min)
-"OMC transforms how you work with Claude - from manual coding to orchestrating specialized agents. All open source at github.com/anthropic-ai/oh-my-codebuddy."
+"OMC transforms how you work with Claude - from manual coding to orchestrating specialized agents. All open source at github.com/cbbfcd/oh-my-codebuddy."
 
 ## Tips for Presenters
 

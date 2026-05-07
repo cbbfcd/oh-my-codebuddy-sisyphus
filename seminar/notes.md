@@ -662,7 +662,7 @@ claude-code "autopilot: build me a todo app"
 - "28 agents with 3-tier model routing save you 30-50% on costs while getting work done faster."
 
 **Resources** (Slide 42)
-- "GitHub: github.com/anthropic-ai/oh-my-codebuddy"
+- "GitHub: github.com/cbbfcd/oh-my-codebuddy"
 - "Documentation: Full guides in the repo README"
 - "Community: Join discussions, share your experiences"
 - "Contributing: It's MIT licensed - PRs welcome"

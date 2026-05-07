@@ -1,7 +1,7 @@
 /**
  * Shared stdin utilities for OMC hooks
  * Provides timeout-protected stdin reading to prevent hangs on Linux and Windows
- * See: https://github.com/anthropic-ai/oh-my-codebuddy/issues/240
+ * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/240
  */
 
 /**

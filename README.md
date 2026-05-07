@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/oh-my-claude-sisyphus?color=cb3837)](https://www.npmjs.com/package/oh-my-claude-sisyphus)
 [![npm downloads](https://img.shields.io/npm/dm/oh-my-claude-sisyphus?color=blue)](https://www.npmjs.com/package/oh-my-claude-sisyphus)
-[![GitHub stars](https://img.shields.io/github/stars/anthropic-ai/oh-my-codebuddy?style=flat&color=yellow)](https://github.com/anthropic-ai/oh-my-codebuddy/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/cbbfcd/oh-my-codebuddy?style=flat&color=yellow)](https://github.com/cbbfcd/oh-my-codebuddy/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Sponsor](https://img.shields.io/badge/Sponsor-❤️-red?style=flat&logo=github)](https://github.com/sponsors/oh-my-codebuddy)
 [![Discord](https://img.shields.io/discord/1452487457085063218?color=5865F2&logo=discord&logoColor=white&label=Discord)](https://discord.gg/PUwSMR9XNk)
@@ -23,7 +23,7 @@
 
 **第一步：安装**
 ```bash
-/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
 /plugin install oh-my-codebuddy
 ```
 
@@ -380,7 +380,7 @@ MIT
 
 ## Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=anthropic-ai/oh-my-codebuddy&type=date&legend=top-left)](https://www.star-history.com/#anthropic-ai/oh-my-codebuddy&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=cbbfcd/oh-my-codebuddy&type=date&legend=top-left)](https://www.star-history.com/#cbbfcd/oh-my-codebuddy&type=date&legend=top-left)
 
 ## 💖 支持本项目
 

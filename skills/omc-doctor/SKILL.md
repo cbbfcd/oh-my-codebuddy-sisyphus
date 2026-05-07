@@ -182,7 +182,7 @@ node -e "const p=require('path'),f=require('fs'),h=require('os').homedir(),d=pro
 ### Fix: Missing/Outdated CODEBUDDY.md
 Fetch latest from GitHub and write to `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/CODEBUDDY.md`:
 ```
-WebFetch(url: "https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy/main/docs/CODEBUDDY.md", prompt: "Return the complete raw markdown content exactly as-is")
+WebFetch(url: "https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy/main/docs/CODEBUDDY.md", prompt: "Return the complete raw markdown content exactly as-is")
 ```
 
 ### Fix: Legacy Curl-Installed Content

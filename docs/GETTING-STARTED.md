@@ -39,7 +39,7 @@ Most users want **both**: the plugin for the in-session experience, and the npm 
 Run the following command inside CodeBuddy Code:
 
 ```bash
-/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
 ```
 
 ### Step 2: Install the plugin
@@ -62,7 +62,7 @@ npm i -g oh-my-claude-sisyphus@latest
 > The warning currently comes from the upstream `better-sqlite3` native-addon dependency
 > (`better-sqlite3 -> prebuild-install`); `prebuild-install@7.1.3` is still the latest
 > published version, so there is no safe repo-side dependency bump or override to remove it
-> yet. The warning is tracked in [#2913](https://github.com/anthropic-ai/oh-my-codebuddy/issues/2913)
+> yet. The warning is tracked in [#2913](https://github.com/cbbfcd/oh-my-codebuddy/issues/2913)
 > and does not by itself mean the OMC CLI install failed.
 
 Both can be installed at the same time. The CLI auto-detects the plugin install and will not double-register skills under `~/.codebuddy/skills/` (if you previously hit the duplicate-skill bug, run `omcb update` once on 4.11.2+ — it self-heals leftover standalone skills that the plugin now provides via `prunePluginDuplicateSkills`).

@@ -31,7 +31,7 @@ Complete reference for oh-my-codebuddy. For quick start, see the main [README.md
 
 ```bash
 # Step 1: Add the marketplace
-/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
 
 # Step 2: Install the plugin
 /plugin install oh-my-codebuddy

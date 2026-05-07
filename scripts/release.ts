@@ -35,7 +35,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, '..');
-const DEFAULT_REPO_SLUG = 'anthropic-ai/oh-my-codebuddy';
+const DEFAULT_REPO_SLUG = 'cbbfcd/oh-my-codebuddy';
 const REPO_SLUG = process.env.GITHUB_REPOSITORY || DEFAULT_REPO_SLUG;
 const REPO_URL = `https://github.com/${REPO_SLUG}`;
 const GITHUB_API_URL = process.env.GITHUB_API_URL || 'https://api.github.com';

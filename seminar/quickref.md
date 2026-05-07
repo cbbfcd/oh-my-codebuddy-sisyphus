@@ -1,9 +1,9 @@
 # oh-my-codebuddy Quick Reference Card
-**v3.6.3 | github.com/anthropic-ai/oh-my-codebuddy**
+**v3.6.3 | github.com/cbbfcd/oh-my-codebuddy**
 
 ## Install
 ```bash
-/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
 /plugin install oh-my-codebuddy
 /oh-my-codebuddy:omc-setup
 ```
@@ -129,7 +129,7 @@ Before claiming completion:
 - **LSP diagnostics:** Full project type checking with `lsp_diagnostics_directory`
 
 ## Resources
-- **GitHub:** github.com/anthropic-ai/oh-my-codebuddy
+- **GitHub:** github.com/cbbfcd/oh-my-codebuddy
 - **Docs:** /docs/REFERENCE.md
 - **Website:** yeachan-heo.github.io/oh-my-codebuddy-website
 - **NPM:** `npm i -g oh-my-codebuddy`

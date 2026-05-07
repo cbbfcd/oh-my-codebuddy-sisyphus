@@ -175,7 +175,7 @@ export interface AutopilotConfig {
      * hard-coded phase sequence. This is the path forward for unifying
      * autopilot/ultrawork/ultrapilot.
      *
-     * @see https://github.com/anthropic-ai/oh-my-codebuddy/issues/1130
+     * @see https://github.com/cbbfcd/oh-my-codebuddy/issues/1130
      */
     pipeline?: {
         /** Planning stage: 'ralplan' for consensus, 'direct' for simple, false to skip */

@@ -50,7 +50,7 @@ Supported formats:
 {
   "aliases": {
     "omc": {
-      "repo": "anthropic-ai/oh-my-codebuddy",
+      "repo": "cbbfcd/oh-my-codebuddy",
       "local": "~/Workspace/oh-my-codebuddy",
       "default_base": "main"
     }
@@ -564,7 +564,7 @@ if [[ ! -f ~/.psm/projects.json ]]; then
 {
   "aliases": {
     "omc": {
-      "repo": "anthropic-ai/oh-my-codebuddy",
+      "repo": "cbbfcd/oh-my-codebuddy",
       "local": "~/Workspace/oh-my-codebuddy",
       "default_base": "main"
     }

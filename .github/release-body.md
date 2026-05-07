@@ -58,7 +58,7 @@ Or reinstall the plugin:
 claude /install-plugin oh-my-codebuddy
 ```
 
-**Full Changelog**: https://github.com/anthropic-ai/oh-my-codebuddy/compare/v4.13.5...v4.13.6
+**Full Changelog**: https://github.com/cbbfcd/oh-my-codebuddy/compare/v4.13.5...v4.13.6
 
 ## Contributors
 

@@ -364,7 +364,7 @@ npm uninstall -g oh-my-codebuddy
 
 ```bash
 # In CodeBuddy Code:
-/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
 /plugin install oh-my-codebuddy
 ```
 
@@ -851,7 +851,7 @@ Expected timeline: Q1 2026
 
 ### Stay Updated
 
-- Watch the [GitHub repository](https://github.com/anthropic-ai/oh-my-codebuddy) for announcements
+- Watch the [GitHub repository](https://github.com/cbbfcd/oh-my-codebuddy) for announcements
 - Check [CHANGELOG.md](../CHANGELOG.md) for detailed release notes
 - Join discussions in GitHub Issues
 
@@ -987,7 +987,7 @@ A: Keywords are explicit shortcuts. Natural language triggers auto-detection. Bo
 - **See all commands**: Run `/oh-my-codebuddy:omc-help`
 - **View real-time status**: Run `/oh-my-codebuddy:hud setup`
 - **Review detailed changelog**: See [CHANGELOG.md](../CHANGELOG.md)
-- **Report bugs**: [GitHub Issues](https://github.com/anthropic-ai/oh-my-codebuddy/issues)
+- **Report bugs**: [GitHub Issues](https://github.com/cbbfcd/oh-my-codebuddy/issues)
 
 ---
 

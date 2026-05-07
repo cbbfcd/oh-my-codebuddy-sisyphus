@@ -10,7 +10,7 @@
  * - save: Write current filesystem state as manifest
  * - check: Return whether manifest exists and is valid
  *
- * @see https://github.com/anthropic-ai/oh-my-codebuddy/issues/1719
+ * @see https://github.com/cbbfcd/oh-my-codebuddy/issues/1719
  */
 import { z } from 'zod';
 import type { ToolDefinition } from './types.js';

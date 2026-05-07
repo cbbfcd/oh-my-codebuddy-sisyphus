@@ -2600,7 +2600,7 @@ function getInvokedSkillName(toolInput: unknown): string | null {
  * Extract the raw (un-normalized) skill name from Skill tool input.
  * Used to distinguish OMC built-in skills (prefixed with 'oh-my-codebuddy:')
  * from project custom skills or other plugin skills with the same bare name.
- * See: https://github.com/anthropic-ai/oh-my-codebuddy/issues/1581
+ * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/1581
  */
 function getRawSkillName(toolInput: unknown): string | undefined {
   if (!toolInput || typeof toolInput !== "object") return undefined;

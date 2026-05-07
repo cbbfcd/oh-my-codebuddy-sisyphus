@@ -569,7 +569,7 @@ To preserve state across worktree deletions, set the `OMC_STATE_DIR` environment
 
 ```bash
 # Add to ~/.bashrc or ~/.zshrc
-export OMC_STATE_DIR="$HOME/.claude/omc"
+export OMC_STATE_DIR="$HOME/.codebuddy/omc"
 ```
 
 State is then stored at `~/.codebuddy/omc/{project-identifier}/`. The project identifier is a hash of the Git remote URL, so the same repository shares state across different worktrees.
@@ -615,4 +615,4 @@ Evidence must be fresh (within 5 minutes) and include actual command output.
 - **Complete Reference**: See [REFERENCE.md](./REFERENCE.md)
 - **Internal API**: See [FEATURES.md](./FEATURES.md)
 - **User Guide**: See [README.md](../README.md)
-- **Skills Reference**: See CLAUDE.md in your project
+- **Skills Reference**: See CODEBUDDY.md in your project

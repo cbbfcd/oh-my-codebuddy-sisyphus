@@ -138,7 +138,7 @@ Use CodeBuddy Code through IDE integrations (VS Code extension) which may handle
 ## Related Issues
 
 ### oh-my-codebuddy
-- [#344](https://github.com/anthropic-ai/oh-my-codebuddy/issues/344) - Korean IME input invisible in input field
+- [#344](https://github.com/cbbfcd/oh-my-codebuddy/issues/344) - Korean IME input invisible in input field
 
 ### anthropics/claude-code
 - [#22732](https://github.com/anthropics/claude-code/issues/22732) - Korean IME: Characters completely invisible during composition

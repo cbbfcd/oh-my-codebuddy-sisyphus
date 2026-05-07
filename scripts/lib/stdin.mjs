@@ -1,7 +1,7 @@
 /**
  * Shared stdin utilities for OMC hook scripts
  * Provides timeout-protected stdin reading to prevent hangs on Linux and Windows
- * See: https://github.com/anthropic-ai/oh-my-codebuddy/issues/240
+ * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/240
  *
  * Mirrors templates/hooks/lib/stdin.mjs for use by plugin hook scripts.
  */

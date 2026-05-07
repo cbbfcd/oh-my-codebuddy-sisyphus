@@ -14,8 +14,8 @@ import type { NotificationConfig } from '../notifications/types.js';
 /** GitHub repository information */
 export declare const REPO_OWNER = "anthropic-ai";
 export declare const REPO_NAME = "oh-my-codebuddy";
-export declare const GITHUB_API_URL = "https://api.github.com/repos/anthropic-ai/oh-my-codebuddy";
-export declare const GITHUB_RAW_URL = "https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy";
+export declare const GITHUB_API_URL = "https://api.github.com/repos/cbbfcd/oh-my-codebuddy";
+export declare const GITHUB_RAW_URL = "https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy";
 export declare function shouldBlockStandaloneUpdateInCurrentSession(): boolean;
 export declare function syncPluginCache(verbose?: boolean): {
     synced: boolean;
