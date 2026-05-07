@@ -104,7 +104,7 @@ function buildCliReplacement(toolName: DeprecatedTeamToolName, args: unknown): s
         flags.push('--agent', quoteCliValue(agentTypes.join(',')));
       }
     } else {
-      flags.push('--agent', '"claude"');
+      flags.push('--agent', '"codebuddy"');
     }
 
     if (tasks.length > 0) {
@@ -245,7 +245,7 @@ function makeJobResponse(jobId: string, job: OmcTeamJob, extra: Record<string, u
 
 const startSchema = z.object({
   teamName: z.string().describe('Slug name for the team (e.g. "auth-review")'),
-  agentTypes: z.array(z.string()).describe('Agent type per worker: "claude", "codex", or "gemini"'),
+  agentTypes: z.array(z.string()).describe('Agent type per worker: "codebuddy", "codex", or "gemini"'),
   tasks: z.array(z.object({
     subject: z.string().describe('Brief task title'),
     description: z.string().describe('Full task description'),
@@ -552,7 +552,7 @@ const TOOLS = [
       type: 'object' as const,
       properties: {
         teamName: { type: 'string', description: 'Slug name for the team' },
-        agentTypes: { type: 'array', items: { type: 'string' }, description: '"claude", "codex", or "gemini" per worker' },
+        agentTypes: { type: 'array', items: { type: 'string' }, description: '"codebuddy", "codex", or "gemini" per worker' },
         tasks: {
           type: 'array',
           items: {

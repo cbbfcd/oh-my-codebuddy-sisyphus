@@ -2,7 +2,7 @@
  * SDK Compatibility Shim
  *
  * Provides thin wrappers around `createSdkMcpServer` and `tool` that were
- * previously imported from the Claude Agent SDK.
+ * previously imported from the CodeBuddy Agent SDK.
  *
  * The @tencent-ai/agent-sdk is expected to expose the same API surface.
  * If the import fails at runtime, the shim falls back to a no-op placeholder
