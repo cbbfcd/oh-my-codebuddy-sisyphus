@@ -68,7 +68,6 @@
     "version": "bash scripts/sync-version.sh"
   },
   "dependencies": {
-    "@tencent-ai/agent-sdk": "^1.0.0",
     "@ast-grep/napi": "^0.31.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@types/better-sqlite3": "^7.6.13",
@@ -122,5 +121,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "optionalDependencies": {
+    "@tencent-ai/agent-sdk": "^1.0.0"
   }
 }
