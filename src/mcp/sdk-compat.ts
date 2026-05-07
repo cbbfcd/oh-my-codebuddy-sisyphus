@@ -11,15 +11,12 @@
  */
 
 // Attempt to load from the new CodeBuddy SDK.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _createSdkMcpServer: (...args: any[]) => any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _tool: (...args: any[]) => any;
 
 try {
   // Dynamic require so TypeScript doesn't error on a package that may not have
   // type declarations installed yet.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const sdk = require('@tencent-ai/agent-sdk');
   _createSdkMcpServer = sdk.createSdkMcpServer;
   _tool = sdk.tool;

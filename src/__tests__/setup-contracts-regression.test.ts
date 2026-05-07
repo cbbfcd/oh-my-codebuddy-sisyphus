@@ -12,7 +12,7 @@
 
 import { describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { dirname, join, relative } from 'path';
 import { fileURLToPath } from 'url';
 

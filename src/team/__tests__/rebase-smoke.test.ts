@@ -48,6 +48,30 @@ function expectEvent(
   expect(events.some((e) => e.type === type && (worker === undefined || e.worker === worker))).toBe(true);
 }
 
+/**
+ * Like {@link expectEvent} but polls the event log until the event appears or
+ * the timeout elapses. Use this after `pollOnce()` because event emission goes
+ * through async fs writes — under CPU contention (vitest threads) the file may
+ * not be flushed by the time `pollOnce` resolves, causing flaky failures.
+ */
+async function waitForEvent(
+  eventLog: string,
+  type: string,
+  worker?: string,
+  timeoutMs = 3000,
+): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const events = readEventLog(eventLog);
+    if (events.some((e) => e.type === type && (worker === undefined || e.worker === worker))) {
+      return;
+    }
+    await new Promise((r) => setTimeout(r, 25));
+  }
+  // Final assertion produces a useful failure message on timeout.
+  expectEvent(eventLog, type, worker);
+}
+
 // ---------------------------------------------------------------------------
 // Acceptance #3: A merges to leader; B and C rebase onto new leader HEAD
 // ---------------------------------------------------------------------------
@@ -78,9 +102,9 @@ describe('rebase fan-out after clean merge', () => {
 
     const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
 
-    expectEvent(eventLog, 'merge_succeeded', 'worker-1');
-    expectEvent(eventLog, 'rebase_triggered', 'worker-2');
-    expectEvent(eventLog, 'rebase_triggered', 'worker-3');
+    await waitForEvent(eventLog, 'merge_succeeded', 'worker-1', 8000);
+    await waitForEvent(eventLog, 'rebase_triggered', 'worker-2', 8000);
+    await waitForEvent(eventLog, 'rebase_triggered', 'worker-3', 8000);
 
     const events = readEventLog(eventLog);
 
@@ -96,8 +120,8 @@ describe('rebase fan-out after clean merge', () => {
     await handle.pollOnce();
 
     const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
-    expectEvent(eventLog, 'merge_succeeded', 'worker-1');
-    expectEvent(eventLog, 'rebase_succeeded');
+    await waitForEvent(eventLog, 'merge_succeeded', 'worker-1', 8000);
+    await waitForEvent(eventLog, 'rebase_succeeded', undefined, 8000);
 
     const events = readEventLog(eventLog);
     const successes = events.filter((e) => e.type === 'rebase_succeeded');
@@ -161,8 +185,8 @@ describe('rebase conflict mailbox delivery', () => {
 
     const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
 
-    expectEvent(eventLog, 'merge_succeeded', 'worker-1');
-    expectEvent(eventLog, 'rebase_triggered', 'worker-2');
+    await waitForEvent(eventLog, 'merge_succeeded', 'worker-1', 8000);
+    await waitForEvent(eventLog, 'rebase_triggered', 'worker-2', 8000);
 
     // Wait for either rebase_conflict or rebase_succeeded
     const deadline = Date.now() + 5000;
@@ -233,8 +257,8 @@ describe('M1: existing rebase short-circuit', () => {
 
     const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
 
-    expectEvent(eventLog, 'merge_succeeded', 'worker-1');
-    expectEvent(eventLog, 'rebase_skipped_in_progress', 'worker-2');
+    await waitForEvent(eventLog, 'merge_succeeded', 'worker-1', 8000);
+    await waitForEvent(eventLog, 'rebase_skipped_in_progress', 'worker-2', 8000);
 
     const events = readEventLog(eventLog);
     const skipped = events.filter(
@@ -280,8 +304,8 @@ describe('M4: dirty-tree audit on rebase resolution', () => {
 
     const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
 
-    expectEvent(eventLog, 'merge_succeeded', 'worker-1');
-    expectEvent(eventLog, 'rebase_triggered', 'worker-2');
+    await waitForEvent(eventLog, 'merge_succeeded', 'worker-1', 8000);
+    await waitForEvent(eventLog, 'rebase_triggered', 'worker-2', 8000);
 
     // Check if we got a conflict
     await new Promise((r) => setTimeout(r, 500));
@@ -317,7 +341,7 @@ describe('M4: dirty-tree audit on rebase resolution', () => {
 
       // Run orchestrator once to detect rebase-merge gone and fire M4 audit
       await handle.pollOnce();
-      expectEvent(eventLog, 'rebase_resolved', 'worker-2');
+      await waitForEvent(eventLog, 'rebase_resolved', 'worker-2', 8000);
 
       // Check inbox for audit message
       const worker2InboxPath = join(

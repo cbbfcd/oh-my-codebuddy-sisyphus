@@ -355,14 +355,6 @@ function resolveWorkerCliForRequest(request: DispatchRequest, config: TeamConfig
   return 'codex';
 }
 
-async function runProcess(cmd: string, args: string[], timeoutMs: number): Promise<{ stdout: string; stderr: string }> {
-  const { execFile } = await import('child_process');
-  const { promisify } = await import('util');
-  const execFileAsync = promisify(execFile);
-  const result = await execFileAsync(cmd, args, { timeout: timeoutMs });
-  return { stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
-}
-
 async function defaultInjector(request: DispatchRequest, config: TeamConfig, _cwd: string): Promise<InjectionResult> {
   const target = defaultInjectTarget(request, config);
   if (!target) return { ok: false, reason: 'missing_tmux_target' };

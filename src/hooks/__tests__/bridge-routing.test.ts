@@ -33,7 +33,7 @@ vi.mock('fs', async (importOriginal) => {
   const actual = await importOriginal<typeof FsType>();
   return {
     ...actual,
-    existsSync: (p: FsType.PathLike, ...rest: unknown[]) =>
+    existsSync: (p: FsType.PathLike, ..._rest: unknown[]) =>
       String(p) === LINUX_BOOT_ID_PATH
         ? true
         : actual.existsSync(p),

@@ -7,13 +7,10 @@
 // Latency is measured from commitFile() call to merge_succeeded event observed.
 
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 import {
   createGitFixture,
   orchestratorEventLogPath,
-  readEventLog,
   waitForEventInLog,
   type GitFixture,
 } from './helpers/git-fixture.js';
@@ -74,7 +71,7 @@ describe.skipIf(process.env.CI === '1')(
 
     it('50 sequential merges complete with p95 latency < 2000ms', async () => {
       const MERGE_COUNT = 50;
-      const FILES_PER_MERGE = 10;
+      const _FILES_PER_MERGE = 10;
       const LINES_PER_FILE = 100;
       const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
       const latencies: number[] = [];
