@@ -1,9 +1,9 @@
 /**
- * Claude Code Configuration Directory Resolution
+ * CodeBuddy Code Configuration Directory Resolution
  *
- * Resolves the active Claude Code configuration directory, honouring
- * CLAUDE_CONFIG_DIR (absolute path, or ~-prefixed) with fallback to
- * ~/.claude.  Trailing separators are stripped; filesystem roots are
+ * Resolves the active CodeBuddy Code configuration directory, honouring
+ * CODEBUDDY_CONFIG_DIR (absolute path, or ~-prefixed) with fallback to
+ * ~/.codebuddy.  Trailing separators are stripped; filesystem roots are
  * preserved.
  *
  * Multi-surface mirrors (keep in sync):
@@ -27,18 +27,18 @@ function stripTrailingSep(p: string): string {
 }
 
 /**
- * Resolve the Claude Code configuration directory.
+ * Resolve the CodeBuddy Code configuration directory.
  *
- * Honours CLAUDE_CONFIG_DIR (absolute path, or ~-prefixed) with fallback
- * to ~/.claude.  Trailing separators are stripped; filesystem roots are
- * preserved.
+ * Honours CODEBUDDY_CONFIG_DIR (absolute path, or ~-prefixed) with fallback
+ * to CLAUDE_CONFIG_DIR for backward compatibility, then ~/.codebuddy.
+ * Trailing separators are stripped; filesystem roots are preserved.
  */
-export function getClaudeConfigDir(): string {
+export function getCodebuddyConfigDir(): string {
   const home = homedir();
-  const configured = process.env.CLAUDE_CONFIG_DIR?.trim();
+  const configured = (process.env.CODEBUDDY_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR)?.trim();
 
   if (!configured) {
-    return stripTrailingSep(normalize(join(home, '.claude')));
+    return stripTrailingSep(normalize(join(home, '.codebuddy')));
   }
 
   if (configured === '~') {
@@ -51,3 +51,6 @@ export function getClaudeConfigDir(): string {
 
   return stripTrailingSep(normalize(configured));
 }
+
+/** @deprecated Use getCodebuddyConfigDir instead */
+export const getClaudeConfigDir = getCodebuddyConfigDir;

@@ -15,9 +15,9 @@ export const ALLOWED_PATH_PREFIX = '.omc/';
  *  Paths are normalized to forward slashes before matching (via toForwardSlash). */
 export const ALLOWED_PATH_PATTERNS = [
   /^\.omc\//,                    // .omc/**
-  /^\.claude\//,                 // .claude/** (local)
-  /^~?\/\.claude\//,             // legacy ~/.claude/** references
-  /\/\.claude\//,                // any /.claude/ path
+  /^\.codebuddy\//,                 // .claude/** (local)
+  /^~?\/\.codebuddy\//,             // legacy ~/.codebuddy/** references
+  /\/\.codebuddy\//,                // any /.codebuddy/ path
   /CLAUDE\.md$/,                 // **/CLAUDE.md
   /AGENTS\.md$/,                 // **/AGENTS.md
 ];
@@ -104,7 +104,7 @@ As an ORCHESTRATOR, you MUST:
 
 **ALLOWED direct file operations:**
 - Files inside \`.omc/\` (plans, notepads, drafts)
-- Files inside \`[$CLAUDE_CONFIG_DIR|~/.claude]/\`
+- Files inside \`[$CODEBUDDY_CONFIG_DIR|~/.codebuddy]/\`
 - \`CLAUDE.md\` and \`AGENTS.md\` files
 - Reading files for verification
 - Running diagnostics/tests

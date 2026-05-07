@@ -9,7 +9,7 @@
 import { join } from 'path';
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync, rmSync, symlinkSync } from 'fs';
 import { homedir } from 'os';
-import { getClaudeConfigDir } from './config-dir.js';
+import { getCodebuddyConfigDir } from './config-dir.js';
 
 /**
  * Convert a path to use forward slashes (for JSON/config files)
@@ -173,7 +173,7 @@ export function getGlobalOmcStateCandidates(...segments: string[]): string[] {
  * Structure: <configDir>/plugins/cache/omc/oh-my-claudecode/
  */
 export function getPluginCacheBase(): string {
-  return join(getClaudeConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
+  return join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
 }
 
 /**
@@ -263,7 +263,7 @@ function compareSemverDesc(a: string, b: string): number {
 export function purgeStalePluginCacheVersions(options?: { skipGracePeriod?: boolean }): PurgeCacheResult {
   const result: PurgeCacheResult = { removed: 0, removedPaths: [], symlinked: 0, symlinkPaths: [], errors: [] };
 
-  const configDir = getClaudeConfigDir();
+  const configDir = getCodebuddyConfigDir();
   const pluginsDir = join(configDir, 'plugins');
   const installedFile = join(pluginsDir, 'installed_plugins.json');
   const cacheDir = join(pluginsDir, 'cache');

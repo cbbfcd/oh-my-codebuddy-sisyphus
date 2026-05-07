@@ -147,7 +147,7 @@ export function getMarkerFilePath(
 }
 
 /**
- * Get the global state file path (in ~/.claude/) for modes that support it
+ * Get the global state file path (in ~/.codebuddy/) for modes that support it
  * @deprecated Global state is no longer supported. All modes use local-only state in .omc/state/
  * @returns Always returns null
  */
@@ -400,7 +400,7 @@ export function getAllModeStatuses(
  * - Local state file (.omc/state/{mode}-state.json)
  * - Session-scoped state file if sessionId provided
  * - Local marker file if applicable
- * - Global state file if applicable (~/.claude/{mode}-state.json)
+ * - Global state file if applicable (~/.codebuddy/{mode}-state.json)
  *
  * @returns true if all files were deleted successfully (or didn't exist)
  */

@@ -25,7 +25,7 @@ import { expandTriggers } from "./transliteration-map.js";
 // Re-export constants
 export const USER_SKILLS_DIR = join(
   homedir(),
-  ".claude",
+  ".codebuddy",
   "skills",
   "omc-learned",
 );

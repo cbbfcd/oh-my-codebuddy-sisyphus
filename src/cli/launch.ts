@@ -19,7 +19,7 @@ import { homedir } from 'os';
 import { basename, join } from 'path';
 import { resolvePluginDirArg } from '../lib/plugin-dir.js';
 import { stripRetiredTeamMcpServers } from '../installer/mcp-registry.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import {
   resolveLaunchPolicy,
   buildTmuxSessionName,
@@ -83,7 +83,7 @@ function ensureMirroredPath(sourcePath: string, targetPath: string): void {
   }
 }
 
-export function prepareOmcLaunchConfigDir(baseConfigDir = getClaudeConfigDir()): string {
+export function prepareOmcLaunchConfigDir(baseConfigDir = getCodebuddyConfigDir()): string {
   const companionPath = join(baseConfigDir, 'CLAUDE-omc.md');
   if (!hasOmcMarkers(companionPath)) {
     return baseConfigDir;
@@ -144,7 +144,7 @@ export function prepareOmcLaunchConfigDir(baseConfigDir = getClaudeConfigDir()):
 }
 
 function isDefaultClaudeConfigDirPath(configDir: string): boolean {
-  return configDir === join(homedir(), '.claude');
+  return configDir === join(homedir(), '.codebuddy');
 }
 
 /**
@@ -493,13 +493,13 @@ function runClaudeInsideTmux(cwd: string, args: string[]): void {
 /**
  * Env vars that must be forwarded into tmux sessions.
  * tmux new-session inherits the *server's* environment, not the calling
- * process's, so vars set on process.env (e.g. CLAUDE_CONFIG_DIR at launch)
+ * process's, so vars set on process.env (e.g. CODEBUDDY_CONFIG_DIR at launch)
  * are silently lost.  We inject them as `export` statements into the shell
  * command that runs inside the tmux pane, *after* .zshrc/.bashrc sourcing
  * so our values take precedence.
  */
 export const TMUX_ENV_FORWARD = [
-  'CLAUDE_CONFIG_DIR',
+  'CODEBUDDY_CONFIG_DIR',
   'OMC_NOTIFY',
   'OMC_OPENCLAW',
   'OMC_TELEGRAM',
@@ -723,9 +723,9 @@ export async function launchCommand(args: string[]): Promise<void> {
 
   const launchConfigDir = prepareOmcLaunchConfigDir();
   if (isDefaultClaudeConfigDirPath(launchConfigDir)) {
-    delete process.env.CLAUDE_CONFIG_DIR;
+    delete process.env.CODEBUDDY_CONFIG_DIR;
   } else {
-    process.env.CLAUDE_CONFIG_DIR = launchConfigDir;
+    process.env.CODEBUDDY_CONFIG_DIR = launchConfigDir;
   }
 
   const normalizedArgs = normalizeClaudeLaunchArgs(argsAfterWebhook);

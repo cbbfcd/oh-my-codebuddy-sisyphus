@@ -55,7 +55,7 @@ import { homedir } from "os";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { getOmcRoot } from "../lib/worktree-paths.js";
-import { getClaudeConfigDir } from "../utils/config-dir.js";
+import { getCodebuddyConfigDir } from "../utils/config-dir.js";
 
 /**
  * Extract session ID (UUID) from a transcript path.
@@ -216,7 +216,7 @@ async function calculateSessionHealth(
  */
 function showDiagnostic(): void {
   const version = getRuntimePackageVersion();
-  const configDir = getClaudeConfigDir();
+  const configDir = getCodebuddyConfigDir();
   const hudScript = join(configDir, "hud", "omc-hud.mjs");
   const settingsFile = join(configDir, "settings.json");
 
@@ -488,8 +488,8 @@ async function main(watchMode = false, skipInit = false): Promise<void> {
         : null,
       subscriptionType: subscriptionInfo.subscriptionType,
       rateLimitTier: subscriptionInfo.rateLimitTier,
-      profileName: process.env.CLAUDE_CONFIG_DIR
-        ? basename(process.env.CLAUDE_CONFIG_DIR).replace(/^\./, "")
+      profileName: process.env.CODEBUDDY_CONFIG_DIR
+        ? basename(process.env.CODEBUDDY_CONFIG_DIR).replace(/^\./, "")
         : null,
       sessionSummary,
       lastToolName: transcriptData.lastToolName,

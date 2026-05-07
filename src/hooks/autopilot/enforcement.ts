@@ -9,7 +9,7 @@
 
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { getClaudeConfigDir } from "../../utils/config-dir.js";
+import { getCodebuddyConfigDir } from "../../utils/config-dir.js";
 import { getHardMaxIterations } from "../../lib/security-config.js";
 import {
   resolveAutopilotPlanPath,
@@ -88,7 +88,7 @@ export function detectSignal(
   sessionId: string,
   signal: AutopilotSignal,
 ): boolean {
-  const claudeDir = getClaudeConfigDir();
+  const claudeDir = getCodebuddyConfigDir();
   const possiblePaths = [
     join(claudeDir, "sessions", sessionId, "transcript.md"),
     join(claudeDir, "sessions", sessionId, "messages.json"),
@@ -568,7 +568,7 @@ IMPORTANT: When this stage is complete, output the signal: ${currentAdapter.comp
  * Detect a pipeline-specific signal in the session transcript.
  */
 function detectPipelineSignal(sessionId: string, signal: string): boolean {
-  const claudeDir = getClaudeConfigDir();
+  const claudeDir = getCodebuddyConfigDir();
   const possiblePaths = [
     join(claudeDir, "sessions", sessionId, "transcript.md"),
     join(claudeDir, "sessions", sessionId, "messages.json"),

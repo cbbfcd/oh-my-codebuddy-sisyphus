@@ -207,7 +207,7 @@ export function getConfigPaths(): { user: string; project: string } {
 
   return {
     user: join(userConfigDir, "claude-omc", "config.jsonc"),
-    project: join(process.cwd(), ".claude", "omc.jsonc"),
+    project: join(process.cwd(), ".codebuddy", "omc.jsonc"),
   };
 }
 
@@ -710,8 +710,8 @@ export function findContextFiles(startDir?: string): string[] {
   const contextFileNames = [
     "AGENTS.md",
     "CLAUDE.md",
-    ".claude/CLAUDE.md",
-    ".claude/AGENTS.md",
+    ".codebuddy/CLAUDE.md",
+    ".codebuddy/AGENTS.md",
   ];
 
   // Search in current directory and parent directories

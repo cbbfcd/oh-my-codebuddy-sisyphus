@@ -241,7 +241,7 @@ function readTodoSummary(directory: string): {
   completed: number;
 } {
   const todoPaths = [
-    join(directory, ".claude", "todos.json"),
+    join(directory, ".codebuddy", "todos.json"),
     join(getOmcRoot(directory), "state", "todos.json"),
   ];
 

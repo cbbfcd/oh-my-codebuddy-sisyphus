@@ -9,8 +9,8 @@
 
 /**
  * TERMINOLOGY:
- * - "Task" (capitalized): New Claude Code Task system (~/.claude/tasks/)
- * - "todo" (lowercase): Legacy todo system (~/.claude/todos/)
+ * - "Task" (capitalized): New Claude Code Task system (~/.codebuddy/tasks/)
+ * - "todo" (lowercase): Legacy todo system (~/.codebuddy/todos/)
  * - "item": Generic term for either Task or todo
  */
 
@@ -28,7 +28,7 @@ function debugLog(message: string, ...args: unknown[]): void {
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { getOmcRoot } from '../../lib/worktree-paths.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 
 /**
  * Validates that a session ID is safe to use in file paths.
@@ -60,7 +60,7 @@ export interface Todo {
  * Claude Code Task system task
  *
  * IMPORTANT: This interface is based on observed behavior and the TaskCreate/TaskUpdate
- * tool schema. The file structure ~/.claude/tasks/{sessionId}/{taskId}.json is inferred
+ * tool schema. The file structure ~/.codebuddy/tasks/{sessionId}/{taskId}.json is inferred
  * from Claude Code's implementation and may change in future versions.
  *
  * As of 2025-01, Anthropic has not published official documentation for the Task system
@@ -363,7 +363,7 @@ export function isAuthenticationError(context?: StopContext): boolean {
  * Get possible todo file locations
  */
 function getTodoFilePaths(sessionId?: string, directory?: string): string[] {
-  const claudeDir = getClaudeConfigDir();
+  const claudeDir = getCodebuddyConfigDir();
   const paths: string[] = [];
 
   // Session-specific todos
@@ -375,7 +375,7 @@ function getTodoFilePaths(sessionId?: string, directory?: string): string[] {
   // Project-specific todos
   if (directory) {
     paths.push(join(getOmcRoot(directory), 'todos.json'));
-    paths.push(join(directory, '.claude', 'todos.json'));
+    paths.push(join(directory, '.codebuddy', 'todos.json'));
   }
 
   // NOTE: Global todos directory scan removed to prevent false positives.
@@ -430,7 +430,7 @@ function isIncomplete(todo: Todo): boolean {
 /**
  * Get the Task directory for a session
  *
- * NOTE: This path (~/.claude/tasks/{sessionId}/) is inferred from Claude Code's
+ * NOTE: This path (~/.codebuddy/tasks/{sessionId}/) is inferred from Claude Code's
  * implementation. Anthropic has not officially documented this structure.
  * The Task files are created by Claude Code's TaskCreate tool.
  */
@@ -439,7 +439,7 @@ export function getTaskDirectory(sessionId: string): string {
   if (!isValidSessionId(sessionId)) {
     return ''; // Return empty string for invalid sessions
   }
-  return join(getClaudeConfigDir(), 'tasks', sessionId);
+  return join(getCodebuddyConfigDir(), 'tasks', sessionId);
 }
 
 /**

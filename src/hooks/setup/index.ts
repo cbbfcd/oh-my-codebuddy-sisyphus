@@ -11,7 +11,7 @@ import { existsSync, mkdirSync, readdirSync, statSync, lstatSync, unlinkSync, re
 import { join } from 'path';
 
 import { registerBeadsContext } from '../beads-context/index.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 
 // ============================================================================
 // Types
@@ -181,7 +181,7 @@ export function patchHooksJsonForWindows(pluginRoot: string): void {
 }
 
 /**
- * Ensure ~/.claude/hooks/lib/stdin.mjs points to the current plugin version.
+ * Ensure ~/.codebuddy/hooks/lib/stdin.mjs points to the current plugin version.
  *
  * This fixes a silent breakage that occurs when OMC upgrades to a new version:
  * the symlink stays pointing at the old version's cache dir, so hooks that
@@ -193,7 +193,7 @@ export function patchHooksJsonForWindows(pluginRoot: string): void {
  * Falls back to copy if symlink is unavailable on the platform.
  */
 export function ensureStdinSymlink(pluginRoot: string): void {
-  const libDstDir = join(getClaudeConfigDir(), 'hooks/lib');
+  const libDstDir = join(getCodebuddyConfigDir(), 'hooks/lib');
   const libSrc = join(pluginRoot, 'templates/hooks/lib');
   const stdinSrc = join(libSrc, 'stdin.mjs');
   const stdinDst = join(libDstDir, 'stdin.mjs');

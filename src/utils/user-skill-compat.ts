@@ -9,9 +9,9 @@ import {
   writeFileSync,
 } from 'fs';
 import { basename, join } from 'path';
-import { getClaudeConfigDir } from './config-dir.js';
+import { getCodebuddyConfigDir } from './config-dir.js';
 
-const CLAUDE_SKILLS_DIR = join(getClaudeConfigDir(), 'skills');
+const CLAUDE_SKILLS_DIR = join(getCodebuddyConfigDir(), 'skills');
 const OMC_LEARNED_DIR = join(CLAUDE_SKILLS_DIR, 'omc-learned');
 const CLAUDE_SKILL_FILENAME = 'SKILL.md';
 

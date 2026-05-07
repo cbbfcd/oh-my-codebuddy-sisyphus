@@ -3,7 +3,7 @@
  *
  * Detects and renders where the active ANTHROPIC_API_KEY comes from:
  * - 'project': set in .claude/settings.local.json (project-level)
- * - 'global': set in ~/.claude/settings.json (user-level)
+ * - 'global': set in ~/.codebuddy/settings.json (user-level)
  * - 'env': present only as an environment variable
  *
  * Never displays the actual key value.
@@ -12,7 +12,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { dim, cyan } from '../colors.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 
 export type ApiKeySource = 'project' | 'global' | 'env';
 
@@ -37,7 +37,7 @@ function settingsFileHasApiKey(filePath: string): boolean {
  *
  * Priority:
  * 1. Project-level: .claude/settings.local.json in cwd
- * 2. Global-level: ~/.claude/settings.json
+ * 2. Global-level: ~/.codebuddy/settings.json
  * 3. Environment variable
  *
  * @param cwd - Current working directory (project root)
@@ -46,12 +46,12 @@ function settingsFileHasApiKey(filePath: string): boolean {
 export function detectApiKeySource(cwd?: string): ApiKeySource | null {
   // 1. Project-level config
   if (cwd) {
-    const projectSettings = join(cwd, '.claude', 'settings.local.json');
+    const projectSettings = join(cwd, '.codebuddy', 'settings.local.json');
     if (settingsFileHasApiKey(projectSettings)) return 'project';
   }
 
   // 2. Global config
-  const globalSettings = join(getClaudeConfigDir(), 'settings.json');
+  const globalSettings = join(getCodebuddyConfigDir(), 'settings.json');
   if (settingsFileHasApiKey(globalSettings)) return 'global';
 
   // 3. Environment variable

@@ -8,7 +8,7 @@
 
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join, basename } from 'path';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import type {
   ParsedSlashCommand,
   CommandInfo,
@@ -25,7 +25,7 @@ import { renderSkillRuntimeGuidance } from '../../features/builtin-skills/runtim
 import { getSkillsDir, renderBundledSkillBody } from '../../features/builtin-skills/skills.js';
 
 /** Claude config directory */
-const CLAUDE_CONFIG_DIR = getClaudeConfigDir();
+const CODEBUDDY_CONFIG_DIR = getCodebuddyConfigDir();
 
 /**
  * Claude Code native commands that must not be shadowed by user skills.
@@ -189,11 +189,11 @@ function discoverSkillsFromDir(skillsDir: string): CommandInfo[] {
  * Discover all available commands from multiple sources
  */
 export function discoverAllCommands(): CommandInfo[] {
-  const userCommandsDir = join(CLAUDE_CONFIG_DIR, 'commands');
-  const projectCommandsDir = join(process.cwd(), '.claude', 'commands');
+  const userCommandsDir = join(CODEBUDDY_CONFIG_DIR, 'commands');
+  const projectCommandsDir = join(process.cwd(), '.codebuddy', 'commands');
   const projectOmcSkillsDir = join(process.cwd(), '.omc', 'skills');
   const projectAgentSkillsDir = join(process.cwd(), '.agents', 'skills');
-  const userSkillsDir = join(CLAUDE_CONFIG_DIR, 'skills');
+  const userSkillsDir = join(CODEBUDDY_CONFIG_DIR, 'skills');
 
   const userCommands = discoverCommandsFromDir(userCommandsDir, 'user');
   const projectCommands = discoverCommandsFromDir(projectCommandsDir, 'project');
@@ -356,7 +356,7 @@ export function executeSlashCommand(parsed: ParsedSlashCommand): ExecuteResult {
   if (!command) {
     return {
       success: false,
-      error: `Command "/${parsed.command}" not found. Available commands are in ${CLAUDE_CONFIG_DIR}/commands/ or .claude/commands/`,
+      error: `Command "/${parsed.command}" not found. Available commands are in ${CODEBUDDY_CONFIG_DIR}/commands/ or .claude/commands/`,
     };
   }
 

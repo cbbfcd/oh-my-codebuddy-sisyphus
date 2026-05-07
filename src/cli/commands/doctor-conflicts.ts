@@ -5,7 +5,7 @@
 
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import { isOmcHook } from '../../installer/index.js';
 import { colors } from '../utils/formatting.js';
 import { listBuiltinSkillNames } from '../../features/builtin-skills/skills.js';
@@ -66,15 +66,15 @@ function collectHooksFromSettings(settingsPath: string): ConflictReport['hookCon
 }
 
 /**
- * Check for hook conflicts in both profile-level (~/.claude/settings.json)
- * and project-level (./.claude/settings.json).
+ * Check for hook conflicts in both profile-level (~/.codebuddy/settings.json)
+ * and project-level (./.codebuddy/settings.json).
  *
  * Claude Code settings precedence: project > profile > defaults.
  * We check both levels so the diagnostic is complete.
  */
 export function checkHookConflicts(): ConflictReport['hookConflicts'] {
-  const profileSettingsPath = join(getClaudeConfigDir(), 'settings.json');
-  const projectSettingsPath = join(process.cwd(), '.claude', 'settings.json');
+  const profileSettingsPath = join(getCodebuddyConfigDir(), 'settings.json');
+  const projectSettingsPath = join(process.cwd(), '.codebuddy', 'settings.json');
 
   const profileHooks = collectHooksFromSettings(profileSettingsPath);
   const projectHooks = collectHooksFromSettings(projectSettingsPath);
@@ -143,7 +143,7 @@ function findCompanionClaudeMdFiles(configDir: string): string[] {
  * where users keep OMC config in a separate file.
  */
 export function checkClaudeMdStatus(): ConflictReport['claudeMdStatus'] {
-  const configDir = getClaudeConfigDir();
+  const configDir = getCodebuddyConfigDir();
   const claudeMdPath = join(configDir, 'CLAUDE.md');
 
   if (!existsSync(claudeMdPath)) {
@@ -221,7 +221,7 @@ export function checkEnvFlags(): ConflictReport['envFlags'] {
  * false positives for user's custom skills.
  */
 export function checkLegacySkills(): ConflictReport['legacySkills'] {
-  const legacySkillsDir = join(getClaudeConfigDir(), 'skills');
+  const legacySkillsDir = join(getCodebuddyConfigDir(), 'skills');
   if (!existsSync(legacySkillsDir)) return [];
 
   const collisions: ConflictReport['legacySkills'] = [];
@@ -248,7 +248,7 @@ export function checkLegacySkills(): ConflictReport['legacySkills'] {
  */
 export function checkConfigIssues(): ConflictReport['configIssues'] {
   const unknownFields: string[] = [];
-  const configPath = join(getClaudeConfigDir(), '.omc-config.json');
+  const configPath = join(getCodebuddyConfigDir(), '.omc-config.json');
 
   if (!existsSync(configPath)) {
     return { unknownFields };

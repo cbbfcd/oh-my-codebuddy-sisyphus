@@ -22,7 +22,7 @@ import {
   copyPluginSyncPayload,
   syncInstalledPluginPayload,
 } from '../installer/index.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { purgeStalePluginCacheVersions } from '../utils/paths.js';
 import type { NotificationConfig } from '../notifications/types.js';
 import { isAutoUpdateDisabled } from '../lib/security-config.js';
@@ -36,12 +36,12 @@ export const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/$
 
 /**
  * Best-effort sync of the Claude Code marketplace clone.
- * The marketplace clone at ~/.claude/plugins/marketplaces/omc/ is used by
+ * The marketplace clone at ~/.codebuddy/plugins/marketplaces/omc/ is used by
  * Claude Code to populate the plugin cache. If it's stale, `/plugin install`
  * and cache rebuilds reinstall old versions. (See #506)
  */
 function syncMarketplaceClone(verbose: boolean = false): { ok: boolean; message: string } {
-  const marketplacePath = join(getClaudeConfigDir(), 'plugins', 'marketplaces', 'omc');
+  const marketplacePath = join(getCodebuddyConfigDir(), 'plugins', 'marketplaces', 'omc');
   if (!existsSync(marketplacePath)) {
     return { ok: true, message: 'Marketplace clone not found; skipping' };
   }
@@ -156,7 +156,7 @@ export function shouldBlockStandaloneUpdateInCurrentSession(): boolean {
 }
 
 export function syncPluginCache(verbose: boolean = false): { synced: boolean; skipped: boolean; errors: string[] } {
-  const pluginCacheRoot = join(getClaudeConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
+  const pluginCacheRoot = join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
   if (!existsSync(pluginCacheRoot)) {
     return { synced: false, skipped: true, errors: [] };
   }
@@ -209,10 +209,10 @@ export function syncPluginCache(verbose: boolean = false): { synced: boolean; sk
   }
 }
 
-/** Installation paths (respects CLAUDE_CONFIG_DIR env var) */
-export const CLAUDE_CONFIG_DIR = getClaudeConfigDir();
-export const VERSION_FILE = join(CLAUDE_CONFIG_DIR, '.omc-version.json');
-export const CONFIG_FILE = join(CLAUDE_CONFIG_DIR, OMC_CONFIG_FILE_REL);
+/** Installation paths (respects CODEBUDDY_CONFIG_DIR env var) */
+export const CODEBUDDY_CONFIG_DIR = getCodebuddyConfigDir();
+export const VERSION_FILE = join(CODEBUDDY_CONFIG_DIR, '.omc-version.json');
+export const CONFIG_FILE = join(CODEBUDDY_CONFIG_DIR, OMC_CONFIG_FILE_REL);
 
 /**
  * Stop hook callback configuration for file logging
@@ -361,11 +361,11 @@ export function isAutoUpgradePromptEnabled(): boolean {
 /**
  * Check if team feature is enabled
  * Returns false by default - requires explicit opt-in
- * Checks ~/.claude/settings.json first, then env var fallback
+ * Checks ~/.codebuddy/settings.json first, then env var fallback
  */
 export function isTeamEnabled(): boolean {
   try {
-    const settingsPath = join(CLAUDE_CONFIG_DIR, 'settings.json');
+    const settingsPath = join(CODEBUDDY_CONFIG_DIR, 'settings.json');
     if (existsSync(settingsPath)) {
       const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
       const val = settings.env?.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS;
@@ -598,7 +598,7 @@ export function reconcileUpdateRuntime(options?: { verbose?: boolean; skipGraceP
   const projectScopedPlugin = isProjectScopedPlugin();
   // Plugin installs execute hooks from <pluginRoot>/hooks/hooks.json. Re-running
   // the standalone settings.json hook merge during `omc update` re-injects the
-  // legacy ~/.claude/hooks/* entries and causes duplicate hook execution.
+  // legacy ~/.codebuddy/hooks/* entries and causes duplicate hook execution.
   //
   // Reconciliation should still refresh shared installer artifacts (CLAUDE.md,
   // HUD, MCP registry, statusLine, etc.), but it must leave settings.json hook
@@ -962,7 +962,7 @@ export interface SilentUpdateConfig {
 }
 
 /** State file for tracking silent update status */
-const SILENT_UPDATE_STATE_FILE = join(CLAUDE_CONFIG_DIR, '.omc-silent-update.json');
+const SILENT_UPDATE_STATE_FILE = join(CODEBUDDY_CONFIG_DIR, '.omc-silent-update.json');
 
 interface SilentUpdateState {
   lastAttempt?: string;
@@ -1037,7 +1037,7 @@ export async function silentAutoUpdate(config: SilentUpdateConfig = {}): Promise
   const {
     checkIntervalHours = 24,
     autoApply = true,
-    logFile = join(CLAUDE_CONFIG_DIR, '.omc-update.log'),
+    logFile = join(CODEBUDDY_CONFIG_DIR, '.omc-update.log'),
     maxRetries = 3
   } = config;
 

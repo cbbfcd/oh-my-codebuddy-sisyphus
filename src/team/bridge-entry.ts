@@ -17,13 +17,13 @@ import { runBridge } from './mcp-team-bridge.js';
 import { deleteHeartbeat } from './heartbeat.js';
 import { unregisterMcpWorker } from './team-registration.js';
 import { getWorktreeRoot } from '../lib/worktree-paths.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { sanitizeName } from './tmux-session.js';
 
 /**
  * Validate that a config path is under the user's home directory
  * and contains a trusted subpath (Claude config dir or ~/.omc/).
- * Resolves the path first to defeat traversal attacks like ~/foo/.claude/../../evil.json.
+ * Resolves the path first to defeat traversal attacks like ~/foo/.codebuddy/../../evil.json.
  */
 export function validateConfigPath(configPath: string, homeDir: string, claudeConfigDir: string): boolean {
   // Resolve to canonical absolute path to defeat ".." traversal
@@ -100,7 +100,7 @@ function main(): void {
 
   // Validate config path is from a trusted location
   const home = homedir();
-  const claudeConfigDir = getClaudeConfigDir();
+  const claudeConfigDir = getCodebuddyConfigDir();
   if (!validateConfigPath(configPath, home, claudeConfigDir)) {
     console.error(`Config path must be under ~/ with ${claudeConfigDir} or ~/.omc/ subpath: ${configPath}`);
     process.exit(1);

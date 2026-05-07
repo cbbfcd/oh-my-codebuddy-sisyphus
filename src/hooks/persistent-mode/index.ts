@@ -14,7 +14,7 @@ import { existsSync, readFileSync, unlinkSync, statSync, openSync, readSync, clo
 import { atomicWriteJsonSync } from '../../lib/atomic-write.js';
 import { join } from 'path';
 import { getHardMaxIterations } from '../../lib/security-config.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import { getGlobalOmcConfigCandidates } from '../../utils/paths.js';
 import {
   readUltraworkState,
@@ -700,7 +700,7 @@ function checkArchitectApprovalInTranscript(
   sessionId: string,
   verificationState?: Pick<VerificationState, 'request_id' | 'story_id' | 'critic_mode'>
 ): boolean {
-  const claudeDir = getClaudeConfigDir();
+  const claudeDir = getCodebuddyConfigDir();
   const possiblePaths = [join(claudeDir, 'sessions', sessionId, 'messages.json')];
 
   for (const transcriptPath of possiblePaths) {
@@ -724,7 +724,7 @@ function checkArchitectApprovalInTranscript(
  * Check for architect rejection in session transcript
  */
 function checkArchitectRejectionInTranscript(sessionId: string): { rejected: boolean; feedback: string } {
-  const claudeDir = getClaudeConfigDir();
+  const claudeDir = getCodebuddyConfigDir();
   const possiblePaths = [
     join(claudeDir, 'sessions', sessionId, 'transcript.md'),
     join(claudeDir, 'sessions', sessionId, 'messages.json'),

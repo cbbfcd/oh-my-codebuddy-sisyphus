@@ -15,7 +15,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { join } from 'path';
 import { writeFileSync, existsSync } from 'fs';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { OMC_PLUGIN_ROOT_ENV } from '../lib/env-vars.js';
 import {
   loadConfig,
@@ -276,7 +276,7 @@ Profile types (use with --profile):
   webhook      Generic webhook (POST with JSON body)
 
 Examples:
-  $ omc config-stop-callback file --enable --path ${join(getClaudeConfigDir(), 'logs/{date}.md')}
+  $ omc config-stop-callback file --enable --path ${join(getCodebuddyConfigDir(), 'logs/{date}.md')}
   $ omc config-stop-callback telegram --enable --token <token> --chat <id>
   $ omc config-stop-callback discord --enable --webhook <url>
   $ omc config-stop-callback file --disable
@@ -494,7 +494,7 @@ Examples:
         const current = config.stopHookCallbacks.file;
         config.stopHookCallbacks.file = {
           enabled: enabled ?? current?.enabled ?? false,
-          path: options.path ?? current?.path ?? join(getClaudeConfigDir(), 'session-logs/{session_id}.md'),
+          path: options.path ?? current?.path ?? join(getCodebuddyConfigDir(), 'session-logs/{session_id}.md'),
           format: (options.format as 'markdown' | 'json') ?? current?.format ?? 'markdown',
         };
         break;
@@ -873,20 +873,20 @@ Examples:
   });
 
 /**
- * Install command - Install agents and commands (default: ~/.claude/)
+ * Install command - Install agents and commands (default: ~/.codebuddy/)
  */
 program
   .command('install')
-  .description('Install OMC agents and commands to Claude Code config directory (default: ~/.claude/)')
+  .description('Install OMC agents and commands to Claude Code config directory (default: ~/.codebuddy/)')
   .option('-f, --force', 'Overwrite existing files')
   .option('-q, --quiet', 'Suppress output except for errors')
   .option('--skip-claude-check', 'Skip checking if Claude Code is installed')
   .addHelpText('after', `
 Examples:
-  $ omc install                  Install to config directory (default: ~/.claude/)
+  $ omc install                  Install to config directory (default: ~/.codebuddy/)
   $ omc install --force          Reinstall, overwriting existing files
   $ omc install --quiet          Silent install for scripts
-  $ CLAUDE_CONFIG_DIR=$HOME/.claude-isolated-workspace omc install  Isolated config directory`)
+  $ CODEBUDDY_CONFIG_DIR=$HOME/.codebuddy-isolated-workspace omc install  Isolated config directory`)
   .action(async (options) => {
     if (!options.quiet) {
       console.log(chalk.blue('╔═══════════════════════════════════════════════════════════╗'));
@@ -924,7 +924,7 @@ Examples:
         console.log(chalk.green('║         Installation Complete!                            ║'));
         console.log(chalk.green('╚═══════════════════════════════════════════════════════════╝'));
         console.log('');
-        console.log(chalk.gray(`Installed to: ${getClaudeConfigDir()}`));
+        console.log(chalk.gray(`Installed to: ${getCodebuddyConfigDir()}`));
         console.log('');
         console.log(chalk.yellow('Usage:'));
         console.log('  claude                        # Start Claude Code normally');

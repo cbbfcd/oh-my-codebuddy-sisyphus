@@ -22,7 +22,7 @@
 import { spawn } from 'child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import type {
   RateLimitsProviderConfig,
   CustomBucket,
@@ -42,7 +42,7 @@ interface CustomProviderCache {
 
 function getCachePath(): string {
   return join(
-    getClaudeConfigDir(),
+    getCodebuddyConfigDir(),
     'plugins',
     'oh-my-claudecode',
     '.custom-rate-cache.json',

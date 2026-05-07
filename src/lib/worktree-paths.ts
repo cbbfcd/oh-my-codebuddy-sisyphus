@@ -14,7 +14,7 @@ import { execSync } from 'child_process';
 import { existsSync, mkdirSync, realpathSync, readdirSync } from 'fs';
 import { homedir } from 'os';
 import { resolve, normalize, relative, sep, join, isAbsolute, basename, dirname } from 'path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 
 /** Standard .omc subdirectories */
 export const OmcPaths = {
@@ -465,9 +465,9 @@ export function isValidTranscriptPath(transcriptPath: string): boolean {
   const normalized = normalize(expandedPath);
   const home = homedir();
 
-  // Allowed: [$CLAUDE_CONFIG_DIR|~/.claude], ~/.omc/..., /tmp/...
+  // Allowed: [$CODEBUDDY_CONFIG_DIR|~/.codebuddy], ~/.omc/..., /tmp/...
   const allowedPrefixes = [
-    getClaudeConfigDir(),
+    getCodebuddyConfigDir(),
     join(home, '.omc'),
     '/tmp',
     '/var/folders', // macOS temp
@@ -590,10 +590,10 @@ export function resolveToWorktreeRoot(directory?: string): string {
  *
  * When Claude Code runs inside a worktree (.claude/worktrees/X), it encodes the
  * worktree CWD into the project directory path, creating a transcript_path like:
- *   ~/.claude/projects/-path-to-project--claude-worktrees-X/<session>.jsonl
+ *   ~/.codebuddy/projects/-path-to-project--claude-worktrees-X/<session>.jsonl
  *
  * But the actual transcript lives at the original project's path:
- *   ~/.claude/projects/-path-to-project/<session>.jsonl
+ *   ~/.codebuddy/projects/-path-to-project/<session>.jsonl
  *
  * Claude Code encodes `/` and `.` as `-`. The `.claude/worktrees/`
  * segment becomes `-claude-worktrees-`, preceded by a `-` from the path
@@ -614,7 +614,7 @@ export function resolveTranscriptPath(transcriptPath: string | undefined, cwd?: 
 
   // Strategy 1: Detect worktree-encoded segment in the transcript path itself.
   // The pattern `--claude-worktrees-` appears when Claude Code encodes a CWD
-  // containing `/.claude/worktrees/` (separator `/` → `-`, dot `.` → `-`).
+  // containing `/.codebuddy/worktrees/` (separator `/` → `-`, dot `.` → `-`).
   // Strip everything from this pattern to the next `/` to recover the original
   // project directory encoding.
   const worktreeSegmentPattern = /--claude-worktrees-[^/\\]+/;
@@ -624,10 +624,10 @@ export function resolveTranscriptPath(transcriptPath: string | undefined, cwd?: 
   }
 
   // Strategy 2: Use CWD to detect worktree and reconstruct the path.
-  // When the CWD contains `/.claude/worktrees/`, we can derive the main
+  // When the CWD contains `/.codebuddy/worktrees/`, we can derive the main
   // project root and look for the transcript there.
   const effectiveCwd = cwd || process.cwd();
-  const worktreeMarker = '.claude/worktrees/';
+  const worktreeMarker = '.codebuddy/worktrees/';
   const markerIdx = effectiveCwd.indexOf(worktreeMarker);
   if (markerIdx !== -1) {
     // Adjust index to exclude the preceding path separator
@@ -641,7 +641,7 @@ export function resolveTranscriptPath(transcriptPath: string | undefined, cwd?: 
     const sessionFile = lastSep !== -1 ? transcriptPath.substring(lastSep + 1) : '';
     if (sessionFile) {
       // The projects directory is under the Claude config dir
-      const projectsDir = join(getClaudeConfigDir(), 'projects');
+      const projectsDir = join(getCodebuddyConfigDir(), 'projects');
 
       if (existsSync(projectsDir)) {
         // Encode the main project root the same way Claude Code does:
@@ -686,7 +686,7 @@ export function resolveTranscriptPath(transcriptPath: string | undefined, cwd?: 
       const lastSep = transcriptPath.lastIndexOf('/');
       const sessionFile = lastSep !== -1 ? transcriptPath.substring(lastSep + 1) : '';
       if (sessionFile) {
-        const projectsDir = join(getClaudeConfigDir(), 'projects');
+        const projectsDir = join(getCodebuddyConfigDir(), 'projects');
         if (existsSync(projectsDir)) {
           const encodedMain = mainRepoRoot.replace(/[/\\.]/g, '-');
           const resolvedPath = join(projectsDir, encodedMain, sessionFile);

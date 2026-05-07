@@ -25,7 +25,7 @@ export interface ModeConfig {
   activeProperty?: string;
   /** Whether state is SQLite-based (requires marker file) */
   isSqlite?: boolean;
-  /** Whether mode has global state in ~/.claude/ */
+  /** Whether mode has global state in ~/.codebuddy/ */
   hasGlobalState?: boolean;
 }
 
