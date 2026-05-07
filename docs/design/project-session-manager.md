@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Project Session Manager (PSM) automates the creation and management of isolated development environments using git worktrees and tmux sessions with Claude Code. It enables parallel work across multiple tasks, projects, and repositories while maintaining clean separation and easy context switching.
+Project Session Manager (PSM) automates the creation and management of isolated development environments using git worktrees and tmux sessions with CodeBuddy Code. It enables parallel work across multiple tasks, projects, and repositories while maintaining clean separation and easy context switching.
 
 ---
 
@@ -33,7 +33,7 @@ Project Session Manager (PSM) automates the creation and management of isolated 
 
 ### Current Pain Points
 
-1. **Context Switching Overhead**: Switching between tasks requires stashing changes, switching branches, and losing Claude Code context
+1. **Context Switching Overhead**: Switching between tasks requires stashing changes, switching branches, and losing CodeBuddy Code context
 2. **PR Review Isolation**: Reviewing PRs often contaminates the working directory
 3. **Parallel Work Limitation**: Can only work on one task at a time per repository
 4. **Session Management**: Manual tmux session creation is tedious and inconsistent
@@ -43,7 +43,7 @@ Project Session Manager (PSM) automates the creation and management of isolated 
 
 PSM provides a unified interface to:
 - Create isolated worktrees with a single command
-- Spawn pre-configured tmux sessions with Claude Code
+- Spawn pre-configured tmux sessions with CodeBuddy Code
 - Track and manage all active sessions
 - Automate cleanup of completed work
 
@@ -68,7 +68,7 @@ PSM provides a unified interface to:
 1. Fetches PR branch
 2. Creates worktree at `~/.psm/worktrees/omc/pr-123`
 3. Spawns tmux session `psm:omc:pr-123`
-4. Launches Claude Code with PR context pre-loaded
+4. Launches CodeBuddy Code with PR context pre-loaded
 5. Opens diff in editor (optional)
 
 ### 2.2 Issue Fixing
@@ -89,7 +89,7 @@ PSM provides a unified interface to:
 2. Creates feature branch from main
 3. Creates worktree at `~/.psm/worktrees/omc/issue-42`
 4. Spawns tmux session with issue context
-5. Pre-populates Claude Code with issue description
+5. Pre-populates CodeBuddy Code with issue description
 
 ### 2.3 Feature Development
 
@@ -192,7 +192,7 @@ PSM provides a unified interface to:
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--project`, `-p` | Project identifier or path | Current directory |
-| `--no-claude` | Skip Claude Code launch | false |
+| `--no-claude` | Skip CodeBuddy Code launch | false |
 | `--no-tmux` | Use current terminal | false |
 | `--editor`, `-e` | Open in editor after | false |
 | `--verbose`, `-v` | Verbose output | false |
@@ -338,7 +338,7 @@ User Command
      ▼
 ┌─────────────────┐
 │ Launch Tmux +   │
-│ Claude Code     │
+│ CodeBuddy Code  │
 └─────────────────┘
 ```
 
@@ -1011,7 +1011,7 @@ $ /psm review omc#123
 
 🖥️  Creating tmux session: psm:omc:pr-123...
 
-🤖 Launching Claude Code with PR context...
+🤖 Launching CodeBuddy Code with PR context...
 
 ✅ Session ready!
 

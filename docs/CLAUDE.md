@@ -21,7 +21,7 @@ Route code to `executor` (use `model=opus` for complex work). Uncertain SDK usag
 
 <model_routing>
 `haiku` (quick lookups), `sonnet` (standard), `opus` (architecture, deep analysis).
-Direct writes OK for: `~/.codebuddy/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
+Direct writes OK for: `~/.codebuddy/**`, `.omc/**`, `.codebuddy/**`, `CODEBUDDY.md`, `AGENTS.md`.
 </model_routing>
 
 <skills>
@@ -60,6 +60,6 @@ State: `.omc/state/`, `.omc/state/sessions/{sessionId}/`, `.omc/notepad.md`, `.o
 
 ## Setup
 
-Say "setup omc" or run `/oh-my-codebuddy:omc-setup`.
+Say "setup omcb" or run `/oh-my-codebuddy:omc-setup`.
 
 <!-- OMC:END -->

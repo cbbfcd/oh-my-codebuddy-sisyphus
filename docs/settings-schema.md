@@ -2,8 +2,8 @@
 
 This page documents OMC-owned configuration keys in the standard OMC config files:
 
-- Project: `.claude/omc.jsonc`
-- User: `~/.config/claude-omc/config.jsonc`
+- Project: `.codebuddy/omcb.jsonc`
+- User: `~/.config/codebuddy-omcb/config.jsonc`
 
 Project config overrides user config.
 

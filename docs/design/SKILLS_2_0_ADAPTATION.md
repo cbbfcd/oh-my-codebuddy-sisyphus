@@ -21,7 +21,7 @@ This MVP focuses on the smallest concrete adaptation that improves interoperabil
 
 ### Anthropic Claude Code
 
-Claude Code's custom subagent model emphasizes:
+CodeBuddy Code's custom subagent model emphasizes:
 
 - specialized workflow packaging
 - scoped capabilities and tools

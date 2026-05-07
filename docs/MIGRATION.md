@@ -168,7 +168,7 @@ The following skills have been **completely removed** in v3.5.3:
 
 1. **No action required** - The unified `/cancel` command already worked in v3.5
 2. **Update any scripts** that reference removed commands
-3. **Re-run `/omc-setup`** if you want to update your CLAUDE.md configuration
+3. **Re-run `/omc-setup`** if you want to update your CODEBUDDY.md configuration
 
 ### Skill Count
 
@@ -185,7 +185,7 @@ Your old commands still work! But now you don't need them.
 
 **Before 3.0:** Explicitly invoke 25+ commands like `/oh-my-codebuddy:ralph "task"`, `/oh-my-codebuddy:ultrawork "task"`
 
-**After 3.0:** Just work naturally - Claude auto-activates the right behaviors. One-time setup: just say "setup omc"
+**After 3.0:** Just work naturally - Claude auto-activates the right behaviors. One-time setup: just say "setup omcb"
 
 ### Project Rebrand
 
@@ -418,7 +418,7 @@ In CodeBuddy Code, just say "setup omc", "omcb setup", or any natural language e
 
 This:
 
-- Downloads latest CLAUDE.md
+- Downloads latest CODEBUDDY.md
 - Configures 32 agents
 - Enables auto-behavior detection
 - Activates continuation enforcement
@@ -943,7 +943,7 @@ Apply oh-my-codebuddy to current project only:
 /oh-my-codebuddy:omc-default
 ```
 
-Creates: `./.claude/CLAUDE.md`
+Creates: `./.codebuddy/CODEBUDDY.md`
 
 ### Global Configuration
 
@@ -953,7 +953,7 @@ Apply to all CodeBuddy Code sessions:
 /oh-my-codebuddy:omc-default-global
 ```
 
-Creates: `~/.codebuddy/CLAUDE.md`
+Creates: `~/.codebuddy/CODEBUDDY.md`
 
 **Precedence:** Project config overrides global if both exist.
 
@@ -996,7 +996,7 @@ A: Keywords are explicit shortcuts. Natural language triggers auto-detection. Bo
 Now that you understand the migration:
 
 1. **For immediate impact**: Start using keywords (`ralph`, `ulw`, `plan`) in your work
-2. **For full power**: Read [docs/CLAUDE.md](CLAUDE.md) to understand orchestration
+2. **For full power**: Read [docs/CODEBUDDY.md](CODEBUDDY.md) to understand orchestration
 3. **For advanced usage**: Check [docs/ARCHITECTURE.md](ARCHITECTURE.md) for deep dives
 4. **For team onboarding**: Share this guide with teammates
 

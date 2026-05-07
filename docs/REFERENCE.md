@@ -292,7 +292,7 @@ omcb setup --plugin-dir-mode
 - **Still installs**:
   - HUD bundle (`~/.codebuddy/hud/`)
   - Git hooks (`.git/hooks/`, if applicable)
-  - CLAUDE.md configuration files
+  - CODEBUDDY.md configuration files
   - `.omc-config.json` state
 - **Conflicts with `--no-plugin`**: If both flags are set, `--no-plugin` takes precedence (with a warning).
 - **Auto-detection**: If `OMC_PLUGIN_ROOT` is already set in the environment, `--plugin-dir-mode` is auto-enabled (unless `--no-plugin` overrides it).
@@ -322,14 +322,14 @@ claude --plugin-dir /path/to/oh-my-codebuddy
 
 - **Set by**: `omcb --plugin-dir <path>` launcher (via `src/cli/launch.ts`).
 - **Read by**: HUD wrapper, setup auto-detect, doctor diagnostics.
-- **Required when**: Using `claude --plugin-dir` directly (without the `omc` shim), so downstream components can resolve the same path.
+- **Required when**: Using `claude --plugin-dir` directly (without the `omcb` shim), so downstream components can resolve the same path.
 - **Precedence**: Explicit CLI flags override this env var (with warnings).
 
 ### Decision matrix: which flag/mode to use?
 
 | Your setup | Launch command | Setup command | Expected behavior |
 |---|---|---|---|
-| **Marketplace plugin** (recommended) | `omc` or `claude` (default) | `omcb setup` | Normal: agents/skills copied to `~/.codebuddy/` |
+| **Marketplace plugin** (recommended) | `omcb` or `claude` (default) | `omcb setup` | Normal: agents/skills copied to `~/.codebuddy/` |
 | **Local dev checkout, want OMC shim** | `omcb --plugin-dir /path` | `omcb setup --plugin-dir-mode` | Dev mode: agents/skills loaded from `/path`, not copied |
 | **Local dev checkout, no OMC shim** | `claude --plugin-dir /path` + `export OMC_PLUGIN_ROOT=/path` | `omcb setup --plugin-dir-mode` | Dev mode + manual env: agents/skills loaded from `/path` |
 | **Local dev, want bundled skills** | `omcb --plugin-dir /path` | `omcb setup --no-plugin` | Forces local bundled skills to `~/.codebuddy/skills/`, ignoring plugin |
@@ -938,7 +938,7 @@ Available presets: `minimal`, `focused`, `full`, `dense`, `analytics`, `opencode
 | --------------------- | -------------------------------------------------------------------------------- |
 | Commands not found    | Re-run `/oh-my-codebuddy:omc-setup`                                             |
 | Hooks not executing   | Check hook permissions: `chmod +x ~/.codebuddy/hooks/**/*.sh`                       |
-| Agents not delegating | Verify CLAUDE.md is loaded: check `./.claude/CLAUDE.md` or `~/.codebuddy/CLAUDE.md` |
+| Agents not delegating | Verify CODEBUDDY.md is loaded: check `./.codebuddy/CODEBUDDY.md` or `~/.codebuddy/CODEBUDDY.md` |
 | LSP tools not working | Install language servers: `npm install -g typescript-language-server`            |
 | Token limit errors    | Use `/oh-my-codebuddy:` for token-efficient execution                           |
 

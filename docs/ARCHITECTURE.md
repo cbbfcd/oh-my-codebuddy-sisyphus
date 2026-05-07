@@ -17,7 +17,7 @@ oh-my-codebuddy enables CodeBuddy Code to orchestrate specialized agents through
        │                                │                              │
        ▼                                ▼                              ▼
 ┌─────────────┐              ┌──────────────────┐           ┌─────────────────┐
-│  "ultrawork │              │   CLAUDE.md      │           │ SKILL ACTIVATED │
+│  "ultrawork │              │ CODEBUDDY.md     │           │ SKILL ACTIVATED │
 │   refactor  │─────────────▶│   Auto-Routing   │──────────▶│                 │
 │   the API"  │              │                  │           │ ultrawork +     │
 └─────────────┘              │ Task Type:       │           │ default +       │

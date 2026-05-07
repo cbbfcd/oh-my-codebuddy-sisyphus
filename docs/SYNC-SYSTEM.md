@@ -14,7 +14,7 @@ In a typical project lifecycle:
 2. Creates a release commit
 3. **Forgets** to update version badge in `README.md` (still shows `3.4.0`)
 4. **Forgets** to update version header in `docs/REFERENCE.md`
-5. **Forgets** to update agent count in `.github/CLAUDE.md` after adding new agents
+5. **Forgets** to update agent count in `.github/CODEBUDDY.md` after adding new agents
 6. Users see inconsistent version information across documentation
 7. CI builds look professional but contain stale metadata
 
@@ -52,7 +52,7 @@ The script syncs these files:
 |------|-------------------|
 | `README.md` | npm version/download badges |
 | `docs/REFERENCE.md` | Version badges, version headers |
-| `.github/CLAUDE.md` | Agent count, skill count |
+| `.github/CODEBUDDY.md` | Agent count, skill count |
 | `docs/ARCHITECTURE.md` | Version references |
 | `CHANGELOG.md` | Latest version header (verify only) |
 
@@ -90,7 +90,7 @@ Skills: 45
   - Version badge
   - Version header
 
-✓ .github/CLAUDE.md
+✓ .github/CODEBUDDY.md
   - Agent count
   - Slash command count
 

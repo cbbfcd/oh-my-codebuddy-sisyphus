@@ -19,7 +19,7 @@ claude plugin marketplace add /path/to/oh-my-codebuddy
 # 2. Install the plugin from the local marketplace
 claude plugin install oh-my-codebuddy@oh-my-codebuddy
 
-# 3. Re-run setup inside CodeBuddy Code so CLAUDE.md / skills reflect this checkout
+# 3. Re-run setup inside CodeBuddy Code so CODEBUDDY.md / skills reflect this checkout
 /setup
 
 # 4. Restart CodeBuddy Code to pick up the plugin
@@ -108,7 +108,7 @@ claude --plugin-dir /path/to/oh-my-codebuddy
 omcb setup --plugin-dir-mode
 ```
 
-Or use the `omc` shim which handles `--plugin-dir` automatically:
+Or use the `omcb` shim which handles `--plugin-dir` automatically:
 
 ```bash
 omcb --plugin-dir /path/to/oh-my-codebuddy setup --plugin-dir-mode
@@ -118,7 +118,7 @@ omcb --plugin-dir /path/to/oh-my-codebuddy setup --plugin-dir-mode
 - Plugin is loaded directly from your filesystem (no cache)
 - Changes to agent/skill files take effect after re-running `omcb setup`
 - No marketplace update step needed — just rebuild and re-run setup
-- Requires manual `OMC_PLUGIN_ROOT` export if using `claude` directly (the `omc` shim sets it for you)
+- Requires manual `OMC_PLUGIN_ROOT` export if using `claude` directly (the `omcb` shim sets it for you)
 
 For the full decision matrix and authoritative plugin-dir documentation, see the [Plugin directory flags section in REFERENCE.md](./REFERENCE.md#plugin-directory-flags).
 

@@ -2,7 +2,7 @@
 
 > Quick start guide: from installation to your first OMC session.
 
-If you're new to Oh My ClaudeCode (OMC), follow the steps below in order.
+If you're new to Oh My CodeBuddy (OMC), follow the steps below in order.
 
 1. [Installation](#installation) - Install the OMC plugin and run initial setup
 2. [First Session](#first-session) - Run your first task with autopilot
@@ -73,7 +73,7 @@ After installation, enter one of the following in CodeBuddy Code:
 
 ```bash
 # Option 1: natural language
-setup omc
+setup omcb
 
 # Option 2: skill command
 /oh-my-codebuddy:omc-setup
@@ -96,9 +96,9 @@ Applies OMC only to the current project:
 /oh-my-codebuddy:omc-setup --local
 ```
 
-- Settings are saved to `./.claude/CLAUDE.md`
+- Settings are saved to `./.codebuddy/CODEBUDDY.md`
 - No effect on other projects
-- Existing global `CLAUDE.md` is preserved
+- Existing global `CODEBUDDY.md` is preserved
 
 #### Global setup
 
@@ -108,10 +108,10 @@ Applies OMC to all CodeBuddy Code sessions:
 /oh-my-codebuddy:omc-setup
 ```
 
-- Settings are saved to `~/.codebuddy/CLAUDE.md`
+- Settings are saved to `~/.codebuddy/CODEBUDDY.md`
 - Applied across all projects
 
-> ⚠️ **Warning:** Global setup now asks explicitly before changing your base `~/.codebuddy/CLAUDE.md`. The default choice is still overwrite. If you choose preserve mode instead, plain `claude` stays on your base config and `omc` force-loads the OMC companion config.
+> ⚠️ **Warning:** Global setup now asks explicitly before changing your base `~/.codebuddy/CODEBUDDY.md`. The default choice is still overwrite. If you choose preserve mode instead, plain `claude` stays on your base config and `omcb` force-loads the OMC companion config.
 
 ### Verifying the installation
 
@@ -153,7 +153,7 @@ This loads agents, skills, and commands directly from your checkout without copy
 
 OMC automatically checks for updates every 24 hours. To update manually, re-run the plugin install command.
 
-> ⚠️ **Warning:** After a plugin update, run `/oh-my-codebuddy:omc-setup` again to apply the latest configuration.
+> ⚠️ **Warning:** After a plugin update, run `/oh-my-codebuddy:omc-setup` again to apply the latest CODEBUDDY.md configuration.
 
 ### Uninstalling
 
@@ -248,8 +248,8 @@ OMC supports two levels of configuration files.
 
 | Scope | File path | Purpose |
 |-------|-----------|---------|
-| User (global) | `~/.config/claude-omc/config.jsonc` | Applied to all projects |
-| Project | `.claude/omc.jsonc` | Applied to current project only |
+| User (global) | `~/.config/codebuddy-omcb/config.jsonc` | Applied to all projects |
+| Project | `.codebuddy/omcb.jsonc` | Applied to current project only |
 
 > ⚠️ **Warning:** The configuration file format is JSONC (JSON with comments support). It is not a TypeScript config file (`omc.config.ts`).
 
@@ -258,8 +258,8 @@ OMC supports two levels of configuration files.
 When settings exist from multiple sources, they are merged in the following order (lower entries take precedence):
 
 ```
-Defaults → User config (~/.config/claude-omc/config.jsonc)
-         → Project config (.claude/omc.jsonc)
+Defaults → User config (~/.config/codebuddy-omcb/config.jsonc)
+         → Project config (.codebuddy/omcb.jsonc)
          → Environment variables
 ```
 
@@ -405,18 +405,18 @@ OMC automatically selects a model tier based on task complexity:
 | MEDIUM | sonnet | Standard implementation, general tasks |
 | HIGH | opus | Architecture, deep analysis |
 
-### CLAUDE.md configuration
+### CODEBUDDY.md configuration
 
-OMC's default behavior is also configured via `CLAUDE.md` files. Running `/oh-my-codebuddy:omc-setup` generates this file automatically.
+OMC's default behavior is also configured via `CODEBUDDY.md` files. Running `/oh-my-codebuddy:omc-setup` generates this file automatically.
 
 | Scope | File | Description |
 |-------|------|-------------|
-| Global | `~/.codebuddy/CLAUDE.md` | Shared settings across all projects |
-| Project | `.claude/CLAUDE.md` | Per-project context and overrides |
+| Global | `~/.codebuddy/CODEBUDDY.md` | Shared settings across all projects |
+| Project | `.codebuddy/CODEBUDDY.md` | Per-project context and overrides |
 
 ### When to re-run setup
 
 - After initial installation
-- After an OMC update (to apply the latest configuration)
+- After an OMC update (to apply the latest CODEBUDDY.md configuration)
 - When switching to a different machine
 - When starting a new project (use the `--local` option)
