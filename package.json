@@ -1,7 +1,7 @@
 {
-  "name": "oh-my-claude-sisyphus",
+  "name": "oh-my-codebuddy",
   "version": "4.13.6",
-  "description": "Multi-agent orchestration system for Claude Code - Inspired by oh-my-opencode",
+  "description": "CodeBuddy Code 多 Agent 智能编排系统",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,9 +12,9 @@
     }
   },
   "bin": {
-    "oh-my-claudecode": "bridge/cli.cjs",
-    "omc": "bridge/cli.cjs",
-    "omc-cli": "bridge/cli.cjs"
+    "oh-my-codebuddy": "bridge/cli.cjs",
+    "omcb": "bridge/cli.cjs",
+    "omcb-cli": "bridge/cli.cjs"
   },
   "files": [
     "dist",
@@ -68,7 +68,7 @@
     "version": "bash scripts/sync-version.sh"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.0",
+    "@tencent-ai/agent-sdk": "^1.0.0",
     "@ast-grep/napi": "^0.31.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@types/better-sqlite3": "^7.6.13",
@@ -82,7 +82,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.78.0",
     "@eslint/js": "^9.39.2",
     "@types/node": "^22.19.7",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
@@ -102,24 +101,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+    "url": "git+https://github.com/anthropic-ai/oh-my-codebuddy.git"
   },
-  "homepage": "https://github.com/Yeachan-Heo/oh-my-claudecode#readme",
+  "homepage": "https://github.com/anthropic-ai/oh-my-codebuddy#readme",
   "bugs": {
-    "url": "https://github.com/Yeachan-Heo/oh-my-claudecode/issues"
+    "url": "https://github.com/anthropic-ai/oh-my-codebuddy/issues"
   },
   "author": "Yeachan Heo",
   "license": "MIT",
   "keywords": [
-    "claude",
-    "claude-code",
+    "codebuddy",
+    "codebuddy-code",
     "ai",
     "agent",
     "multi-agent",
     "orchestration",
-    "omc",
-    "claudecode",
-    "anthropic",
+    "omcb",
+    "tencent",
     "llm"
   ],
   "publishConfig": {
