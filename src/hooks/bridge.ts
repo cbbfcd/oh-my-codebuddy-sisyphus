@@ -13,6 +13,17 @@
  * ```
  */
 
+/**
+ * CodeBuddy Code Hook Compatibility
+ *
+ * CodeBuddy supports 9 events (vs Claude Code's 14).
+ * Missing events are handled as follows:
+ * - PostToolUseFailure: merged into PostToolUse (check tool_response for errors)
+ * - SubagentStart: inferred from PreToolUse when tool_name === 'Agent'
+ * - PermissionRequest: not applicable (CodeBuddy handles differently)
+ * - WorktreeCreate/Remove: handled via Bash hooks if needed
+ */
+
 import { pathToFileURL } from "url";
 import {
   existsSync,
