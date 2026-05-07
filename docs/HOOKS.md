@@ -1,10 +1,10 @@
 # Hooks System
 
-> OMC's 20 hooks intercept Claude Code lifecycle events to enable magic keywords, context injection, and quality enforcement.
+> OMC's 20 hooks intercept CodeBuddy Code lifecycle events to enable magic keywords, context injection, and quality enforcement.
 
 ## What Are Hooks?
 
-Hooks are scripts that execute automatically in response to Claude Code lifecycle events. oh-my-claudecode extends Claude Code's default behavior with 20 hooks.
+Hooks are scripts that execute automatically in response to CodeBuddy Code lifecycle events. oh-my-codebuddy extends CodeBuddy Code's default behavior with 20 hooks.
 
 When a user submits a prompt, a tool runs, or a session starts/ends, hooks fire automatically to inject additional context, activate modes, and manage state.
 
@@ -89,7 +89,7 @@ Separate hook names with commas to skip only those hooks.
 
 ## Lifecycle Events
 
-Claude Code emits events throughout a session. OMC attaches hooks to these events to extend behavior. There are 11 lifecycle events.
+CodeBuddy Code emits events throughout a session. OMC attaches hooks to these events to extend behavior. There are 11 lifecycle events.
 
 ### UserPromptSubmit
 
@@ -232,7 +232,7 @@ Enforces continuation when an execution mode is active. This is the hook that ke
 - **Reinforcement message**: "The boulder never stops" — prompts Claude to continue working
 - **Staleness check**: States older than 2 hours are treated as inactive to prevent stale state from blocking new sessions
 - **Notification**: Sends Discord/Telegram/Slack notification on first stop (if configured)
-- **Cancel**: Use `/oh-my-claudecode:cancel` to deactivate modes
+- **Cancel**: Use `/oh-my-codebuddy:cancel` to deactivate modes
 
 > **Note**: autopilot, ralph, ultrawork, and ultraqa are **skills** (invoked via keyword-detector), not hooks. The persistent-mode hook is what enforces their continuation by blocking the Stop event.
 
@@ -265,7 +265,7 @@ cancelomc
 or
 
 ```
-/oh-my-claudecode:cancel
+/oh-my-codebuddy:cancel
 ```
 
 `cancel` removes state files for all active modes: ralph, autopilot, ultrawork, and any others.
@@ -274,7 +274,7 @@ or
 
 ## Context Management Hooks
 
-Claude Code's context window is finite. During long sessions, compaction occurs and previous conversation content is summarized. OMC's context management hooks prepare for compaction, preserve important information, and maintain project-level memory.
+CodeBuddy Code's context window is finite. During long sessions, compaction occurs and previous conversation content is summarized. OMC's context management hooks prepare for compaction, preserve important information, and maintain project-level memory.
 
 ### notepad
 
@@ -432,7 +432,7 @@ cancel  (highest priority, exclusive)
 ### Usage Examples
 
 ```bash
-# In Claude Code:
+# In CodeBuddy Code:
 
 # Autonomous execution
 autopilot: implement user authentication with OAuth
@@ -458,5 +458,5 @@ stopomc
 `team` is not auto-detected. It must be invoked explicitly via the `/team` slash command to prevent infinite spawning.
 
 ```
-/oh-my-claudecode:team 3:executor "build a fullstack todo app"
+/oh-my-codebuddy:team 3:executor "build a fullstack todo app"
 ```

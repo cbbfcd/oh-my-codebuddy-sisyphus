@@ -222,7 +222,7 @@ notepad_read()
 
 ### Compaction Behavior
 
-When Claude Code compacts context:
+When CodeBuddy Code compacts context:
 
 1. Notepad contents are included in the compaction result
 2. Priority notes are restored first
@@ -734,7 +734,7 @@ load_omc_skills_local()
 
 #### `load_omc_skills_global`
 
-Loads skills from the global user directory (`~/.claude/skills/`).
+Loads skills from the global user directory (`~/.codebuddy/skills/`).
 
 ```
 load_omc_skills_global()
@@ -778,4 +778,4 @@ deepinit_manifest(action="save")
 deepinit_manifest(action="check")
 ```
 
-Used internally by the `deepinit` skill (`/oh-my-claudecode:deepinit`) to enable incremental AGENTS.md regeneration instead of full re-scans.
+Used internally by the `deepinit` skill (`/oh-my-codebuddy:deepinit`) to enable incremental AGENTS.md regeneration instead of full re-scans.

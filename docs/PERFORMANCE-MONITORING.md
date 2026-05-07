@@ -1,6 +1,6 @@
 # Performance Monitoring Guide
 
-Comprehensive guide to monitoring, debugging, and optimizing Claude Code and oh-my-claudecode performance.
+Comprehensive guide to monitoring, debugging, and optimizing CodeBuddy Code and oh-my-codebuddy performance.
 
 ---
 
@@ -21,7 +21,7 @@ Comprehensive guide to monitoring, debugging, and optimizing Claude Code and oh-
 
 ## Overview
 
-oh-my-claudecode provides comprehensive monitoring capabilities for tracking agent performance, token usage, costs, and identifying bottlenecks in multi-agent workflows. This guide covers both built-in tools and external resources for monitoring Claude's performance.
+oh-my-codebuddy provides comprehensive monitoring capabilities for tracking agent performance, token usage, costs, and identifying bottlenecks in multi-agent workflows. This guide covers both built-in tools and external resources for monitoring Claude's performance.
 
 ### What You Can Monitor
 
@@ -46,7 +46,7 @@ The Agent Observatory provides real-time visibility into all running agents, the
 The observatory is automatically displayed in the HUD when agents are running. You can also query it programmatically:
 
 ```typescript
-import { getAgentObservatory } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { getAgentObservatory } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const obs = getAgentObservatory(process.cwd());
 console.log(obs.header);  // "Agent Observatory (3 active, 85% efficiency)"
@@ -84,7 +84,7 @@ Agent Observatory (3 active, 85% efficiency)
 
 ### Session-End Summaries
 
-The legacy analytics workflow described in older docs (`omc-analytics`, `omc cost`, `omc backfill`, and the `analytics` HUD preset) is no longer part of current `dev`.
+The legacy analytics workflow described in older docs (`omc-analytics`, `omcb cost`, `omcb backfill`, and the `analytics` HUD preset) is no longer part of current `dev`.
 
 The supported monitoring surfaces on current builds are:
 
@@ -96,7 +96,7 @@ The supported monitoring surfaces on current builds are:
 #### Supported Inspection Commands
 
 ```bash
-omc hud
+omcb hud
 tail -20 .omc/state/agent-replay-*.jsonl
 ls .omc/sessions/*.json
 ```
@@ -148,7 +148,7 @@ Each line is a JSON event:
 #### Analyzing Replay Data
 
 ```typescript
-import { getReplaySummary } from 'oh-my-claudecode/hooks/subagent-tracker/session-replay';
+import { getReplaySummary } from 'oh-my-codebuddy/hooks/subagent-tracker/session-replay';
 
 const summary = getReplaySummary(process.cwd(), sessionId);
 
@@ -181,7 +181,7 @@ The replay system automatically identifies bottlenecks:
 
 ### Configuration
 
-Edit `~/.claude/settings.json`:
+Edit `~/.codebuddy/settings.json`:
 
 ```json
 {
@@ -219,7 +219,7 @@ Edit `~/.claude/settings.json`:
 3. **Review tool_usage** in agent state
 
 ```typescript
-import { getAgentPerformance } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { getAgentPerformance } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const perf = getAgentPerformance(process.cwd(), agentId);
 console.log('Tool timings:', perf.tool_timings);
@@ -231,7 +231,7 @@ console.log('Bottleneck:', perf.bottleneck);
 When multiple agents modify the same file:
 
 ```typescript
-import { detectFileConflicts } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { detectFileConflicts } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const conflicts = detectFileConflicts(process.cwd());
 conflicts.forEach(c => {
@@ -250,7 +250,7 @@ OMC automatically detects problematic agents:
 | `file_conflict` | Multiple agents on file | Warning |
 
 ```typescript
-import { suggestInterventions } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { suggestInterventions } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const interventions = suggestInterventions(process.cwd());
 interventions.forEach(i => {
@@ -263,7 +263,7 @@ interventions.forEach(i => {
 Track how well your parallel agents are performing:
 
 ```typescript
-import { calculateParallelEfficiency } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { calculateParallelEfficiency } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const eff = calculateParallelEfficiency(process.cwd());
 console.log(`Efficiency: ${eff.score}%`);
@@ -279,7 +279,7 @@ console.log(`Active: ${eff.active}, Stale: ${eff.stale}, Total: ${eff.total}`);
 Clean up agents that exceed the timeout threshold:
 
 ```typescript
-import { cleanupStaleAgents } from 'oh-my-claudecode/hooks/subagent-tracker';
+import { cleanupStaleAgents } from 'oh-my-codebuddy/hooks/subagent-tracker';
 
 const cleaned = cleanupStaleAgents(process.cwd());
 console.log(`Cleaned ${cleaned} stale agents`);
@@ -312,8 +312,8 @@ Visit the platform to:
 
 | Resource | Description | Link |
 |----------|-------------|------|
-| Claude Code Discord | Community support and tips | [discord.gg/anthropic](https://discord.gg/anthropic) |
-| OMC GitHub Issues | Bug reports and feature requests | [GitHub Issues](https://github.com/Yeachan-Heo/oh-my-claudecode/issues) |
+| CodeBuddy Code Discord | Community support and tips | [discord.gg/anthropic](https://discord.gg/anthropic) |
+| OMC GitHub Issues | Bug reports and feature requests | [GitHub Issues](https://github.com/anthropic-ai/oh-my-codebuddy/issues) |
 | Anthropic Documentation | Official Claude documentation | [docs.anthropic.com](https://docs.anthropic.com) |
 
 ### Model Performance Benchmarks
@@ -334,7 +334,7 @@ Track Claude's performance across standard benchmarks:
 
 ```bash
 # Set up budget warnings in HUD
-/oh-my-claudecode:hud
+/oh-my-codebuddy:hud
 # Select "focused" or "full"
 ```
 
@@ -378,7 +378,7 @@ if (summary.bottlenecks.length > 0) {
 Periodically clean up old replay files and stale agent state:
 
 ```typescript
-import { cleanupReplayFiles } from 'oh-my-claudecode/hooks/subagent-tracker/session-replay';
+import { cleanupReplayFiles } from 'oh-my-codebuddy/hooks/subagent-tracker/session-replay';
 
 cleanupReplayFiles(process.cwd()); // Keeps last 10 sessions
 ```
@@ -423,7 +423,7 @@ cleanupReplayFiles(process.cwd()); // Keeps last 10 sessions
 
 **Solutions**:
 1. End the session normally so the `session-end` hook runs
-2. Verify HUD / hooks are installed: `/oh-my-claudecode:hud setup`
+2. Verify HUD / hooks are installed: `/oh-my-codebuddy:hud setup`
 3. Check the current workspace `.omc/sessions/` directory
 4. Review `.omc/state/agent-replay-*.jsonl` if you need timing/activity evidence instead
 

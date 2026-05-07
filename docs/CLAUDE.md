@@ -1,9 +1,9 @@
 <!-- OMC:START -->
 <!-- OMC:VERSION:4.13.6 -->
 
-# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
-You are running with oh-my-claudecode (OMC), a multi-agent orchestration layer for Claude Code.
+You are running with oh-my-codebuddy (OMC), a multi-agent orchestration layer for CodeBuddy Code.
 Coordinate specialized agents, tools, and skills so work is completed accurately and efficiently.
 
 <operating_principles>
@@ -21,11 +21,11 @@ Route code to `executor` (use `model=opus` for complex work). Uncertain SDK usag
 
 <model_routing>
 `haiku` (quick lookups), `sonnet` (standard), `opus` (architecture, deep analysis).
-Direct writes OK for: `~/.claude/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
+Direct writes OK for: `~/.codebuddy/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
 </model_routing>
 
 <skills>
-Invoke via `/oh-my-claudecode:<name>`. Trigger patterns auto-detect keywords.
+Invoke via `/oh-my-codebuddy:<name>`. Trigger patterns auto-detect keywords.
 Tier-0 workflows include `autopilot`, `ultrawork`, `ralph`, `team`, and `ralplan`.
 Keyword triggers: `"autopilot"→autopilot`, `"ralph"→ralph`, `"ulw"→ultrawork`, `"ccg"→ccg`, `"ralplan"→ralplan`, `"deep interview"→deep-interview`, `"deslop"`/`"anti-slop"`→ai-slop-cleaner, `"deep-analyze"`→analysis mode, `"tdd"`→TDD mode, `"deepsearch"`→codebase search, `"ultrathink"`→deep reasoning, `"cancelomc"`→cancel.
 Team orchestration is explicit via `/team`.
@@ -51,7 +51,7 @@ Kill switches: `DISABLE_OMC`, `OMC_SKIP_HOOKS` (comma-separated).
 </hooks_and_context>
 
 <cancellation>
-`/oh-my-claudecode:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work incomplete.
+`/oh-my-codebuddy:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work incomplete.
 </cancellation>
 
 <worktree_paths>
@@ -60,6 +60,6 @@ State: `.omc/state/`, `.omc/state/sessions/{sessionId}/`, `.omc/notepad.md`, `.o
 
 ## Setup
 
-Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
+Say "setup omc" or run `/oh-my-codebuddy:omc-setup`.
 
 <!-- OMC:END -->

@@ -1,6 +1,6 @@
 # Reference Documentation
 
-Complete reference for oh-my-claudecode. For quick start, see the main [README.md](../README.md).
+Complete reference for oh-my-codebuddy. For quick start, see the main [README.md](../README.md).
 
 ---
 
@@ -25,25 +25,25 @@ Complete reference for oh-my-claudecode. For quick start, see the main [README.m
 
 ## Installation
 
-**Only the Claude Code Plugin method is supported.** Other installation methods (npm, bun, curl) are deprecated and may not work correctly.
+**Only the CodeBuddy Code Plugin method is supported.** Other installation methods (npm, bun, curl) are deprecated and may not work correctly.
 
-### Claude Code Plugin (Required)
+### CodeBuddy Code Plugin (Required)
 
 ```bash
 # Step 1: Add the marketplace
-/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
 
 # Step 2: Install the plugin
-/plugin install oh-my-claudecode
+/plugin install oh-my-codebuddy
 ```
 
-This integrates directly with Claude Code's plugin system and uses Node.js hooks.
+This integrates directly with CodeBuddy Code's plugin system and uses Node.js hooks.
 
 > **Note**: Direct npm/bun global installs are **not supported**. The plugin system handles all installation and hook setup automatically.
 
 ### Requirements
 
-- [Claude Code](https://docs.anthropic.com/claude-code) installed
+- [CodeBuddy Code](https://docs.anthropic.com/claude-code) installed
 - One of:
   - **Claude Max/Pro subscription** (recommended for individuals)
   - **Anthropic API key** (`ANTHROPIC_API_KEY` environment variable)
@@ -54,10 +54,10 @@ This integrates directly with Claude Code's plugin system and uses Node.js hooks
 
 ### Project-Scoped Configuration (Recommended)
 
-Configure omc for the current project only:
+Configure omcb for the current project only:
 
 ```
-/oh-my-claudecode:omc-setup --local
+/oh-my-codebuddy:omc-setup --local
 ```
 
 - Creates `./.claude/CLAUDE.md` in your current project
@@ -67,20 +67,20 @@ Configure omc for the current project only:
 
 ### Global Configuration
 
-Configure omc for all Claude Code sessions:
+Configure omcb for all CodeBuddy Code sessions:
 
 ```
-/oh-my-claudecode:omc-setup
+/oh-my-codebuddy:omc-setup
 ```
 
-- Creates `~/.claude/CLAUDE.md` globally
+- Creates `~/.codebuddy/CLAUDE.md` globally
 - Configuration applies to all projects
-- **Default**: explicitly overwrites existing `~/.claude/CLAUDE.md`
-- **Optional preserve mode**: keeps the base file, writes OMC to `~/.claude/CLAUDE-omc.md`, and lets `omc` force-load that companion config at launch while plain `claude` stays unchanged
+- **Default**: explicitly overwrites existing `~/.codebuddy/CLAUDE.md`
+- **Optional preserve mode**: keeps the base file, writes OMC to `~/.codebuddy/CLAUDE-omc.md`, and lets `omc` force-load that companion config at launch while plain `claude` stays unchanged
 
 ### What Configuration Enables
 
-| Feature           | Without     | With omc Config            |
+| Feature           | Without     | With omcb Config            |
 | ----------------- | ----------- | -------------------------- |
 | Agent delegation  | Manual only | Automatic based on task    |
 | Keyword detection | Disabled    | ultrawork, search |
@@ -93,7 +93,7 @@ Configure omc for all Claude Code sessions:
 If both configurations exist, **project-scoped takes precedence** over global:
 
 ```
-./.claude/CLAUDE.md  (project)   →  Overrides  →  ~/.claude/CLAUDE.md  (global)
+./.claude/CLAUDE.md  (project)   →  Overrides  →  ~/.codebuddy/CLAUDE.md  (global)
 ```
 
 ### Environment Variables
@@ -118,7 +118,7 @@ By default, OMC stores state in `{worktree}/.omc/`. This is lost when worktrees 
 export OMC_STATE_DIR="$HOME/.claude/omc"
 ```
 
-This resolves to `~/.claude/omc/{project-identifier}/` where the project identifier uses a hash of the git remote URL (stable across worktrees/clones) with a fallback to the directory path hash for local-only repos.
+This resolves to `~/.codebuddy/omc/{project-identifier}/` where the project identifier uses a hash of the git remote URL (stable across worktrees/clones) with a fallback to the directory path hash for local-only repos.
 
 If both a legacy `{worktree}/.omc/` directory and a centralized directory exist, OMC logs a notice and uses the centralized directory. You can then migrate data from the legacy directory and remove it.
 
@@ -126,10 +126,10 @@ If both a legacy `{worktree}/.omc/` directory and a centralized directory exist,
 
 - **First time**: Run after installation (choose project or global)
 - **After updates**: Re-run to get the latest configuration
-- **Different machines**: Run on each machine where you use Claude Code
-- **New projects**: Run `/oh-my-claudecode:omc-setup --local` in each project that needs omc
+- **Different machines**: Run on each machine where you use CodeBuddy Code
+- **New projects**: Run `/oh-my-codebuddy:omc-setup --local` in each project that needs omc
 
-> **NOTE**: After updating the plugin (via `npm update`, `git pull`, or Claude Code's plugin update), you MUST re-run `/oh-my-claudecode:omc-setup` to apply the latest CLAUDE.md changes.
+> **NOTE**: After updating the plugin (via `npm update`, `git pull`, or CodeBuddy Code's plugin update), you MUST re-run `/oh-my-codebuddy:omc-setup` to apply the latest CLAUDE.md changes.
 
 ### Remote OMC / Remote MCP Access
 
@@ -184,7 +184,7 @@ This remains a prompt-level workflow contract, not runtime enforcement. For the 
 
 ### Agent Customization
 
-Edit agent files in `~/.claude/agents/` to customize behavior:
+Edit agent files in `~/.codebuddy/agents/` to customize behavior:
 
 ```yaml
 ---
@@ -192,13 +192,13 @@ name: architect
 description: Your custom description
 tools: Read, Grep, Glob, Bash, Edit
 model: opus # or sonnet, haiku
-# Optional: effort inherits from the parent Claude Code session unless you add an explicit override.
+# Optional: effort inherits from the parent CodeBuddy Code session unless you add an explicit override.
 # effort: high
 ---
 Your custom system prompt here...
 ```
 
-Bundled OMC agent prompts currently do **not** ship an `effort:` frontmatter field. Any effort language inside `agents/*.md` is behavioral guidance for the prompt body, while runtime effort inherits from the parent Claude Code session unless the agent markdown explicitly declares an override.
+Bundled OMC agent prompts currently do **not** ship an `effort:` frontmatter field. Any effort language inside `agents/*.md` is behavioral guidance for the prompt body, while runtime effort inherits from the parent CodeBuddy Code session unless the agent markdown explicitly declares an override.
 
 ### Project-Level Config
 
@@ -222,21 +222,21 @@ This is a TypeScript monorepo using:
 
 ### Stop Callback Notification Tags
 
-Configure tags for Telegram/Discord stop callbacks with `omc config-stop-callback`.
+Configure tags for Telegram/Discord stop callbacks with `omcb config-stop-callback`.
 
 ```bash
 # Set/replace tags
-omc config-stop-callback telegram --enable --token <bot_token> --chat <chat_id> --tag-list "@alice,bob"
-omc config-stop-callback discord --enable --webhook <url> --tag-list "@here,123456789012345678,role:987654321098765432"
+omcb config-stop-callback telegram --enable --token <bot_token> --chat <chat_id> --tag-list "@alice,bob"
+omcb config-stop-callback discord --enable --webhook <url> --tag-list "@here,123456789012345678,role:987654321098765432"
 
 # Incremental updates
-omc config-stop-callback telegram --add-tag charlie
-omc config-stop-callback discord --remove-tag @here
-omc config-stop-callback discord --clear-tags
+omcb config-stop-callback telegram --add-tag charlie
+omcb config-stop-callback discord --remove-tag @here
+omcb config-stop-callback discord --clear-tags
 
 # Inspect current callback config
-omc config-stop-callback telegram --show
-omc config-stop-callback discord --show
+omcb config-stop-callback telegram --show
+omcb config-stop-callback discord --show
 ```
 
 Tag behavior:
@@ -251,76 +251,76 @@ Tag behavior:
 
 When you launch OMC via a local development checkout instead of the marketplace plugin, you can configure how OMC discovers agents, skills, and commands.
 
-> **Recommended for local development**: Use `omc --plugin-dir <path>` (paired with `omc setup --plugin-dir-mode`). Unlike `claude plugin marketplace add`, this flow loads agents/skills directly from your checkout with **no plugin cache**, so edits are picked up on the next session without `marketplace update` / `plugin update` round-trips — much faster iteration.
+> **Recommended for local development**: Use `omcb --plugin-dir <path>` (paired with `omcb setup --plugin-dir-mode`). Unlike `claude plugin marketplace add`, this flow loads agents/skills directly from your checkout with **no plugin cache**, so edits are picked up on the next session without `marketplace update` / `plugin update` round-trips — much faster iteration.
 
-### `omc --plugin-dir <path>`
+### `omcb --plugin-dir <path>`
 
 **Usage**: Non-consuming launcher flag that captures your local checkout path.
 
 ```bash
-omc --plugin-dir /path/to/oh-my-claudecode setup --plugin-dir-mode
+omcb --plugin-dir /path/to/oh-my-codebuddy setup --plugin-dir-mode
 ```
 
-- **What it does**: Parses `--plugin-dir <path>` (or `--plugin-dir=<path>`), resolves it to an absolute path, sets `OMC_PLUGIN_ROOT` environment variable, then passes the flag through to Claude Code untouched.
-- **Non-consuming**: The flag stays in the argument list so Claude Code's plugin loader still sees it.
+- **What it does**: Parses `--plugin-dir <path>` (or `--plugin-dir=<path>`), resolves it to an absolute path, sets `OMC_PLUGIN_ROOT` environment variable, then passes the flag through to CodeBuddy Code untouched.
+- **Non-consuming**: The flag stays in the argument list so CodeBuddy Code's plugin loader still sees it.
 - **Precedence**: Explicit `--plugin-dir` flag wins over any pre-existing `OMC_PLUGIN_ROOT` env var (with a warning if they disagree).
 - **Resolution**: Relative paths are resolved to absolute via `path.resolve()`. Note: `~` is **not** expanded — use `$HOME` or an absolute path instead.
-- **Pair with setup**: `--plugin-dir` alone only affects the current Claude session. You must **also** run `omc setup --plugin-dir-mode` (or let auto-detection kick in from `OMC_PLUGIN_ROOT`) so HUD, hooks, and CLAUDE.md are installed for the linked checkout. Skipping this step leaves `~/.claude/` pointing at a stale plugin root.
+- **Pair with setup**: `--plugin-dir` alone only affects the current Claude session. You must **also** run `omcb setup --plugin-dir-mode` (or let auto-detection kick in from `OMC_PLUGIN_ROOT`) so HUD, hooks, and CLAUDE.md are installed for the linked checkout. Skipping this step leaves `~/.codebuddy/` pointing at a stale plugin root.
 
 ### `claude --plugin-dir <path>` (direct)
 
-**Usage**: When you launch Claude Code directly without the `omc` shim.
+**Usage**: When you launch CodeBuddy Code directly without the `omc` shim.
 
 ```bash
-export OMC_PLUGIN_ROOT=/path/to/oh-my-claudecode
-claude --plugin-dir /path/to/oh-my-claudecode
+export OMC_PLUGIN_ROOT=/path/to/oh-my-codebuddy
+claude --plugin-dir /path/to/oh-my-codebuddy
 ```
 
 - **Requirement**: You must manually set `OMC_PLUGIN_ROOT` environment variable so the HUD wrapper and other env-aware components can resolve the same path as the plugin loader.
 - **Why**: The HUD bundle needs to know where agents/skills/commands are located so they stay in sync with the plugin instance.
 - **Note**: Plain `claude` (without `omc`) does not automatically capture `--plugin-dir` for you.
 
-### `omc setup --plugin-dir-mode`
+### `omcb setup --plugin-dir-mode`
 
 **Usage**: Explicit flag to enable dev plugin-dir mode during setup.
 
 ```bash
-omc setup --plugin-dir-mode
+omcb setup --plugin-dir-mode
 ```
 
-- **What it does**: Skips copying agents and bundled skills into `~/.claude/` because the plugin already provides them at runtime via `--plugin-dir`.
+- **What it does**: Skips copying agents and bundled skills into `~/.codebuddy/` because the plugin already provides them at runtime via `--plugin-dir`.
 - **Still installs**:
-  - HUD bundle (`~/.claude/hud/`)
+  - HUD bundle (`~/.codebuddy/hud/`)
   - Git hooks (`.git/hooks/`, if applicable)
   - CLAUDE.md configuration files
   - `.omc-config.json` state
 - **Conflicts with `--no-plugin`**: If both flags are set, `--no-plugin` takes precedence (with a warning).
 - **Auto-detection**: If `OMC_PLUGIN_ROOT` is already set in the environment, `--plugin-dir-mode` is auto-enabled (unless `--no-plugin` overrides it).
 
-### `omc doctor --plugin-dir <path>` (NEW)
+### `omcb doctor --plugin-dir <path>` (NEW)
 
 **Usage**: Run diagnostics with a specific plugin directory.
 
 ```bash
-omc doctor --plugin-dir /path/to/oh-my-claudecode
-omc doctor conflicts --plugin-dir /path/to/oh-my-claudecode
+omcb doctor --plugin-dir /path/to/oh-my-codebuddy
+omcb doctor conflicts --plugin-dir /path/to/oh-my-codebuddy
 ```
 
 - **What it does**: Resolves the provided path to absolute, sets `OMC_PLUGIN_ROOT` before the doctor action runs, matching `launch.ts` semantics.
 - **Precedence**: Explicit `--plugin-dir` flag wins over pre-existing `OMC_PLUGIN_ROOT` env var (with a warning if they disagree).
-- **Subcommand support**: Works with both `omc doctor` and `omc doctor conflicts`.
+- **Subcommand support**: Works with both `omcb doctor` and `omcb doctor conflicts`.
 - **Output**: Diagnostic results reflect the plugin directory you specified.
 
 ### `OMC_PLUGIN_ROOT` environment variable
 
-**Usage**: Authoritative source for the active plugin root when launching Claude Code.
+**Usage**: Authoritative source for the active plugin root when launching CodeBuddy Code.
 
 ```bash
-export OMC_PLUGIN_ROOT=/path/to/oh-my-claudecode
-claude --plugin-dir /path/to/oh-my-claudecode
+export OMC_PLUGIN_ROOT=/path/to/oh-my-codebuddy
+claude --plugin-dir /path/to/oh-my-codebuddy
 ```
 
-- **Set by**: `omc --plugin-dir <path>` launcher (via `src/cli/launch.ts`).
+- **Set by**: `omcb --plugin-dir <path>` launcher (via `src/cli/launch.ts`).
 - **Read by**: HUD wrapper, setup auto-detect, doctor diagnostics.
 - **Required when**: Using `claude --plugin-dir` directly (without the `omc` shim), so downstream components can resolve the same path.
 - **Precedence**: Explicit CLI flags override this env var (with warnings).
@@ -329,41 +329,41 @@ claude --plugin-dir /path/to/oh-my-claudecode
 
 | Your setup | Launch command | Setup command | Expected behavior |
 |---|---|---|---|
-| **Marketplace plugin** (recommended) | `omc` or `claude` (default) | `omc setup` | Normal: agents/skills copied to `~/.claude/` |
-| **Local dev checkout, want OMC shim** | `omc --plugin-dir /path` | `omc setup --plugin-dir-mode` | Dev mode: agents/skills loaded from `/path`, not copied |
-| **Local dev checkout, no OMC shim** | `claude --plugin-dir /path` + `export OMC_PLUGIN_ROOT=/path` | `omc setup --plugin-dir-mode` | Dev mode + manual env: agents/skills loaded from `/path` |
-| **Local dev, want bundled skills** | `omc --plugin-dir /path` | `omc setup --no-plugin` | Forces local bundled skills to `~/.claude/skills/`, ignoring plugin |
-| **Troubleshooting a specific path** | N/A | `omc doctor --plugin-dir /path` | Diagnostics show status for `/path` |
+| **Marketplace plugin** (recommended) | `omc` or `claude` (default) | `omcb setup` | Normal: agents/skills copied to `~/.codebuddy/` |
+| **Local dev checkout, want OMC shim** | `omcb --plugin-dir /path` | `omcb setup --plugin-dir-mode` | Dev mode: agents/skills loaded from `/path`, not copied |
+| **Local dev checkout, no OMC shim** | `claude --plugin-dir /path` + `export OMC_PLUGIN_ROOT=/path` | `omcb setup --plugin-dir-mode` | Dev mode + manual env: agents/skills loaded from `/path` |
+| **Local dev, want bundled skills** | `omcb --plugin-dir /path` | `omcb setup --no-plugin` | Forces local bundled skills to `~/.codebuddy/skills/`, ignoring plugin |
+| **Troubleshooting a specific path** | N/A | `omcb doctor --plugin-dir /path` | Diagnostics show status for `/path` |
 
 ---
 
 ## CLI Commands: ask/team/session
 
-### `omc ask`
+### `omcb ask`
 
 ```bash
-omc ask claude "review this patch"
-omc ask codex "review this patch from a security perspective"
-omc ask gemini --prompt "suggest UX improvements"
-omc ask claude --agent-prompt executor --prompt "create an implementation plan"
+omcb ask claude "review this patch"
+omcb ask codex "review this patch from a security perspective"
+omcb ask gemini --prompt "suggest UX improvements"
+omcb ask claude --agent-prompt executor --prompt "create an implementation plan"
 ```
 
 - Provider matrix: `claude | codex | gemini`
 - Artifacts: `.omc/artifacts/ask/{provider}-{slug}-{timestamp}.md`
 - Canonical env vars: `OMC_ASK_ADVISOR_SCRIPT`, `OMC_ASK_ORIGINAL_TASK`
 - Phase-1 aliases (deprecated warning): `OMX_ASK_ADVISOR_SCRIPT`, `OMX_ASK_ORIGINAL_TASK`
-- Skill entrypoint: `/oh-my-claudecode:ask <claude|codex|gemini> <prompt>` routes to this command
+- Skill entrypoint: `/oh-my-codebuddy:ask <claude|codex|gemini> <prompt>` routes to this command
 
-### `omc team` (CLI runtime surface)
+### `omcb team` (CLI runtime surface)
 
 ```bash
-omc team 2:codex "review auth flow"
-omc team status review-auth-flow
-omc team shutdown review-auth-flow --force
-omc team api claim-task --input '{"team_name":"auth-review","task_id":"1","worker":"worker-1"}' --json
+omcb team 2:codex "review auth flow"
+omcb team status review-auth-flow
+omcb team shutdown review-auth-flow --force
+omcb team api claim-task --input '{"team_name":"auth-review","task_id":"1","worker":"worker-1"}' --json
 ```
 
-Supported entrypoints: direct start (`omc team [N:agent] "<task>"`), `status`, `shutdown`, and `api`.
+Supported entrypoints: direct start (`omcb team [N:agent] "<task>"`), `status`, `shutdown`, and `api`.
 
 Native team worker worktrees are an opt-in/config-gated runtime-v2 rollout. See [Native Team Worktree Mode](TEAM-WORKTREE-MODE.md) for the worktree path contract, canonical `OMC_TEAM_STATE_ROOT` behavior, status fields, and dirty-worktree cleanup policy.
 
@@ -372,12 +372,12 @@ Topology behavior:
 - inside cmux (`CMUX_SURFACE_ID` without `$TMUX`): launch a detached tmux session for team workers
 - plain terminal: launch a detached tmux session for team workers
 
-### `omc session search`
+### `omcb session search`
 
 ```bash
-omc session search "team leader stale"
-omc session search notify-hook --since 7d
-omc session search provider-routing --project all --json
+omcb session search "team leader stale"
+omcb session search notify-hook --since 7d
+omcb session search provider-routing --project all --json
 ```
 
 - Defaults to the current project/worktree scope
@@ -394,18 +394,18 @@ The Team MCP runtime server is **not enabled by default**. If manually enabled, 
 ```json
 {
   "code": "deprecated_cli_only",
-  "message": "Legacy team MCP runtime tools are deprecated. Use the omc team CLI instead."
+  "message": "Legacy team MCP runtime tools are deprecated. Use the omcb team CLI instead."
 }
 ```
 
-Use `omc team ...` replacements instead:
+Use `omcb team ...` replacements instead:
 
 | Tool                   | Purpose                                                    |
 | ---------------------- | ---------------------------------------------------------- |
-| `omc_run_team_start`   | **Deprecated** → `omc team [N:agent-type] "<task>"`        |
-| `omc_run_team_status`  | **Deprecated** → `omc team status <team-name>`             |
-| `omc_run_team_wait`    | **Deprecated** → monitor via `omc team status <team-name>` |
-| `omc_run_team_cleanup` | **Deprecated** → `omc team shutdown <team-name> [--force]` |
+| `omc_run_team_start`   | **Deprecated** → `omcb team [N:agent-type] "<task>"`        |
+| `omc_run_team_status`  | **Deprecated** → `omcb team status <team-name>`             |
+| `omc_run_team_wait`    | **Deprecated** → monitor via `omcb team status <team-name>` |
+| `omc_run_team_cleanup` | **Deprecated** → `omcb team shutdown <team-name> [--force]` |
 
 Optional compatibility enablement (manual only):
 
@@ -458,7 +458,7 @@ Bounded handoff policy:
 
 ## Agents (29 Total)
 
-Always use `oh-my-claudecode:` prefix when calling via Task tool.
+Always use `oh-my-codebuddy:` prefix when calling via Task tool.
 
 ### By Domain and Tier
 
@@ -528,76 +528,76 @@ Includes **34 canonical skills + 2 deprecated aliases** (`learner`, `psm`). Runt
 
 | Skill                     | Description                                                      | Manual Command                              |
 | ------------------------- | ---------------------------------------------------------------- | ------------------------------------------- |
-| `ai-slop-cleaner`         | Anti-slop cleanup workflow with optional reviewer-only `--review` pass | `/oh-my-claudecode:ai-slop-cleaner`         |
-| `ask`                     | Ask Claude, Codex, or Gemini via local CLI and capture a reusable artifact | `/oh-my-claudecode:ask`               |
-| `autoresearch`            | Stateful single-mission evaluator-driven improvement loop           | `/oh-my-claudecode:autoresearch`            |
-| `autopilot`               | Full autonomous execution from idea to working code              | `/oh-my-claudecode:autopilot`               |
-| `cancel`                  | Unified cancellation for active modes                            | `/oh-my-claudecode:cancel`                  |
-| `ccg`                     | Tri-model workflow via `ask codex` + `ask gemini`, then Claude synthesis | `/oh-my-claudecode:ccg`                     |
-| `configure-notifications` | Configure notification integrations (Telegram, Discord, Slack) via natural language | `/oh-my-claudecode:configure-notifications` |
-| `deep-dive`               | Two-stage trace → deep-interview pipeline with context handoff   | `/oh-my-claudecode:deep-dive`               |
-| `deep-interview`          | Socratic deep interview with ambiguity gating                    | `/oh-my-claudecode:deep-interview`          |
-| `deepinit`                | Generate hierarchical AGENTS.md docs                             | `/oh-my-claudecode:deepinit`                |
-| `external-context`        | Parallel document-specialist research                            | `/oh-my-claudecode:external-context`        |
-| `hud`                     | Configure HUD/statusline                                         | `/oh-my-claudecode:hud`                     |
-| `skillify`                | Extract reusable skill from session                              | `/oh-my-claudecode:skillify`                |
-| `learner`                 | **Deprecated** compatibility alias for `skillify`                | `/oh-my-claudecode:learner`                 |
-| `mcp-setup`               | Configure MCP servers                                            | `/oh-my-claudecode:mcp-setup`               |
-| `omc-doctor`              | Diagnose and fix installation issues                             | `/oh-my-claudecode:omc-doctor`              |
-| `omc-plan`                | Planning workflow (`/plan` safe alias)                           | `/oh-my-claudecode:omc-plan`                |
+| `ai-slop-cleaner`         | Anti-slop cleanup workflow with optional reviewer-only `--review` pass | `/oh-my-codebuddy:ai-slop-cleaner`         |
+| `ask`                     | Ask Claude, Codex, or Gemini via local CLI and capture a reusable artifact | `/oh-my-codebuddy:ask`               |
+| `autoresearch`            | Stateful single-mission evaluator-driven improvement loop           | `/oh-my-codebuddy:autoresearch`            |
+| `autopilot`               | Full autonomous execution from idea to working code              | `/oh-my-codebuddy:autopilot`               |
+| `cancel`                  | Unified cancellation for active modes                            | `/oh-my-codebuddy:cancel`                  |
+| `ccg`                     | Tri-model workflow via `ask codex` + `ask gemini`, then Claude synthesis | `/oh-my-codebuddy:ccg`                     |
+| `configure-notifications` | Configure notification integrations (Telegram, Discord, Slack) via natural language | `/oh-my-codebuddy:configure-notifications` |
+| `deep-dive`               | Two-stage trace → deep-interview pipeline with context handoff   | `/oh-my-codebuddy:deep-dive`               |
+| `deep-interview`          | Socratic deep interview with ambiguity gating                    | `/oh-my-codebuddy:deep-interview`          |
+| `deepinit`                | Generate hierarchical AGENTS.md docs                             | `/oh-my-codebuddy:deepinit`                |
+| `external-context`        | Parallel document-specialist research                            | `/oh-my-codebuddy:external-context`        |
+| `hud`                     | Configure HUD/statusline                                         | `/oh-my-codebuddy:hud`                     |
+| `skillify`                | Extract reusable skill from session                              | `/oh-my-codebuddy:skillify`                |
+| `learner`                 | **Deprecated** compatibility alias for `skillify`                | `/oh-my-codebuddy:learner`                 |
+| `mcp-setup`               | Configure MCP servers                                            | `/oh-my-codebuddy:mcp-setup`               |
+| `omc-doctor`              | Diagnose and fix installation issues                             | `/oh-my-codebuddy:omc-doctor`              |
+| `omc-plan`                | Planning workflow (`/plan` safe alias)                           | `/oh-my-codebuddy:omc-plan`                |
 | `omc-reference`           | Detailed OMC agent/tools/team/commit reference skill             | Auto-loaded reference only                  |
-| `omc-setup`               | One-time setup wizard                                            | `/oh-my-claudecode:omc-setup`               |
-| `omc-teams`               | Spawn `claude`/`codex`/`gemini` tmux workers for parallel execution | `/oh-my-claudecode:omc-teams`             |
-| `project-session-manager` | Manage isolated dev environments (git worktrees + tmux)          | `/oh-my-claudecode:project-session-manager` |
-| `psm` | **Deprecated** compatibility alias for `project-session-manager` | `/oh-my-claudecode:psm` |
-| `ralph`                   | Persistence loop until verified completion                       | `/oh-my-claudecode:ralph`                   |
-| `ralplan`                 | Consensus planning alias for `/omc-plan --consensus`             | `/oh-my-claudecode:ralplan`                 |
-| `release`                 | Automated release workflow                                       | `/oh-my-claudecode:release`                 |
-| `self-improve`            | Autonomous evolutionary code improvement engine with tournament selection; artifacts are topic-scoped under `.omc/self-improve/topics/<topic-slug>/` by default, with flat `.omc/self-improve/` preserved for legacy single-track resumes | `/oh-my-claudecode:self-improve`    |
-| `setup`                   | Unified setup entrypoint for install, diagnostics, and MCP configuration | `/oh-my-claudecode:setup`              |
-| `sciomc`                  | Parallel scientist orchestration                                 | `/oh-my-claudecode:sciomc`                  |
-| `skill`                   | Manage local skills (list/add/remove/search/edit)                | `/oh-my-claudecode:skill`                   |
-| `team`                    | Coordinated multi-agent workflow                                 | `/oh-my-claudecode:team`                    |
-| `trace`                   | Evidence-driven tracing lane with parallel tracer hypotheses     | `/oh-my-claudecode:trace`                   |
-| `ultraqa`                 | QA cycle until goal is met                                       | `/oh-my-claudecode:ultraqa`                 |
-| `ultrawork`               | Maximum parallel throughput mode                                 | `/oh-my-claudecode:ultrawork`               |
-| `visual-verdict`          | Structured visual QA verdict for screenshot/reference comparisons | `/oh-my-claudecode:visual-verdict`          |
-| `wiki`                    | LLM Wiki — persistent markdown knowledge base that compounds across sessions | `/oh-my-claudecode:wiki`           |
-| `writer-memory`           | Agentic memory system for writing projects                       | `/oh-my-claudecode:writer-memory`           |
+| `omc-setup`               | One-time setup wizard                                            | `/oh-my-codebuddy:omc-setup`               |
+| `omc-teams`               | Spawn `claude`/`codex`/`gemini` tmux workers for parallel execution | `/oh-my-codebuddy:omc-teams`             |
+| `project-session-manager` | Manage isolated dev environments (git worktrees + tmux)          | `/oh-my-codebuddy:project-session-manager` |
+| `psm` | **Deprecated** compatibility alias for `project-session-manager` | `/oh-my-codebuddy:psm` |
+| `ralph`                   | Persistence loop until verified completion                       | `/oh-my-codebuddy:ralph`                   |
+| `ralplan`                 | Consensus planning alias for `/omc-plan --consensus`             | `/oh-my-codebuddy:ralplan`                 |
+| `release`                 | Automated release workflow                                       | `/oh-my-codebuddy:release`                 |
+| `self-improve`            | Autonomous evolutionary code improvement engine with tournament selection; artifacts are topic-scoped under `.omc/self-improve/topics/<topic-slug>/` by default, with flat `.omc/self-improve/` preserved for legacy single-track resumes | `/oh-my-codebuddy:self-improve`    |
+| `setup`                   | Unified setup entrypoint for install, diagnostics, and MCP configuration | `/oh-my-codebuddy:setup`              |
+| `sciomc`                  | Parallel scientist orchestration                                 | `/oh-my-codebuddy:sciomc`                  |
+| `skill`                   | Manage local skills (list/add/remove/search/edit)                | `/oh-my-codebuddy:skill`                   |
+| `team`                    | Coordinated multi-agent workflow                                 | `/oh-my-codebuddy:team`                    |
+| `trace`                   | Evidence-driven tracing lane with parallel tracer hypotheses     | `/oh-my-codebuddy:trace`                   |
+| `ultraqa`                 | QA cycle until goal is met                                       | `/oh-my-codebuddy:ultraqa`                 |
+| `ultrawork`               | Maximum parallel throughput mode                                 | `/oh-my-codebuddy:ultrawork`               |
+| `visual-verdict`          | Structured visual QA verdict for screenshot/reference comparisons | `/oh-my-codebuddy:visual-verdict`          |
+| `wiki`                    | LLM Wiki — persistent markdown knowledge base that compounds across sessions | `/oh-my-codebuddy:wiki`           |
+| `writer-memory`           | Agentic memory system for writing projects                       | `/oh-my-codebuddy:writer-memory`           |
 
 
 ---
 
 ## Slash Commands
 
-Each installed skill is exposed as `/oh-my-claudecode:<skill-name>`. The skills table above is the full runtime-backed list; the commands below highlight common entrypoints and aliases. Compatibility keyword modes like `deep-analyze` and `tdd` are prompt-triggered behaviors, not standalone slash commands.
+Each installed skill is exposed as `/oh-my-codebuddy:<skill-name>`. The skills table above is the full runtime-backed list; the commands below highlight common entrypoints and aliases. Compatibility keyword modes like `deep-analyze` and `tdd` are prompt-triggered behaviors, not standalone slash commands.
 
 | Command                                     | Description                                                                                   |
 | ------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `/oh-my-claudecode:ai-slop-cleaner <target>`    | Run the anti-slop cleanup workflow (`--review` for reviewer-only pass)                    |
-| `/oh-my-claudecode:ask <claude\|codex\|gemini> <prompt>` | Route a prompt through the selected advisor CLI and capture an ask artifact         |
-| `/oh-my-claudecode:autopilot <task>`            | Full autonomous execution                                                                  |
-| `/oh-my-claudecode:configure-notifications`     | Configure notification integrations                                                       |
-| `/oh-my-claudecode:deep-dive <problem>`         | Run the trace → deep-interview pipeline                                                   |
-| `/oh-my-claudecode:deep-interview <idea>`       | Socratic interview with ambiguity scoring before execution                                 |
-| `/oh-my-claudecode:deepinit [path]`             | Index codebase with hierarchical AGENTS.md files                                           |
-| `/oh-my-claudecode:mcp-setup`                   | Configure MCP servers                                                                      |
-| `/oh-my-claudecode:omc-doctor`                  | Diagnose and fix installation issues                                                       |
-| `/oh-my-claudecode:omc-plan <description>`      | Start planning session (supports consensus structured deliberation)                        |
-| `/oh-my-claudecode:omc-setup`                   | One-time setup wizard                                                                      |
-| `/oh-my-claudecode:omc-teams <N>:<agent> <task>`       | Spawn `claude`/`codex`/`gemini` tmux workers for legacy parallel execution                |
-| `/oh-my-claudecode:project-session-manager <arguments>` | Manage isolated dev environments with git worktrees + tmux                         |
-| `/oh-my-claudecode:psm <arguments>`             | Deprecated alias for project session manager                                               |
-| `/oh-my-claudecode:ralph <task>`                | Self-referential loop until task completion (`--critic=architect|critic|codex`)           |
-| `/oh-my-claudecode:ralplan <description>`       | Iterative planning with consensus structured deliberation (`--deliberate` for high-risk mode) |
-| `/oh-my-claudecode:release`                     | Automated release workflow                                                                 |
-| `/oh-my-claudecode:setup`                       | Unified setup entrypoint (`setup`, `setup doctor`, `setup mcp`)                           |
-| `/oh-my-claudecode:sciomc <topic>`              | Parallel research orchestration                                                            |
-| `/oh-my-claudecode:team <N>:<agent> <task>`     | Coordinated native team workflow                                                           |
-| `/oh-my-claudecode:trace`                       | Evidence-driven tracing lane that orchestrates parallel tracer hypotheses in team mode     |
-| `/oh-my-claudecode:ultraqa <goal>`              | Autonomous QA cycling workflow                                                             |
-| `/oh-my-claudecode:ultrawork <task>`            | Maximum performance mode with parallel agents                                              |
-| `/oh-my-claudecode:visual-verdict <task>`       | Structured visual QA verdict for screenshot/reference comparisons                          |
+| `/oh-my-codebuddy:ai-slop-cleaner <target>`    | Run the anti-slop cleanup workflow (`--review` for reviewer-only pass)                    |
+| `/oh-my-codebuddy:ask <claude\|codex\|gemini> <prompt>` | Route a prompt through the selected advisor CLI and capture an ask artifact         |
+| `/oh-my-codebuddy:autopilot <task>`            | Full autonomous execution                                                                  |
+| `/oh-my-codebuddy:configure-notifications`     | Configure notification integrations                                                       |
+| `/oh-my-codebuddy:deep-dive <problem>`         | Run the trace → deep-interview pipeline                                                   |
+| `/oh-my-codebuddy:deep-interview <idea>`       | Socratic interview with ambiguity scoring before execution                                 |
+| `/oh-my-codebuddy:deepinit [path]`             | Index codebase with hierarchical AGENTS.md files                                           |
+| `/oh-my-codebuddy:mcp-setup`                   | Configure MCP servers                                                                      |
+| `/oh-my-codebuddy:omc-doctor`                  | Diagnose and fix installation issues                                                       |
+| `/oh-my-codebuddy:omc-plan <description>`      | Start planning session (supports consensus structured deliberation)                        |
+| `/oh-my-codebuddy:omc-setup`                   | One-time setup wizard                                                                      |
+| `/oh-my-codebuddy:omc-teams <N>:<agent> <task>`       | Spawn `claude`/`codex`/`gemini` tmux workers for legacy parallel execution                |
+| `/oh-my-codebuddy:project-session-manager <arguments>` | Manage isolated dev environments with git worktrees + tmux                         |
+| `/oh-my-codebuddy:psm <arguments>`             | Deprecated alias for project session manager                                               |
+| `/oh-my-codebuddy:ralph <task>`                | Self-referential loop until task completion (`--critic=architect|critic|codex`)           |
+| `/oh-my-codebuddy:ralplan <description>`       | Iterative planning with consensus structured deliberation (`--deliberate` for high-risk mode) |
+| `/oh-my-codebuddy:release`                     | Automated release workflow                                                                 |
+| `/oh-my-codebuddy:setup`                       | Unified setup entrypoint (`setup`, `setup doctor`, `setup mcp`)                           |
+| `/oh-my-codebuddy:sciomc <topic>`              | Parallel research orchestration                                                            |
+| `/oh-my-codebuddy:team <N>:<agent> <task>`     | Coordinated native team workflow                                                           |
+| `/oh-my-codebuddy:trace`                       | Evidence-driven tracing lane that orchestrates parallel tracer hypotheses in team mode     |
+| `/oh-my-codebuddy:ultraqa <goal>`              | Autonomous QA cycling workflow                                                             |
+| `/oh-my-codebuddy:ultrawork <task>`            | Maximum performance mode with parallel agents                                              |
+| `/oh-my-codebuddy:visual-verdict <task>`       | Structured visual QA verdict for screenshot/reference comparisons                          |
 
 ### Skill Pipeline Metadata (Preview)
 
@@ -610,7 +610,7 @@ next-skill-args: --consensus --direct
 handoff: .omc/specs/deep-interview-{slug}.md
 ```
 
-When present, OMC appends a standardized **Skill Pipeline** section to the rendered skill prompt so the current stage, handoff artifact, and explicit next `Skill("oh-my-claudecode:...")` invocation are carried forward consistently.
+When present, OMC appends a standardized **Skill Pipeline** section to the rendered skill prompt so the current stage, handoff artifact, and explicit next `Skill("oh-my-codebuddy:...")` invocation are carried forward consistently.
 
 ### Skills 2.0 Compatibility (MVP)
 
@@ -622,7 +622,7 @@ For builtin and slash-loaded skills, OMC also appends a standardized **Skill Res
 
 ## Hooks System
 
-OMC registers 20 hook scripts across 11 Claude Code lifecycle events. For detailed documentation, see [HOOKS.md](./HOOKS.md).
+OMC registers 20 hook scripts across 11 CodeBuddy Code lifecycle events. For detailed documentation, see [HOOKS.md](./HOOKS.md).
 
 ### Hooks by Lifecycle Event
 
@@ -715,7 +715,7 @@ Use these trigger phrases in natural language prompts to activate enhanced modes
 ### Examples
 
 ```bash
-# In Claude Code:
+# In CodeBuddy Code:
 
 # Maximum parallelism
 ultrawork implement user authentication with OAuth
@@ -754,8 +754,8 @@ stopomc
 | Platform    | Install Method              | Hook Type      |
 | ----------- | --------------------------- | -------------- |
 | **Windows** | WSL2 recommended (see note) | Node.js (.mjs) |
-| **macOS**   | Claude Code Plugin          | Bash (.sh)     |
-| **Linux**   | Claude Code Plugin          | Bash (.sh)     |
+| **macOS**   | CodeBuddy Code Plugin          | Bash (.sh)     |
+| **Linux**   | CodeBuddy Code Plugin          | Bash (.sh)     |
 
 > **Note**: Bash hooks are fully portable across macOS and Linux (no GNU-specific dependencies).
 
@@ -810,7 +810,7 @@ stopomc
 
 ## Performance Monitoring
 
-oh-my-claudecode includes comprehensive monitoring for agent performance, token usage, and debugging parallel workflows.
+oh-my-codebuddy includes comprehensive monitoring for agent performance, token usage, and debugging parallel workflows.
 
 For complete documentation, see **[Performance Monitoring Guide](./PERFORMANCE-MONITORING.md)**.
 
@@ -821,14 +821,14 @@ For complete documentation, see **[Performance Monitoring Guide](./PERFORMANCE-M
 | **Agent Observatory**   | Real-time agent status, efficiency, bottlenecks | HUD / API                            |
 | **Session-End Summaries** | Persisted per-session summaries and callback payloads | `.omc/sessions/*.json`, `session-end` |
 | **Session Replay**      | Event timeline for post-session analysis        | `.omc/state/agent-replay-*.jsonl`    |
-| **Session Search**      | Search prior local transcript/session artifacts  | `omc session search`, `session_search` |
+| **Session Search**      | Search prior local transcript/session artifacts  | `omcb session search`, `session_search` |
 | **Intervention System** | Auto-detection of stale agents, cost overruns   | Automatic                            |
 
 ### CLI Commands
 
 ```bash
-omc hud                              # Render the current HUD statusline
-omc team status <team-name>          # Inspect a running team job
+omcb hud                              # Render the current HUD statusline
+omcb team status <team-name>          # Inspect a running team job
 tail -20 .omc/state/agent-replay-*.jsonl
 ls .omc/sessions/*.json
 ```
@@ -856,7 +856,7 @@ Enable a supported preset for agent and context visibility in your status line:
 ### Diagnose Installation Issues
 
 ```bash
-/oh-my-claudecode:omc-doctor
+/oh-my-codebuddy:omc-doctor
 ```
 
 Checks for:
@@ -870,14 +870,14 @@ Checks for:
 ### Configure HUD Statusline
 
 ```bash
-/oh-my-claudecode:hud setup
+/oh-my-codebuddy:hud setup
 ```
 
 Installs or repairs the HUD statusline for real-time status updates.
 
 ### HUD Configuration (settings.json)
 
-Configure HUD elements in `~/.claude/settings.json`:
+Configure HUD elements in `~/.codebuddy/settings.json`:
 
 ```json
 {
@@ -936,15 +936,15 @@ Available presets: `minimal`, `focused`, `full`, `dense`, `analytics`, `opencode
 
 | Issue                 | Solution                                                                         |
 | --------------------- | -------------------------------------------------------------------------------- |
-| Commands not found    | Re-run `/oh-my-claudecode:omc-setup`                                             |
-| Hooks not executing   | Check hook permissions: `chmod +x ~/.claude/hooks/**/*.sh`                       |
-| Agents not delegating | Verify CLAUDE.md is loaded: check `./.claude/CLAUDE.md` or `~/.claude/CLAUDE.md` |
+| Commands not found    | Re-run `/oh-my-codebuddy:omc-setup`                                             |
+| Hooks not executing   | Check hook permissions: `chmod +x ~/.codebuddy/hooks/**/*.sh`                       |
+| Agents not delegating | Verify CLAUDE.md is loaded: check `./.claude/CLAUDE.md` or `~/.codebuddy/CLAUDE.md` |
 | LSP tools not working | Install language servers: `npm install -g typescript-language-server`            |
-| Token limit errors    | Use `/oh-my-claudecode:` for token-efficient execution                           |
+| Token limit errors    | Use `/oh-my-codebuddy:` for token-efficient execution                           |
 
 ### Auto-Update
 
-Oh-my-claudecode includes a silent auto-update system that checks for updates in the background.
+oh-my-codebuddy includes a silent auto-update system that checks for updates in the background.
 
 Features:
 
@@ -952,21 +952,21 @@ Features:
 - **Concurrent-safe**: Lock file prevents simultaneous update attempts
 - **Cross-platform**: Works on both macOS and Linux
 
-To manually update, re-run the plugin install command or use Claude Code's built-in update mechanism.
+To manually update, re-run the plugin install command or use CodeBuddy Code's built-in update mechanism.
 
 ### Uninstall
 
-Use Claude Code's plugin management:
+Use CodeBuddy Code's plugin management:
 
 ```
-/plugin uninstall oh-my-claudecode@oh-my-claudecode
+/plugin uninstall oh-my-codebuddy@oh-my-codebuddy
 ```
 
 Or manually remove the installed files:
 
 ```bash
-rm ~/.claude/agents/{architect,document-specialist,explore,designer,writer,vision,critic,analyst,executor,qa-tester}.md
-rm ~/.claude/commands/{analyze,autopilot,deepsearch,plan,review,ultrawork}.md
+rm ~/.codebuddy/agents/{architect,document-specialist,explore,designer,writer,vision,critic,analyst,executor,qa-tester}.md
+rm ~/.codebuddy/commands/{analyze,autopilot,deepsearch,plan,review,ultrawork}.md
 ```
 
 ---

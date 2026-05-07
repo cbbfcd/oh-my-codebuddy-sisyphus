@@ -1,6 +1,6 @@
 # CJK IME Input Known Issues
 
-This document describes known issues with CJK (Chinese, Japanese, Korean) IME input in Claude Code CLI and provides workarounds for affected users.
+This document describes known issues with CJK (Chinese, Japanese, Korean) IME input in CodeBuddy Code CLI and provides workarounds for affected users.
 
 ## Table of Contents
 
@@ -14,7 +14,7 @@ This document describes known issues with CJK (Chinese, Japanese, Korean) IME in
 
 ## Overview
 
-Claude Code CLI uses React Ink for terminal UI rendering. Due to limitations in how terminal raw mode handles IME (Input Method Editor) composition events, CJK users experience various input issues ranging from invisible characters to mispositioned composition text.
+CodeBuddy Code CLI uses React Ink for terminal UI rendering. Due to limitations in how terminal raw mode handles IME (Input Method Editor) composition events, CJK users experience various input issues ranging from invisible characters to mispositioned composition text.
 
 ## Affected Users
 
@@ -97,12 +97,12 @@ This requires real-time composition display that terminal raw mode cannot provid
 
 ### Workaround 1: External Editor + Paste (Recommended)
 
-Compose your text in an external editor that handles IME correctly, then paste into Claude Code.
+Compose your text in an external editor that handles IME correctly, then paste into CodeBuddy Code.
 
 1. Open any text editor (VS Code, Notes, TextEdit, Notepad)
 2. Type your CJK text there
 3. Copy (`Cmd+C` / `Ctrl+C`)
-4. Paste into Claude Code (`Cmd+V` / `Ctrl+V`)
+4. Paste into CodeBuddy Code (`Cmd+V` / `Ctrl+V`)
 
 **Pros**: Works 100% reliably
 **Cons**: Disrupts workflow, requires switching applications
@@ -121,7 +121,7 @@ When possible, use English for prompts but include CJK text in file contents or 
 
 ### Workaround 3: Clipboard-based Input Script
 
-Create a script that reads from clipboard and sends to Claude Code:
+Create a script that reads from clipboard and sends to CodeBuddy Code:
 
 ```bash
 # macOS
@@ -133,12 +133,12 @@ xclip -selection clipboard -o | claude --stdin
 
 ### Workaround 4: Use IDE Integration
 
-Use Claude Code through IDE integrations (VS Code extension) which may handle IME better than raw terminal.
+Use CodeBuddy Code through IDE integrations (VS Code extension) which may handle IME better than raw terminal.
 
 ## Related Issues
 
-### oh-my-claudecode
-- [#344](https://github.com/Yeachan-Heo/oh-my-claudecode/issues/344) - Korean IME input invisible in input field
+### oh-my-codebuddy
+- [#344](https://github.com/anthropic-ai/oh-my-codebuddy/issues/344) - Korean IME input invisible in input field
 
 ### anthropics/claude-code
 - [#22732](https://github.com/anthropics/claude-code/issues/22732) - Korean IME: Characters completely invisible during composition

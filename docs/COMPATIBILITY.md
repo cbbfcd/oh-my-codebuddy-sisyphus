@@ -1,6 +1,6 @@
 # MCP/Plugin Compatibility Layer
 
-The Compatibility Layer enables oh-my-claudecode to discover, register, and use external plugins, MCP servers, and tools. It provides a unified interface for managing external tools while maintaining security through an integrated permission system.
+The Compatibility Layer enables oh-my-codebuddy to discover, register, and use external plugins, MCP servers, and tools. It provides a unified interface for managing external tools while maintaining security through an integrated permission system.
 
 ## Table of Contents
 
@@ -43,10 +43,10 @@ Plugins              MCP Configs          OMC Tools
 
 Scans for external plugins and MCP servers from:
 
-- `~/.claude/plugins/` - OMC/Claude Code plugins directory
-- `~/.claude/installed-plugins/` - Alternative plugins location
-- `~/.claude/settings.json` - Claude Code MCP server configs
-- `~/.claude/claude_desktop_config.json` - Claude Desktop MCP server configs
+- `~/.codebuddy/plugins/` - OMC/CodeBuddy Code plugins directory
+- `~/.codebuddy/installed-plugins/` - Alternative plugins location
+- `~/.codebuddy/settings.json` - CodeBuddy Code MCP server configs
+- `~/.codebuddy/claude_desktop_config.json` - Claude Desktop MCP server configs
 - Plugin manifests (`plugin.json`) for embedded MCP servers
 
 **Discovers:**
@@ -101,10 +101,10 @@ Manages MCP server connections:
 
 ### Directory Structure
 
-Plugins are discovered from `~/.claude/plugins/` and `~/.claude/installed-plugins/`:
+Plugins are discovered from `~/.codebuddy/plugins/` and `~/.codebuddy/installed-plugins/`:
 
 ```
-~/.claude/plugins/
+~/.codebuddy/plugins/
 ├── my-plugin/
 │   ├── plugin.json          (required)
 │   ├── skills/              (optional)
@@ -180,13 +180,13 @@ tags: tag1, tag2
 Skill documentation here...
 ```
 
-**Agents** are discovered from `.md` files in the agents directory with similar frontmatter structure. Supported runtime fields depend on Claude Code; OMC's bundled agent files currently rely on `name`, `description`, `model`, optional tool restrictions, and prompt body guidance. They do not currently ship an `effort:` frontmatter override, so effort inherits from the parent Claude Code session unless a custom agent explicitly adds one.
+**Agents** are discovered from `.md` files in the agents directory with similar frontmatter structure. Supported runtime fields depend on CodeBuddy Code; OMC's bundled agent files currently rely on `name`, `description`, `model`, optional tool restrictions, and prompt body guidance. They do not currently ship an `effort:` frontmatter override, so effort inherits from the parent CodeBuddy Code session unless a custom agent explicitly adds one.
 
 ## MCP Server Discovery
 
 ### Claude Desktop Config
 
-Located at `~/.claude/claude_desktop_config.json`:
+Located at `~/.codebuddy/claude_desktop_config.json`:
 
 ```json
 {
@@ -205,9 +205,9 @@ Located at `~/.claude/claude_desktop_config.json`:
 }
 ```
 
-### Claude Code Settings
+### CodeBuddy Code Settings
 
-Located at `~/.claude/settings.json`:
+Located at `~/.codebuddy/settings.json`:
 
 ```json
 {
@@ -530,8 +530,8 @@ import {
 
 // Initialize everything
 const result = await initializeCompatibility({
-  pluginPaths: ['~/.claude/plugins'],
-  mcpConfigPath: '~/.claude/claude_desktop_config.json',
+  pluginPaths: ['~/.codebuddy/plugins'],
+  mcpConfigPath: '~/.codebuddy/claude_desktop_config.json',
   autoConnect: true  // Auto-connect to MCP servers
 });
 
@@ -561,8 +561,8 @@ const plugins = discoverPlugins({
 
 // Discover MCP servers
 const servers = discoverMcpServers({
-  mcpConfigPath: '~/.claude/claude_desktop_config.json',
-  settingsPath: '~/.claude/settings.json'
+  mcpConfigPath: '~/.codebuddy/claude_desktop_config.json',
+  settingsPath: '~/.codebuddy/settings.json'
 });
 
 // Discover everything at once
@@ -896,9 +896,9 @@ registerCustomPatterns();
 **Problem:** `discoverPlugins()` returns empty array.
 
 **Checklist:**
-- Plugins are in `~/.claude/plugins/` or `~/.claude/installed-plugins/`
+- Plugins are in `~/.codebuddy/plugins/` or `~/.codebuddy/installed-plugins/`
 - Each plugin has a `plugin.json` in the root or `.claude-plugin/` subdirectory
-- Plugin name doesn't conflict with reserved names (e.g., 'oh-my-claudecode')
+- Plugin name doesn't conflict with reserved names (e.g., 'oh-my-codebuddy')
 - File permissions allow reading the directory
 
 **Debug:**

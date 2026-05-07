@@ -1,147 +1,71 @@
-English | [한국어](README.ko.md) | [中文](README.zh.md) | [日本語](README.ja.md) | [Español](README.es.md) | [Tiếng Việt](README.vi.md) | [Português](README.pt.md)
+[English](README.md) | [한국어](README.ko.md) | 中文 | [日本語](README.ja.md) | [Español](README.es.md) | [Tiếng Việt](README.vi.md) | [Português](README.pt.md)
 
-# oh-my-claudecode
+# oh-my-codebuddy
 
 [![npm version](https://img.shields.io/npm/v/oh-my-claude-sisyphus?color=cb3837)](https://www.npmjs.com/package/oh-my-claude-sisyphus)
 [![npm downloads](https://img.shields.io/npm/dm/oh-my-claude-sisyphus?color=blue)](https://www.npmjs.com/package/oh-my-claude-sisyphus)
-[![GitHub stars](https://img.shields.io/github/stars/Yeachan-Heo/oh-my-claudecode?style=flat&color=yellow)](https://github.com/Yeachan-Heo/oh-my-claudecode/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/anthropic-ai/oh-my-codebuddy?style=flat&color=yellow)](https://github.com/anthropic-ai/oh-my-codebuddy/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Sponsor](https://img.shields.io/badge/Sponsor-❤️-red?style=flat&logo=github)](https://github.com/sponsors/Yeachan-Heo)
 [![Discord](https://img.shields.io/discord/1452487457085063218?color=5865F2&logo=discord&logoColor=white&label=Discord)](https://discord.gg/PUwSMR9XNk)
 
-> **For Codex users:** Check out [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) — the same orchestration experience for OpenAI Codex CLI.
+> **Codex 用户：** 查看 [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) — 为 OpenAI Codex CLI 提供同样的编排体验。
 
-**Multi-agent orchestration for Claude Code. Zero learning curve.**
+**CodeBuddy Code 的多智能体编排系统。零学习曲线。**
 
-_Don't learn Claude Code. Just use OMC._
+*无需学习 CodeBuddy Code，直接使用 OMC。*
 
-[Get Started](#quick-start) • [Documentation](https://yeachan-heo.github.io/oh-my-claudecode-website) • [CLI Reference](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#cli-reference) • [Workflows](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#workflows) • [Migration Guide](docs/MIGRATION.md) • [Discord](https://discord.gg/PUwSMR9XNk)
+[快速开始](#快速开始) • [文档](https://yeachan-heo.github.io/oh-my-codebuddy-website) • [CLI 参考](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#cli-reference) • [工作流](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#workflows) • [迁移指南](docs/MIGRATION.md) • [Discord](https://discord.gg/PUwSMR9XNk)
 
 ---
 
-## Core Maintainers
+## 快速开始
 
-| Role | Name | GitHub |
-| --- | --- | --- |
-| Creator & Lead | Yeachan Heo | [@Yeachan-Heo](https://github.com/Yeachan-Heo) |
-
-## Ambassadors
-
-| Name | GitHub |
-| --- | --- |
-| Sigrid Jin | [@sigridjineth](https://github.com/sigridjineth) |
-
-## Document Specialists
-
-| Name | GitHub |
-| --- | --- |
-| devswha | [@devswha](https://github.com/devswha) |
-
-## Top Collaborators
-
-| Name | GitHub | Commits |
-| --- | --- | --- |
-| JunghwanNA | [@shaun0927](https://github.com/shaun0927) | 65 |
-| riftzen-bit | [@riftzen-bit](https://github.com/riftzen-bit) | 52 |
-| Seunggwan Song | [@Nathan-Song](https://github.com/Nathan-Song) | 20 |
-| BLUE | [@blue-int](https://github.com/blue-int) | 20 |
-| Junho Yeo | [@junhoyeo](https://github.com/junhoyeo) | 15 |
-
-## Quick Start
-
-**Step 1: Install**
-
-Marketplace/plugin install (recommended for most Claude Code users).
-These are Claude Code slash commands — enter them **one at a time** (pasting both lines at once will fail):
-
+**第一步：安装**
 ```bash
-/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin marketplace add https://github.com/anthropic-ai/oh-my-codebuddy
+/plugin install oh-my-codebuddy
 ```
 
-Then:
-
+**第二步：配置**
 ```bash
-/plugin install oh-my-claudecode
-```
-
-If you prefer the npm CLI/runtime path instead of the marketplace flow:
-
-```bash
-npm i -g oh-my-claude-sisyphus@latest
-```
-
-> **Known npm warning:** npm may print `deprecated prebuild-install@7.1.3` during the CLI install.
-> This currently comes from the upstream `better-sqlite3` native-addon dependency
-> (`better-sqlite3 -> prebuild-install`); `prebuild-install@7.1.3` is still the latest
-> published version, so there is no safe repo-side dependency bump or override to remove
-> the warning yet. The warning is tracked in [#2913](https://github.com/Yeachan-Heo/oh-my-claudecode/issues/2913)
-> and does not by itself mean the OMC CLI install failed.
-
-**Step 2: Setup**
-
-```bash
-# Inside a Claude Code / OMC session
-/setup
 /omc-setup
-
-# From your terminal
-omc setup
 ```
 
-If you run OMC via `omc --plugin-dir <path>` or `claude --plugin-dir <path>`, add `--plugin-dir-mode` to `omc setup` (or export `OMC_PLUGIN_ROOT` before running it) so the installer doesn't duplicate skills/agents that the plugin already provides at runtime. See the [Plugin directory flags section in REFERENCE.md](./docs/REFERENCE.md#plugin-directory-flags) for a complete decision matrix and all available flags.
+如果你通过 `omcb --plugin-dir <path>` 或 `claude --plugin-dir <path>` 运行 OMC，请在 `omcb setup` 中添加 `--plugin-dir-mode`（或提前导出 `OMC_PLUGIN_ROOT`），以避免复制插件在运行时已经提供的技能/代理。有关完整的决策矩阵和所有可用标志，请参阅 [REFERENCE.md 中的 Plugin directory flags 部分](./docs/REFERENCE.md#plugin-directory-flags)。
 
-**Step 3: Build something**
+<!-- TODO(i18n): verify translation -->
 
-```bash
-# Inside a Claude Code / OMC session
-/autopilot "build a REST API for managing tasks"
-
-# Natural-language in-session shortcut
+**第三步：开始构建**
+```
 autopilot: build a REST API for managing tasks
 ```
 
-That's it. Everything else is automatic.
+就这么简单。其余都是自动的。
 
-### CLI Commands vs In-Session Skills
+### 不确定从哪里开始？
 
-OMC exposes two different surfaces:
-
-- **Terminal CLI commands**: run `omc ...` from your shell after installing the npm/runtime path (`npm i -g oh-my-claude-sisyphus@latest`) or from a local checkout.
-- **In-session skills**: run `/...` inside a Claude Code session after installing the plugin/setup flow.
-
-| Feature | Terminal CLI | In-session skill | Notes |
-| --- | --- | --- | --- |
-| Setup | `omc setup` | `/setup` or `/omc-setup` | Both are real entrypoints. `/setup` is the easiest plugin-first path. |
-| Ask providers | `omc ask codex "review this patch"` | `/ask codex "review this patch"` | Both route through the same advisor flow. |
-| Team orchestration | `omc team 2:codex "review auth flow"` | `/team 3:executor "fix all TypeScript errors"` | Both exist, but they are different runtimes: `omc team` launches tmux CLI workers; `/team` runs the in-session native team workflow. |
-| Autopilot / Ralph / Ultrawork / Deep Interview | — | `/autopilot ...`, `/ralph ...`, `/ultrawork ...`, `/deep-interview ...` | These are in-session skills. There is no `omc autopilot` / `omc ralph` / `omc ultrawork` CLI subcommand in this repo. |
-| Autoresearch | `omc autoresearch` (**hard-deprecated shim**) | `/deep-interview --autoresearch ...` + `/oh-my-claudecode:autoresearch` | Setup stays in deep-interview; execution now belongs to the stateful skill. |
-
-### Not Sure Where to Start?
-
-If you're uncertain about requirements, have a vague idea, or want to micromanage the design:
+如果你对需求不明确、有模糊的想法，或者想要精细控制设计：
 
 ```
 /deep-interview "I want to build a task management app"
 ```
 
-The deep interview uses Socratic questioning to clarify your thinking before any code is written. It exposes hidden assumptions and measures clarity across weighted dimensions, ensuring you know exactly what to build before execution begins.
+深度访谈使用苏格拉底式提问在编写任何代码之前帮你理清思路。它揭示隐藏假设并通过加权维度衡量清晰度，确保你在执行前明确知道要构建什么。
 
-## Team Mode (Recommended)
+## Team 模式（推荐）
 
-Starting in **v4.1.7**, **Team** is the canonical orchestration surface in OMC. The legacy `swarm` keyword/skill has been removed; use `team` directly.
+从 **v4.1.7** 开始，**Team** 是 OMC 的标准编排方式。**swarm** 和 **ultrapilot** 等旧版入口仍受支持，但现在**在底层路由到 Team**。
 
 ```bash
 /team 3:executor "fix all TypeScript errors"
 ```
 
-Use `/team ...` when you want Claude Code's in-session native team workflow. Use `omc team ...` when you want terminal-launched tmux CLI workers (`claude` / `codex` / `gemini` panes).
-
-Team runs as a staged pipeline:
+Team 按阶段化流水线运行：
 
 `team-plan → team-prd → team-exec → team-verify → team-fix (loop)`
 
-Enable Claude Code native teams in `~/.claude/settings.json`:
+在 `~/.codebuddy/settings.json` 中启用 CodeBuddy Code 原生团队：
 
 ```json
 {
@@ -151,136 +75,121 @@ Enable Claude Code native teams in `~/.claude/settings.json`:
 }
 ```
 
-> If teams are disabled, OMC will warn you and fall back to non-team execution where possible.
+> 如果团队被禁用，OMC 会发出警告并在可能的情况下回退到非 Team 执行模式。
 
-### tmux CLI Workers — Codex & Gemini (v4.4.0+)
+### tmux CLI 工作者 — Codex & Gemini (v4.4.0+)
 
-**v4.4.0 removes the Codex/Gemini MCP servers** (`x`, `g` providers). Use the CLI-first Team runtime (`omc team ...`) to spawn real tmux worker panes:
+**v4.4.0 移除了 Codex/Gemini MCP 服务器**（`x`、`g` 提供商）。请改用 `/omc-teams` 在 tmux 分屏中启动真实的 CLI 进程：
 
 ```bash
-omc team 2:codex "review auth module for security issues"
-omc team 2:gemini "redesign UI components for accessibility"
-omc team 1:claude "implement the payment flow"
-omc team status auth-review
-omc team shutdown auth-review
+/omc-teams 2:codex   "review auth module for security issues"
+/omc-teams 2:gemini  "redesign UI components for accessibility"
+/omc-teams 1:claude  "implement the payment flow"
 ```
 
-`/omc-teams` remains as a legacy compatibility skill and now routes to `omc team ...`.
-
-For mixed Codex + Gemini work in one command, use the **`/ccg`** skill (routes via `/ask codex` + `/ask gemini`, then Claude synthesizes):
+如需在一个命令中混合使用 Codex + Gemini，请使用 **`/ccg`** 技能：
 
 ```bash
 /ccg Review this PR — architecture (Codex) and UI components (Gemini)
 ```
 
-| Surface                   | Workers            | Best For                                     |
-| ------------------------- | ------------------ | -------------------------------------------- |
-| `omc team N:codex "..."`  | N Codex CLI panes  | Code review, security analysis, architecture |
-| `omc team N:gemini "..."` | N Gemini CLI panes | UI/UX design, docs, large-context tasks      |
-| `omc team N:claude "..."` | N Claude CLI panes | General tasks via Claude CLI in tmux         |
-| `/ccg`                    | /ask codex + /ask gemini | Tri-model advisor synthesis           |
+| 技能 | 工作者 | 最适合 |
+|-------|---------|----------|
+| `/omc-teams N:codex` | N 个 Codex CLI 窗格 | 代码审查、安全分析、架构 |
+| `/omc-teams N:gemini` | N 个 Gemini CLI 窗格 | UI/UX 设计、文档、大上下文任务 |
+| `/omc-teams N:claude` | N 个 Claude CLI 窗格 | 通过 tmux 中的 Claude CLI 处理通用任务 |
+| `/ccg` | 1 个 Codex + 1 个 Gemini | 并行三模型编排 |
 
-Workers spawn on-demand and die when their task completes — no idle resource usage. Requires `codex` / `gemini` CLIs installed and an active tmux session.
+工作者按需生成，任务完成后自动退出 — 无空闲资源浪费。需要安装 `codex` / `gemini` CLI 并有活跃的 tmux 会话。
 
-Native team worker worktrees are being added behind an opt-in/config gate. See [Native Team Worktree Mode](docs/TEAM-WORKTREE-MODE.md) for the workspace contract, canonical state-root rules, dirty-worktree preservation policy, and verification checklist.
+> **注意：包命名** — 项目品牌名为 **oh-my-codebuddy**（仓库、插件、命令），但 npm 包以 [`oh-my-claude-sisyphus`](https://www.npmjs.com/package/oh-my-claude-sisyphus) 发布。通过 npm/bun 安装 CLI 工具时，请使用 `npm install -g oh-my-claude-sisyphus`。
 
-> **Note: Package naming** — The project is branded as **oh-my-claudecode** (repo, plugin, commands), but the npm package is published as [`oh-my-claude-sisyphus`](https://www.npmjs.com/package/oh-my-claude-sisyphus). If you install or upgrade the CLI tools via npm/bun, use `npm i -g oh-my-claude-sisyphus@latest`.
-
-### Updating
-
-If you installed OMC via npm, upgrade with the published package name:
+### 更新
 
 ```bash
-npm i -g oh-my-claude-sisyphus@latest
-```
-
-> **Package naming note:** the repo, plugin, and commands are branded **oh-my-claudecode**, but the published npm package name remains `oh-my-claude-sisyphus`.
-
-If you installed OMC via the Claude Code marketplace/plugin flow, update with:
-
-```bash
-# 1. Update the marketplace clone
+# 1. 更新 marketplace 克隆
 /plugin marketplace update omc
 
-# 2. Re-run setup to refresh configuration
-/setup
+# 2. 重新运行设置以刷新配置
+/omc-setup
 ```
 
-If you are developing from a local checkout or git worktree, update the checkout first, then re-run setup from that worktree so the active runtime matches the code you are testing.
+> **注意：** 如果 marketplace 自动更新未启用，您需要在运行设置之前手动执行 `/plugin marketplace update omc` 来同步最新版本。
 
-> **Note:** If marketplace auto-update is not enabled, you must manually run `/plugin marketplace update omc` to sync the latest version before running setup.
-
-If you experience issues after updating, clear the old plugin cache:
+如果更新后遇到问题，清除旧的插件缓存：
 
 ```bash
 /omc-doctor
 ```
 
-<h1 align="center">Your Claude Just Have been Steroided.</h1>
+<h1 align="center">你的 Claude 已被注入超能力。</h1>
 
 <p align="center">
-  <img src="assets/omc-character.jpg" alt="oh-my-claudecode" width="400" />
+  <img src="assets/omc-character.jpg" alt="oh-my-codebuddy" width="400" />
 </p>
 
 ---
 
-## Why oh-my-claudecode?
+## 为什么选择 oh-my-codebuddy？
 
-- **Zero configuration required** - Works out of the box with intelligent defaults
-- **Team-first orchestration** - Team is the canonical multi-agent surface
-- **Natural language interface** - No commands to memorize, just describe what you want
-- **Automatic parallelization** - Complex tasks distributed across specialized agents
-- **Persistent execution** - Won't give up until the job is verified complete
-- **Cost optimization** - Smart model routing saves 30-50% on tokens
-- **Learn from experience** - Automatically extracts and reuses problem-solving patterns
-- **Real-time visibility** - HUD statusline shows what's happening under the hood
+- **无需配置** - 开箱即用，智能默认设置
+- **Team 优先编排** - Team 是标准的多智能体界面（swarm/ultrapilot 是兼容性外观）
+- **自然语言交互** - 无需记忆命令，只需描述你的需求
+- **自动并行化** - 复杂任务自动分配给专业智能体
+- **持久执行** - 不会半途而废，直到任务验证完成
+- **成本优化** - 智能模型路由节省 30-50% 的 token
+- **从经验中学习** - 自动提取并复用问题解决模式
+- **实时可见性** - HUD 状态栏显示底层运行状态
 
 ---
 
-## Features
+## 功能特性
 
-### Orchestration Modes
+### 执行模式
+针对不同场景的多种策略 - 从全自动构建到 token 高效重构。[了解更多 →](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#execution-modes)
 
-Multiple strategies for different use cases — from Team-backed orchestration to token-efficient refactoring. [Learn more →](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#execution-modes)
+| 模式 | 特点 | 适用场景 |
+|------|---------|---------|
+| **Team（推荐）** | 阶段化流水线 | 在共享任务列表上协作的 Claude 智能体 |
+| **omc-teams** | tmux CLI 工作者 | Codex/Gemini CLI 任务；按需生成，完成后退出 |
+| **ccg** | 三模型并行 | Codex（分析）+ Gemini（设计），Claude 合成 |
+| **Autopilot** | 自主执行 | 最小化繁琐配置的端到端功能开发 |
+| **Ultrawork** | 最大并行 | 不需要 Team 的并行修复/重构 |
+| **Ralph** | 持久模式 | 必须完整完成的任务 |
+| **Pipeline** | 顺序处理 | 需要严格顺序的多阶段转换 |
+| **Swarm / Ultrapilot（旧版）** | 路由到 Team | 现有工作流和旧文档 |
 
-| Mode                    | What it is                                                                              | Use For                                                |
-| ----------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| **Team (recommended)**  | Canonical staged pipeline (`team-plan → team-prd → team-exec → team-verify → team-fix`) | Coordinated Claude agents on a shared task list        |
-| **omc team (CLI)**      | tmux CLI workers — real `claude`/`codex`/`gemini` processes in split-panes              | Codex/Gemini CLI tasks; on-demand spawn, die when done |
-| **ccg**                 | Tri-model advisors via `/ask codex` + `/ask gemini`, Claude synthesizes                   | Mixed backend+UI work needing both Codex and Gemini    |
-| **Autopilot**           | Autonomous execution (single lead agent)                                                | End-to-end feature work with minimal ceremony          |
-| **Ultrawork**           | Maximum parallelism (non-team)                                                          | Burst parallel fixes/refactors where Team isn't needed |
-| **Ralph**               | Persistent mode with verify/fix loops                                                   | Tasks that must complete fully (no silent partials)    |
-| **Pipeline**            | Sequential, staged processing                                                           | Multi-step transformations with strict ordering        |
-| **Ultrapilot (legacy)** | Deprecated compatibility mode (autopilot pipeline alias)                                | Existing workflows and older docs                      |
+### 智能编排
 
-### Intelligent Orchestration
+- **32 个专业智能体** 涵盖架构、研究、设计、测试、数据科学
+- **智能模型路由** - 简单任务用 Haiku，复杂推理用 Opus
+- **自动委派** - 每次都选择最合适的智能体
 
-- **19 specialized agents** (with tier variants) for architecture, research, design, testing, data science
-- **Smart model routing** - Haiku for simple tasks, Opus for complex reasoning
-- **Automatic delegation** - Right agent for the job, every time
+### 开发者体验
 
-### Developer Experience
+- **魔法关键词** - `ralph`、`ulw`、`plan` 提供显式控制
+- **HUD 状态栏** - 状态栏实时显示编排指标
+  - 如果你直接使用 `claude --plugin-dir <path>` 启动 CodeBuddy Code（绕过 `omc` shim），请在 shell 中导出 `OMC_PLUGIN_ROOT=<path>`，以便 HUD bundle 解析到与插件加载器相同的 checkout。详情见 [REFERENCE.md 中的 Plugin directory flags 部分](./docs/REFERENCE.md#plugin-directory-flags)。
 
-- **Magic keywords** - `ralph`, `ulw`, `ralplan`; Team stays explicit via `/team`
-- **HUD statusline** - Real-time orchestration metrics in your status bar
-  - If you launch Claude Code directly with `claude --plugin-dir <path>` (bypassing the `omc` shim), export `OMC_PLUGIN_ROOT=<path>` in your shell so the HUD bundle resolves to the same checkout as the plugin loader. See the [Plugin directory flags section in REFERENCE.md](./docs/REFERENCE.md#plugin-directory-flags) for details.
-- **Skill learning** - Extract reusable patterns from your sessions
-- **Analytics & cost tracking** - Understand token usage across all sessions
+  <!-- TODO(i18n): verify translation -->
+- **技能学习** - 从会话中提取可复用模式
+- **分析与成本追踪** - 了解所有会话的 token 使用情况
 
-### Contributing
+### 贡献
 
-Want to contribute to OMC? See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full developer guide, including how to fork, set up a local checkout, link it as your active plugin, run tests, and submit PRs.
+想为 OMC 做贡献？请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解完整的开发者指南，包括如何 fork、设置本地 checkout、将其链接为活跃插件、运行测试和提交 PR。
 
-### Custom Skills
+<!-- TODO(i18n): verify translation -->
 
-Learn once, reuse forever. OMC extracts hard-won debugging knowledge into portable skill files that auto-inject when relevant.
+### 自定义技能
 
-| | Project Scope | User Scope |
+一次学习，永久复用。OMC 将调试过程中获得的实战知识提取为可移植的技能文件，并在相关场景中自动注入。
+
+| | 项目作用域 | 用户作用域 |
 |---|---|---|
-| **Path** | `.omc/skills/` | `~/.omc/skills/` |
-| **Shared with** | Team (commit the skill file to keep it across worktrees) | All your projects |
-| **Priority** | Higher (overrides user) | Lower (fallback) |
+| **路径** | `.omc/skills/` | `~/.omc/skills/` |
+| **共享范围** | 团队（受版本控制） | 所有项目通用 |
+| **优先级** | 高（覆盖用户作用域） | 低（回退） |
 
 ```yaml
 # .omc/skills/fix-proxy-crash.md
@@ -290,138 +199,89 @@ description: aiohttp proxy crashes on ClientDisconnectedError
 triggers: ["proxy", "aiohttp", "disconnected"]
 source: extracted
 ---
-Wrap handler at server.py:42 in try/except ClientDisconnectedError...
+在 server.py:42 的处理程序外包裹 try/except ClientDisconnectedError...
 ```
 
-**Manage skills:** `/skill list | add | remove | edit | search`
-**Skillify:** `/skillify` extracts reusable patterns with strict quality gates
-**Auto-inject:** Matching skills load into context automatically — no manual recall needed
+**技能管理：** `/skill list | add | remove | edit | search`
+**自动学习：** `/skillify` 以严格的质量标准提取可复用模式
+**自动注入：** 匹配的技能自动加载到上下文中 — 无需手动调用
 
-Project-scoped skills are stored in `.omc/skills/` and are intended to be committed when you want them shared. If you create them inside a linked git worktree and do not commit them, they disappear when that worktree is removed.
-
-[Full feature list →](docs/REFERENCE.md)
+[完整功能列表 →](docs/REFERENCE.md)
 
 ---
 
-## In-session shortcuts
+## 魔法关键词
 
-These shortcuts run **inside a Claude Code / OMC session**, not as terminal CLI commands. For shell commands, use the `omc ...` forms shown above. Team mode is explicit: use `/team ...` in-session or `omc team ...` from your shell rather than expecting a bare `team` keyword trigger.
+为高级用户提供的可选快捷方式。不用它们，自然语言也能很好地工作。
 
-| In-session form        | Kind                  | Effect                              | Example                                        |
-| ---------------------- | --------------------- | ----------------------------------- | ---------------------------------------------- |
-| `/team`                | Slash skill           | Canonical Team orchestration        | `/team 3:executor "fix all TypeScript errors"` |
-| `/ccg`                 | Slash skill           | `/ask codex` + `/ask gemini` synthesis | `/ccg review this PR`                       |
-| `/autopilot` / `autopilot` | Skill / prompt trigger | Full autonomous execution       | `/autopilot "build a todo app"`                |
-| `/ralph` / `ralph`     | Skill / prompt trigger | Persistence mode                   | `/ralph "refactor auth"`                       |
-| `/ultrawork` / `ulw`   | Skill / prompt trigger | Maximum parallelism                | `/ultrawork "fix all errors"`                  |
-| `/ralplan` / `ralplan` | Skill / prompt trigger | Iterative planning consensus       | `/ralplan "plan this feature"`                 |
-| `/deep-interview`      | Slash skill           | Socratic requirements clarification | `/deep-interview "vague idea"`                 |
-| `deepsearch`           | Prompt trigger        | Codebase-focused search routing     | `deepsearch for auth middleware`               |
-| `ultrathink`           | Prompt trigger        | Deep reasoning mode                 | `ultrathink about this architecture`           |
-| `cancelomc`, `stopomc` | Prompt trigger        | Stop active OMC modes               | `stopomc`                                      |
+| 关键词 | 效果 | 示例 |
+|---------|--------|---------|
+| `team` | 标准 Team 编排 | `/team 3:executor "fix all TypeScript errors"` |
+| `omc-teams` | tmux CLI 工作者 (codex/gemini/claude) | `/omc-teams 2:codex "security review"` |
+| `ccg` | 三模型 Codex+Gemini 编排 | `/ccg review this PR` |
+| `autopilot` | 全自动执行 | `autopilot: build a todo app` |
+| `ralph` | 持久模式 | `ralph: refactor auth` |
+| `ulw` | 最大并行化 | `ulw fix all errors` |
+| `plan` | 规划访谈 | `plan the API` |
+| `ralplan` | 迭代规划共识 | `ralplan this feature` |
+| `deep-interview` | 苏格拉底式需求澄清 | `deep-interview "vague idea"` |
+| `swarm` | **已弃用** — 请使用 `team` | `swarm 5 agents: fix lint errors` |
+| `ultrapilot` | **已弃用** — 请使用 `team` | `ultrapilot: build a fullstack app` |
 
-**Notes:**
+**注意：**
+- **ralph 包含 ultrawork：** 激活 ralph 模式时，会自动包含 ultrawork 的并行执行。无需组合关键词。
+- `swarm N agents` 语法仍可被识别用于提取智能体数量，但运行时在 v4.1.7+ 中由 Team 支持。
 
-- **ralph includes ultrawork**: when you activate ralph mode, it automatically includes ultrawork's parallel execution.
-- `swarm` compatibility alias has been removed; migrate existing prompts to `/team` syntax.
-- `plan this` / `plan the` keyword triggers were removed; use `ralplan` or explicit `/oh-my-claudecode:omc-plan`.
+---
 
-## Utilities
+## 实用工具
 
-### Provider Advisor (`omc ask` / `/ask`)
+### 速率限制等待
 
-Run local provider CLIs and save a markdown artifact under `.omc/artifacts/ask/`.
-
-```bash
-# Terminal CLI
-omc ask claude "review this migration plan"
-omc ask codex --prompt "identify architecture risks"
-omc ask gemini --prompt "propose UI polish ideas"
-omc ask claude --agent-prompt executor --prompt "draft implementation steps"
-
-# Inside a Claude Code / OMC session
-/ask claude "review this migration plan"
-/ask codex "identify architecture risks"
-```
-
-Canonical env vars:
-
-- `OMC_ASK_ADVISOR_SCRIPT`
-- `OMC_ASK_ORIGINAL_TASK`
-
-Phase-1 aliases `OMX_ASK_ADVISOR_SCRIPT` and `OMX_ASK_ORIGINAL_TASK` are accepted with deprecation warnings.
-
-### Autoresearch (stateful skill)
-
-`omc autoresearch` is now a **hard-deprecated shim**. The authoritative workflow is:
+当速率限制重置时自动恢复 CodeBuddy Code 会话。
 
 ```bash
-/deep-interview --autoresearch improve startup performance
-/oh-my-claudecode:autoresearch
+omcb wait          # 检查状态，获取指导
+omcb wait --start  # 启用自动恢复守护进程
+omcb wait --stop   # 禁用守护进程
 ```
 
-- `deep-interview --autoresearch` generates/sets up the mission and evaluator
-- `autoresearch` runs the bounded, single-mission stateful loop
-- each iteration records evaluation JSON plus markdown decision logs
-- non-passing iterations continue
-- strict stopping is controlled by an explicit max-runtime ceiling
+**需要：** tmux（用于会话检测）
 
-### Rate Limit Wait
+### 通知标签配置 (Telegram/Discord/Slack)
 
-Auto-resume Claude Code sessions when rate limits reset.
+你可以配置 stop 回调发送会话摘要时要 @ 谁。
 
 ```bash
-omc wait          # Check status, get guidance
-omc wait --start  # Enable auto-resume daemon
-omc wait --stop   # Disable daemon
+# 设置/替换标签列表
+omcb config-stop-callback telegram --enable --token <bot_token> --chat <chat_id> --tag-list "@alice,bob"
+omcb config-stop-callback discord --enable --webhook <url> --tag-list "@here,123456789012345678,role:987654321098765432"
+omcb config-stop-callback slack --enable --webhook <url> --tag-list "<!here>,<@U1234567890>"
+
+# 增量更新
+omcb config-stop-callback telegram --add-tag charlie
+omcb config-stop-callback discord --remove-tag @here
+omcb config-stop-callback discord --clear-tags
 ```
 
-**Requires:** tmux (for session detection)
+标签规则：
+- Telegram：`alice` 会规范化为 `@alice`
+- Discord：支持 `@here`、`@everyone`、纯数字用户 ID、`role:<id>`
+- Slack：支持 `<@MEMBER_ID>`、`<!channel>`、`<!here>`、`<!everyone>`、`<!subteam^GROUP_ID>`
+- `file` 回调会忽略标签选项
 
-### Monitoring & Observability
+### OpenClaw 集成
 
-Use the HUD for live observability and the current session/replay artifacts for post-session inspection:
+将 CodeBuddy Code 会话事件转发到 [OpenClaw](https://openclaw.ai/) 网关，通过您的 OpenClaw 代理实现自动化响应和工作流程。
 
-- HUD preset: `/oh-my-claudecode:hud setup` then use a supported preset such as `"omcHud": { "preset": "focused" }`
-- Session summaries: `.omc/sessions/*.json`
-- Replay logs: `.omc/state/agent-replay-*.jsonl`
-- Live HUD rendering: `omc hud`
-
-### Notification Tags (Telegram/Discord/Slack)
-
-You can configure who gets tagged when stop callbacks send session summaries.
+**快速设置（推荐）：**
 
 ```bash
-# Set/replace tag list
-omc config-stop-callback telegram --enable --token <bot_token> --chat <chat_id> --tag-list "@alice,bob"
-omc config-stop-callback discord --enable --webhook <url> --tag-list "@here,123456789012345678,role:987654321098765432"
-omc config-stop-callback slack --enable --webhook <url> --tag-list "<!here>,<@U1234567890>"
-
-# Incremental updates
-omc config-stop-callback telegram --add-tag charlie
-omc config-stop-callback discord --remove-tag @here
-omc config-stop-callback discord --clear-tags
+/oh-my-codebuddy:configure-notifications
+# → 提示时输入 "openclaw" → 选择 "OpenClaw Gateway"
 ```
 
-Tag behavior:
-
-- Telegram: `alice` becomes `@alice`
-- Discord: supports `@here`, `@everyone`, numeric user IDs, and `role:<id>`
-- Slack: supports `<@MEMBER_ID>`, `<!channel>`, `<!here>`, `<!everyone>`, `<!subteam^GROUP_ID>`
-- `file` callbacks ignore tag options
-
-### OpenClaw Integration
-
-Forward Claude Code session events to an [OpenClaw](https://openclaw.ai/) gateway to enable automated responses and workflows via your OpenClaw agent.
-
-**Quick setup (recommended):**
-
-```bash
-/oh-my-claudecode:configure-notifications
-# → When prompted, type "openclaw" → choose "OpenClaw Gateway"
-```
-
-**Manual setup:** create `~/.claude/omc_config.openclaw.json`:
+**手动设置：** 创建 `~/.codebuddy/omc_config.openclaw.json`：
 
 ```json
 {
@@ -441,86 +301,70 @@ Forward Claude Code session events to an [OpenClaw](https://openclaw.ai/) gatewa
 }
 ```
 
-**Environment variables:**
+**环境变量：**
 
-| Variable | Description |
-|----------|-------------|
-| `OMC_OPENCLAW=1` | Enable OpenClaw |
-| `OMC_OPENCLAW_DEBUG=1` | Enable debug logging |
-| `OMC_OPENCLAW_CONFIG=/path/to/config.json` | Override config file path |
+| 变量 | 说明 |
+|------|------|
+| `OMC_OPENCLAW=1` | 启用 OpenClaw |
+| `OMC_OPENCLAW_DEBUG=1` | 启用调试日志 |
+| `OMC_OPENCLAW_CONFIG=/path/to/config.json` | 覆盖配置文件路径 |
 
-**Supported hook events (6 active in bridge.ts):**
+**支持的钩子事件（bridge.ts 中 6 个活跃）：**
 
-| Event | Trigger | Key template variables |
-|-------|---------|----------------------|
-| `session-start` | Session begins | `{{sessionId}}`, `{{projectName}}`, `{{projectPath}}` |
-| `stop` | Claude response completes | `{{sessionId}}`, `{{projectName}}` |
-| `keyword-detector` | Every prompt submission | `{{prompt}}`, `{{sessionId}}` |
-| `ask-user-question` | Claude requests user input | `{{question}}`, `{{sessionId}}` |
-| `pre-tool-use` | Before tool invocation (high frequency) | `{{toolName}}`, `{{sessionId}}` |
-| `post-tool-use` | After tool invocation (high frequency) | `{{toolName}}`, `{{sessionId}}` |
+| 事件 | 触发时机 | 主要模板变量 |
+|------|---------|-------------|
+| `session-start` | 会话开始时 | `{{sessionId}}`, `{{projectName}}`, `{{projectPath}}` |
+| `stop` | Claude 响应完成时 | `{{sessionId}}`, `{{projectName}}` |
+| `keyword-detector` | 每次提交提示词时 | `{{prompt}}`, `{{sessionId}}` |
+| `ask-user-question` | Claude 请求用户输入时 | `{{question}}`, `{{sessionId}}` |
+| `pre-tool-use` | 工具调用前（高频） | `{{toolName}}`, `{{sessionId}}` |
+| `post-tool-use` | 工具调用后（高频） | `{{toolName}}`, `{{sessionId}}` |
 
-**Reply channel environment variables:**
+**回复通道环境变量：**
 
-| Variable | Description |
-|----------|-------------|
-| `OPENCLAW_REPLY_CHANNEL` | Reply channel (e.g. `discord`) |
-| `OPENCLAW_REPLY_TARGET` | Channel ID |
-| `OPENCLAW_REPLY_THREAD` | Thread ID |
+| 变量 | 说明 |
+|------|------|
+| `OPENCLAW_REPLY_CHANNEL` | 回复通道（例如 `discord`） |
+| `OPENCLAW_REPLY_TARGET` | 频道 ID |
+| `OPENCLAW_REPLY_THREAD` | 线程 ID |
 
-See `scripts/openclaw-gateway-demo.mjs` for a reference gateway that relays OpenClaw payloads to Discord via ClawdBot.
-
----
-
-## Documentation
-
-- **[Full Reference](docs/REFERENCE.md)** - Complete feature documentation
-- **[CLI Reference](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#cli-reference)** - All `omc` commands, flags, and tools
-- **[Notifications Guide](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#notifications)** - Discord, Telegram, Slack, and webhook setup
-- **[Recommended Workflows](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#workflows)** - Battle-tested skill chains for common tasks
-- **[Release Notes](https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#release-notes)** - What's new in each version
-- **[Website](https://yeachan-heo.github.io/oh-my-claudecode-website)** - Interactive guides and examples
-- **[Migration Guide](docs/MIGRATION.md)** - Upgrade from v2.x
-- **[Architecture](docs/ARCHITECTURE.md)** - How it works under the hood
-- **[Performance Monitoring](docs/PERFORMANCE-MONITORING.md)** - Agent tracking, debugging, and optimization
-- **[Security Guide](SECURITY.md)** - Enterprise deployment and hardening
+参见 `scripts/openclaw-gateway-demo.mjs`，这是一个通过 ClawdBot 将 OpenClaw 有效载荷转发到 Discord 的参考网关。
 
 ---
 
-## Requirements
+## 文档
 
-- [Claude Code](https://docs.anthropic.com/claude-code) CLI
-- Claude Max/Pro subscription OR Anthropic API key
-
-### Platform & tmux
-
-OMC features like `omc team` and rate-limit detection require **tmux**:
-
-| Platform       | tmux provider                                            | Install                |
-| -------------- | -------------------------------------------------------- | ---------------------- |
-| macOS          | [tmux](https://github.com/tmux/tmux)                    | `brew install tmux`    |
-| Ubuntu/Debian  | tmux                                                     | `sudo apt install tmux`|
-| Fedora         | tmux                                                     | `sudo dnf install tmux`|
-| Arch           | tmux                                                     | `sudo pacman -S tmux`  |
-| Windows        | [psmux](https://github.com/marlocarlo/psmux) (native)   | `winget install psmux` |
-| Windows (WSL2) | tmux (inside WSL)                                        | `sudo apt install tmux`|
-
-> **Windows users:** [psmux](https://github.com/marlocarlo/psmux) provides a native `tmux` binary for Windows with 76 tmux-compatible commands. No WSL required.
-
-### Optional: Multi-AI Orchestration
-
-OMC can optionally orchestrate external AI providers for cross-validation and design consistency. These are **not required** — OMC works fully without them.
-
-| Provider                                                  | Install                             | What it enables                                  |
-| --------------------------------------------------------- | ----------------------------------- | ------------------------------------------------ |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | `npm install -g @google/gemini-cli` | Design review, UI consistency (1M token context) |
-| [Codex CLI](https://github.com/openai/codex)              | `npm install -g @openai/codex`      | Architecture validation, code review cross-check |
-
-**Cost:** 3 Pro plans (Claude + Gemini + ChatGPT) cover everything for ~$60/month.
+- **[完整参考](docs/REFERENCE.md)** - 完整功能文档
+- **[CLI 参考](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#cli-reference)** - 所有 `omc` 命令、标志和工具
+- **[通知指南](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#notifications)** - Discord、Telegram、Slack 和 webhook 设置
+- **[推荐工作流](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#workflows)** - 常见任务的经过实战检验的技能链
+- **[发布说明](https://yeachan-heo.github.io/oh-my-codebuddy-website/docs/#release-notes)** - 每个版本的新内容
+- **[网站](https://yeachan-heo.github.io/oh-my-codebuddy-website)** - 交互式指南和示例
+- **[迁移指南](docs/MIGRATION.md)** - 从 v2.x 升级
+- **[架构](docs/ARCHITECTURE.md)** - 底层工作原理
+- **[性能监控](docs/PERFORMANCE-MONITORING.md)** - 智能体追踪、调试和优化
 
 ---
 
-## License
+## 环境要求
+
+- [CodeBuddy Code](https://docs.anthropic.com/claude-code) CLI
+- Claude Max/Pro 订阅 或 Anthropic API 密钥
+
+### 可选：多 AI 编排
+
+OMC 可以选择性地调用外部 AI 提供商进行交叉验证和设计一致性检查。**非必需** — 没有它们 OMC 也能完整运行。
+
+| 提供商 | 安装 | 功能 |
+|--------|------|------|
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | `npm install -g @google/gemini-cli` | 设计审查、UI 一致性（1M token 上下文）|
+| [Codex CLI](https://github.com/openai/codex) | `npm install -g @openai/codex` | 架构验证、代码审查交叉检查 |
+
+**费用：** 3 个 Pro 计划（Claude + Gemini + ChatGPT）每月约 $60 即可覆盖所有功能。
+
+---
+
+## 开源协议
 
 MIT
 
@@ -528,52 +372,32 @@ MIT
 
 <div align="center">
 
-**Inspired by:** [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) • [claude-hud](https://github.com/ryanjoachim/claude-hud) • [Superpowers](https://github.com/obra/superpowers) • [everything-claude-code](https://github.com/affaan-m/everything-claude-code) • [Ouroboros](https://github.com/Q00/ouroboros)
+**灵感来源：** [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) • [claude-hud](https://github.com/ryanjoachim/claude-hud) • [Superpowers](https://github.com/obra/superpowers) • [everything-claude-code](https://github.com/affaan-m/everything-claude-code) • [Ouroboros](https://github.com/Q00/ouroboros)
 
-**Zero learning curve. Maximum power.**
+**零学习曲线。最强大能。**
 
 </div>
 
-<!-- OMC:FEATURED-CONTRIBUTORS:START -->
-## Featured by OmC Contributors
+## Star 历史
 
-Top personal non-fork, non-archived repos from all-time OMC contributors (100+ GitHub stars).
+[![Star History Chart](https://api.star-history.com/svg?repos=anthropic-ai/oh-my-codebuddy&type=date&legend=top-left)](https://www.star-history.com/#anthropic-ai/oh-my-codebuddy&type=date&legend=top-left)
 
-- [@Yeachan-Heo](https://github.com/Yeachan-Heo) — [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) (⭐ 32k)
-- [@junhoyeo](https://github.com/junhoyeo) — [tokscale](https://github.com/junhoyeo/tokscale) (⭐ 2.3k)
-- [@psmux](https://github.com/psmux) — [psmux](https://github.com/psmux/psmux) (⭐ 1.6k)
-- [@BowTiedSwan](https://github.com/BowTiedSwan) — [buildflow](https://github.com/BowTiedSwan/buildflow) (⭐ 291)
-- [@alohays](https://github.com/alohays) — [awesome-visual-representation-learning-with-transformers](https://github.com/alohays/awesome-visual-representation-learning-with-transformers) (⭐ 268)
-- [@jcwleo](https://github.com/jcwleo) — [random-network-distillation-pytorch](https://github.com/jcwleo/random-network-distillation-pytorch) (⭐ 261)
-- [@emgeee](https://github.com/emgeee) — [mean-tutorial](https://github.com/emgeee/mean-tutorial) (⭐ 200)
-- [@shaun0927](https://github.com/shaun0927) — [openchrome](https://github.com/shaun0927/openchrome) (⭐ 186)
-- [@MeroZemory](https://github.com/MeroZemory) — [ida-multi-mcp](https://github.com/MeroZemory/ida-multi-mcp) (⭐ 182)
-- [@anduinnn](https://github.com/anduinnn) — [HiFiNi-Auto-CheckIn](https://github.com/anduinnn/HiFiNi-Auto-CheckIn) (⭐ 171)
-- [@HaD0Yun](https://github.com/HaD0Yun) — [Gopeak-godot-mcp](https://github.com/HaD0Yun/Gopeak-godot-mcp) (⭐ 148)
-- [@Znuff](https://github.com/Znuff) — [consolas-powerline](https://github.com/Znuff/consolas-powerline) (⭐ 146)
+## 💖 支持本项目
 
-<!-- OMC:FEATURED-CONTRIBUTORS:END -->
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Yeachan-Heo/oh-my-claudecode&type=date&legend=top-left)](https://www.star-history.com/#Yeachan-Heo/oh-my-claudecode&type=date&legend=top-left)
-
-## 💖 Support This Project
-
-If Oh-My-ClaudeCode helps your workflow, consider sponsoring:
+如果 oh-my-codebuddy 帮助了你的工作流，请考虑赞助：
 
 [![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-❤️-red?style=for-the-badge&logo=github)](https://github.com/sponsors/Yeachan-Heo)
 
-### Why sponsor?
+### 为什么赞助？
 
-- Keep development active
-- Priority support for sponsors
-- Influence roadmap & features
-- Help maintain free & open source
+- 保持项目活跃开发
+- 赞助者获得优先支持
+- 影响路线图和功能
+- 帮助维护自由开源
 
-### Other ways to help
+### 其他帮助方式
 
-- ⭐ Star the repo
-- 🐛 Report bugs
-- 💡 Suggest features
-- 📝 Contribute code
+- ⭐ 为仓库加星
+- 🐛 报告问题
+- 💡 提出功能建议
+- 📝 贡献代码

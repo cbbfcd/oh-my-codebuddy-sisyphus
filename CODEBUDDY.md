@@ -1,9 +1,9 @@
 <!-- OMC:START -->
 <!-- OMC:VERSION:4.9.1 -->
 
-# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
-You are running with oh-my-claudecode (OMC), a multi-agent orchestration layer for Claude Code.
+You are running with oh-my-codebuddy (OMC), a multi-agent orchestration layer for CodeBuddy Code.
 Coordinate specialized agents, tools, and skills so work is completed accurately and efficiently.
 
 <operating_principles>
@@ -21,17 +21,17 @@ Route code to `executor` (use `model=opus` for complex work). Uncertain SDK usag
 
 <model_routing>
 `haiku` (quick lookups), `sonnet` (standard), `opus` (architecture, deep analysis).
-Direct writes OK for: `~/.claude/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
+Direct writes OK for: `~/.codebuddy/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
 </model_routing>
 
 <agent_catalog>
-Prefix: `oh-my-claudecode:`. See `agents/*.md` for full prompts.
+Prefix: `oh-my-codebuddy:`. See `agents/*.md` for full prompts.
 
 explore (haiku), analyst (opus), planner (opus), architect (opus), debugger (sonnet), executor (sonnet), verifier (sonnet), tracer (sonnet), security-reviewer (sonnet), code-reviewer (opus), test-engineer (sonnet), designer (sonnet), writer (haiku), qa-tester (sonnet), scientist (sonnet), document-specialist (sonnet), git-master (sonnet), code-simplifier (opus), critic (opus)
 </agent_catalog>
 
 <tools>
-External AI: `/team N:executor "task"`, `omc team N:codex|gemini "..."`, `omc ask <claude|codex|gemini>`, `/ccg`
+External AI: `/team N:executor "task"`, `omcb team N:codex|gemini "..."`, `omcb ask <claude|codex|gemini>`, `/ccg`
 OMC State: `state_read`, `state_write`, `state_clear`, `state_list_active`, `state_get_status`
 Teams: `TeamCreate`, `TeamDelete`, `SendMessage`, `TaskCreate`, `TaskList`, `TaskGet`, `TaskUpdate`
 Notepad: `notepad_read`, `notepad_write_priority`, `notepad_write_working`, `notepad_write_manual`
@@ -40,7 +40,7 @@ Code Intel: LSP (`lsp_hover`, `lsp_goto_definition`, `lsp_find_references`, `lsp
 </tools>
 
 <skills>
-Invoke via `/oh-my-claudecode:<name>`. Trigger patterns auto-detect keywords.
+Invoke via `/oh-my-codebuddy:<name>`. Trigger patterns auto-detect keywords.
 
 Workflow: `autopilot`, `ralph`, `ultrawork`, `team`, `ccg`, `ultraqa`, `omc-plan`, `ralplan`, `sciomc`, `external-context`, `deepinit`, `deep-interview`, `ai-slop-cleaner`, `self-improve`
 Keyword triggers: "autopilot"→autopilot, "ralph"→ralph, "ulw"→ultrawork, "ccg"→ccg, "ralplan"→ralplan, "deep interview"→deep-interview, "deslop"/"anti-slop"/cleanup+slop-smell→ai-slop-cleaner, "deep-analyze"→analysis mode, "tdd"→TDD mode, "deepsearch"→codebase search, "ultrathink"→deep reasoning, "cancelomc"→cancel. Team orchestration is explicit via `/team`.
@@ -102,7 +102,7 @@ Kill switches: `DISABLE_OMC`, `OMC_SKIP_HOOKS` (comma-separated).
 </hooks_and_context>
 
 <cancellation>
-`/oh-my-claudecode:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work incomplete.
+`/oh-my-codebuddy:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work incomplete.
 </cancellation>
 
 <worktree_paths>
@@ -111,6 +111,6 @@ State: `.omc/state/`, `.omc/state/sessions/{sessionId}/`, `.omc/notepad.md`, `.o
 
 ## Setup
 
-Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
+Say "setup omc" or run `/oh-my-codebuddy:omc-setup`.
 
 <!-- OMC:END -->
