@@ -6,11 +6,11 @@ user-invocable: false
 
 # OMC Reference
 
-Use this built-in reference when you need detailed OMC catalog information that does not need to live in every `CLAUDE.md` session.
+Use this built-in reference when you need detailed OMC catalog information that does not need to live in every `CODEBUDDY.md` session.
 
 ## Agent Catalog
 
-Prefix: `oh-my-claudecode:`. See `agents/*.md` for full prompts.
+Prefix: `oh-my-codebuddy:`. See `agents/*.md` for full prompts.
 
 - `explore` (haiku) — fast codebase search and mapping
 - `analyst` (opus) — requirements clarity and hidden constraints
@@ -42,8 +42,8 @@ Prefix: `oh-my-claudecode:`. See `agents/*.md` for full prompts.
 
 ### External AI / orchestration
 - `/team N:executor "task"`
-- `omc team N:codex|gemini "..."`
-- `omc ask <claude|codex|gemini>`
+- `omcb team N:codex|gemini "..."`
+- `omcb ask <codebuddy|codex|gemini>`
 - `/ccg`
 
 ### OMC state
@@ -65,7 +65,7 @@ Prefix: `oh-my-claudecode:`. See `agents/*.md` for full prompts.
 
 ## Skills Registry
 
-Invoke built-in workflows via `/oh-my-claudecode:<name>`.
+Invoke built-in workflows via `/oh-my-codebuddy:<name>`.
 
 ### Workflow skills
 - `autopilot` — full autonomous execution from idea to working code
@@ -73,7 +73,7 @@ Invoke built-in workflows via `/oh-my-claudecode:<name>`.
 - `ultrawork` — high-throughput parallel execution
 - `visual-verdict` — structured visual QA verdicts
 - `team` — coordinated team orchestration
-- `ccg` — Codex + Gemini + Claude synthesis lane
+- `ccg` — Codex + Gemini + CodeBuddy synthesis lane
 - `ultraqa` — QA cycle: test, verify, fix, repeat
 - `omc-plan` — planning workflow and `/plan`-safe alias
 - `ralplan` — consensus planning workflow
@@ -86,7 +86,7 @@ Invoke built-in workflows via `/oh-my-claudecode:<name>`.
 ### Utility skills
 - `ask`, `cancel`, `note`, `skillify`, `learner` (deprecated alias), `omc-setup`, `mcp-setup`, `hud`, `omc-doctor`, `trace`, `release`, `project-session-manager`, `skill`, `writer-memory`, `configure-notifications`
 
-### Keyword triggers kept compact in CLAUDE.md
+### Keyword triggers kept compact in CODEBUDDY.md
 - `"autopilot"→autopilot`
 - `"ralph"→ralph`
 - `"ulw"→ultrawork`
@@ -130,12 +130,12 @@ Use git trailers to preserve decision context in every commit message.
 ```text
 feat(docs): reduce always-loaded OMC instruction footprint
 
-Move reference-only orchestration content into a native Claude skill so
+Move reference-only orchestration content into a native CodeBuddy skill so
 session-start guidance stays small while detailed OMC reference remains available.
 
-Constraint: Preserve CLAUDE.md marker-based installation flow
+Constraint: Preserve CODEBUDDY.md marker-based installation flow
 Rejected: Sync all built-in skills in legacy install | broader behavior change than issue requires
 Confidence: high
 Scope-risk: narrow
-Not-tested: End-to-end plugin marketplace install in a fresh Claude profile
+Not-tested: End-to-end plugin marketplace install in a fresh CodeBuddy profile
 ```

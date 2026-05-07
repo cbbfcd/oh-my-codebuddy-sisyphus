@@ -6,7 +6,7 @@ level: 7
 
 # Learner Skill
 
-> Deprecated compatibility alias: use `/oh-my-claudecode:skillify` for new skill extraction workflows. This file remains for internal implementation/history and compatibility.
+> Deprecated compatibility alias: use `/oh-my-codebuddy:skillify` for new skill extraction workflows. This file remains for internal implementation/history and compatibility.
 
 This is a Level 7 (self-improving) skill. It has two distinct sections:
 - **Expertise**: Domain knowledge about what makes a good skill. Updated automatically as patterns are discovered.
@@ -23,7 +23,7 @@ Only the Expertise section should be updated during improvement cycles.
 
 ### Core Principle
 
-Reusable skills are not code snippets to copy-paste, but **principles and decision-making heuristics** that teach Claude HOW TO THINK about a class of problems.
+Reusable skills are not code snippets to copy-paste, but **principles and decision-making heuristics** that teach CodeBuddy HOW TO THINK about a class of problems.
 
 **The difference:**
 - BAD (mimicking): "When you see ConnectionResetError, add this try/except block"
@@ -111,7 +111,7 @@ This classification ensures expertise can be updated independently without desta
 
 ### Step 4: Save Location
 
-- **User-level**: `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/<skill-name>.md` - Rare. Only for truly portable insights.
+- **User-level**: `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/<skill-name>.md` - Rare. Only for truly portable insights.
 - **Project-level**: `.omc/skills/<skill-name>.md` - Default. Intended to be committed with the repo when you want the team to keep the skill. In linked worktrees, uncommitted skills are still worktree-local and disappear if that worktree is deleted.
 
 ### Required File Format
@@ -154,15 +154,15 @@ What goes wrong if you don't know this? What symptom led you here?
 How do you know when this skill applies? What are the signs?
 
 ## The Approach
-The decision-making heuristic, not just code. How should Claude THINK about this?
+The decision-making heuristic, not just code. How should CodeBuddy THINK about this?
 
 ## Example (Optional)
 If code helps, show it - but as illustration of the principle, not copy-paste material.
 ```
 
-**Key**: A skill is REUSABLE if Claude can apply it to NEW situations, not just identical ones.
+**Key**: A skill is REUSABLE if CodeBuddy can apply it to NEW situations, not just identical ones.
 
 ## Related Commands
 
-- /oh-my-claudecode:note - Save quick notes that survive compaction (less formal than skills)
-- /oh-my-claudecode:ralph - Start a development loop with learning capture
+- /oh-my-codebuddy:note - Save quick notes that survive compaction (less formal than skills)
+- /oh-my-codebuddy:ralph - Start a development loop with learning capture

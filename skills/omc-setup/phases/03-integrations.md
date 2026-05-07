@@ -5,31 +5,31 @@
 ## Step 3.1: Verify Plugin Installation
 
 ```bash
-grep -q "oh-my-claudecode" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json" && echo "Plugin verified" || echo "Plugin NOT found - run: claude /install-plugin oh-my-claudecode"
+grep -q "oh-my-codebuddy" "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/settings.json" && echo "Plugin verified" || echo "Plugin NOT found - run: codebuddy /install-plugin oh-my-codebuddy"
 ```
 
 ## Step 3.2: Offer MCP Server Configuration
 
-MCP servers extend Claude Code with additional tools (web search, GitHub, etc.).
+MCP servers extend CodeBuddy Code with additional tools (web search, GitHub, etc.).
 
 Use AskUserQuestion: "Would you like to configure MCP servers for enhanced capabilities? (Context7, Exa search, GitHub, etc.)"
 
 If yes, invoke the mcp-setup skill:
 ```
-/oh-my-claudecode:mcp-setup
+/oh-my-codebuddy:mcp-setup
 ```
 
 If no, skip to next step.
 
 ## Step 3.3: Configure Agent Teams (Optional)
 
-Agent teams are an experimental Claude Code feature that lets you spawn N coordinated agents working on a shared task list with inter-agent messaging. **Teams are disabled by default** and require enabling via `settings.json`.
+Agent teams are an experimental CodeBuddy Code feature that lets you spawn N coordinated agents working on a shared task list with inter-agent messaging. **Teams are disabled by default** and require enabling via `settings.json`.
 
-Reference: https://code.claude.com/docs/en/agent-teams
+Reference: https://docs.codebuddy.ai/agent-teams
 
 Use AskUserQuestion:
 
-**Question:** "Would you like to enable agent teams? Teams let you spawn coordinated agents (e.g., `/team 3:executor 'fix all errors'`). This is an experimental Claude Code feature."
+**Question:** "Would you like to enable agent teams? Teams let you spawn coordinated agents (e.g., `/team 3:executor 'fix all errors'`). This is an experimental CodeBuddy Code feature."
 
 **Options:**
 1. **Yes, enable teams (Recommended)** - Enable the experimental feature and configure defaults
@@ -39,12 +39,12 @@ Use AskUserQuestion:
 
 #### 3.3.1: Enable Agent Teams in settings.json
 
-**CRITICAL**: Agent teams require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` to be set in `~/.claude/settings.json`. This must be done carefully to preserve existing user settings.
+**CRITICAL**: Agent teams require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` to be set in `~/.codebuddy/settings.json`. This must be done carefully to preserve existing user settings.
 
 First, read the current settings.json:
 
 ```bash
-SETTINGS_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
+SETTINGS_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/settings.json"
 
 if [ -f "$SETTINGS_FILE" ]; then
   echo "Current settings.json found"
@@ -54,12 +54,12 @@ else
 fi
 ```
 
-Then use the Read tool to read `${CLAUDE_CONFIG_DIR:-~/.claude}/settings.json` (if it exists). Use the Edit tool to merge the teams configuration while preserving ALL existing settings.
+Then use the Read tool to read `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/settings.json` (if it exists). Use the Edit tool to merge the teams configuration while preserving ALL existing settings.
 
 Use jq to safely merge without overwriting existing settings:
 
 ```bash
-SETTINGS_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
+SETTINGS_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/settings.json"
 
 if [ -f "$SETTINGS_FILE" ]; then
   TEMP_FILE=$(mktemp)
@@ -94,7 +94,7 @@ Use AskUserQuestion:
 If user chooses anything other than "Auto", add `teammateMode` to settings.json:
 
 ```bash
-SETTINGS_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
+SETTINGS_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/settings.json"
 
 # TEAMMATE_MODE is "in-process" or "tmux" based on user choice
 # Skip this if user chose "Auto" (that's the default)
@@ -116,14 +116,14 @@ Use AskUserQuestion with multiple questions:
 **Question 2:** "Which CLI provider should teammates use by default?"
 
 **Options:**
-1. **claude (Recommended)** - Default provider with the widest compatibility
+1. **codebuddy (Recommended)** - Default provider with the widest compatibility
 2. **codex** - Use Codex CLI workers by default when installed
 3. **gemini** - Use Gemini CLI workers by default when installed
 
-Store the team configuration in `~/.claude/.omc-config.json`:
+Store the team configuration in `~/.codebuddy/.omc-config.json`:
 
 ```bash
-CONFIG_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.omc-config.json"
+CONFIG_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/.omc-config.json"
 mkdir -p "$(dirname "$CONFIG_FILE")"
 
 if [ -f "$CONFIG_FILE" ]; then
@@ -144,14 +144,14 @@ echo "  Default provider: AGENT_TYPE"
 echo "  Model: teammates inherit your session model"
 ```
 
-**Note:** Teammates do not have a separate model default. Each teammate is a full Claude Code session that inherits your configured model. Subagents spawned by teammates can use any model tier.
+**Note:** Teammates do not have a separate model default. Each teammate is a full CodeBuddy Code session that inherits your configured model. Subagents spawned by teammates can use any model tier.
 
 #### Verify settings.json Integrity
 
 After all modifications, verify settings.json is valid JSON and contains the expected keys:
 
 ```bash
-SETTINGS_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
+SETTINGS_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/settings.json"
 
 if jq empty "$SETTINGS_FILE" 2>/dev/null; then
   echo "settings.json: valid JSON"
@@ -173,7 +173,7 @@ jq '.' "$SETTINGS_FILE"
 
 ### If User Chooses NO:
 
-Skip this step. Agent teams will remain disabled. User can enable later by adding to `~/.claude/settings.json`:
+Skip this step. Agent teams will remain disabled. User can enable later by adding to `~/.codebuddy/settings.json`:
 ```json
 {
   "env": {
@@ -182,11 +182,11 @@ Skip this step. Agent teams will remain disabled. User can enable later by addin
 }
 ```
 
-Or by running `/oh-my-claudecode:omc-setup --force` and choosing to enable teams.
+Or by running `/oh-my-codebuddy:omc-setup --force` and choosing to enable teams.
 
 ## Save Progress
 
 ```bash
 CONFIG_TYPE=$(jq -r '.configType // "unknown"' ".omc/state/setup-state.json" 2>/dev/null || echo "unknown")
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/setup-progress.sh" save 6 "$CONFIG_TYPE"
+bash "${CODEBUDDY_PLUGIN_ROOT}/scripts/setup-progress.sh" save 6 "$CONFIG_TYPE"
 ```

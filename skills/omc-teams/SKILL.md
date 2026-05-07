@@ -1,34 +1,34 @@
 ---
 name: omc-teams
-description: CLI-team runtime for claude, codex, or gemini workers in tmux panes when you need process-based parallel execution
+description: CLI-team runtime for codebuddy, codex, or gemini workers in tmux panes when you need process-based parallel execution
 aliases: []
 level: 4
 ---
 
 # OMC Teams Skill
 
-Spawn N CLI worker processes in tmux panes to execute tasks in parallel. Supports `claude`, `codex`, and `gemini` agent types.
+Spawn N CLI worker processes in tmux panes to execute tasks in parallel. Supports `codebuddy`, `codex`, and `gemini` agent types.
 
-`/omc-teams` is a legacy compatibility skill for the CLI-first runtime: use `omc team ...` commands (not deprecated MCP runtime tools).
+`/omc-teams` is a legacy compatibility skill for the CLI-first runtime: use `omcb team ...` commands (not deprecated MCP runtime tools).
 
 ## Usage
 
 ```bash
-/oh-my-claudecode:omc-teams N:claude "task description"
-/oh-my-claudecode:omc-teams N:codex "task description"
-/oh-my-claudecode:omc-teams N:gemini "task description"
+/oh-my-codebuddy:omc-teams N:codebuddy "task description"
+/oh-my-codebuddy:omc-teams N:codex "task description"
+/oh-my-codebuddy:omc-teams N:gemini "task description"
 ```
 
 ### Parameters
 
 - **N** - Number of CLI workers (1-10)
-- **agent-type** - `claude` (Claude CLI), `codex` (OpenAI Codex CLI), or `gemini` (Google Gemini CLI)
+- **agent-type** - `codebuddy` (CodeBuddy CLI), `codex` (OpenAI Codex CLI), or `gemini` (Google Gemini CLI)
 - **task** - Task description to distribute across all workers
 
 ### Examples
 
 ```bash
-/omc-teams 2:claude "implement auth module with tests"
+/omc-teams 2:codebuddy "implement auth module with tests"
 /omc-teams 2:codex "review the auth module for security issues"
 /omc-teams 3:gemini "redesign UI components for accessibility"
 ```
@@ -36,8 +36,8 @@ Spawn N CLI worker processes in tmux panes to execute tasks in parallel. Support
 ## Requirements
 
 - **tmux binary** must be installed and discoverable (`command -v tmux`)
-- **Classic tmux session optional** for in-place pane splitting (`$TMUX` set). Inside cmux or a plain terminal, `omc team` falls back to a detached tmux session instead of splitting the current surface.
-- **claude** CLI: `npm install -g @anthropic-ai/claude-code`
+- **Classic tmux session optional** for in-place pane splitting (`$TMUX` set). Inside cmux or a plain terminal, `omcb team` falls back to a detached tmux session instead of splitting the current surface.
+- **codebuddy** CLI: `npm install -g @codebuddy/codebuddy-code`
 - **codex** CLI: `npm install -g @openai/codex`
 - **gemini** CLI: `npm install -g @google/gemini-cli`
 
@@ -52,9 +52,9 @@ command -v tmux >/dev/null 2>&1
 ```
 
 - If this fails, report that **tmux is not installed** and stop.
-- If `$TMUX` is set, `omc team` can reuse the current tmux window/panes directly.
-- If `$TMUX` is empty but `CMUX_SURFACE_ID` is set, report that the user is running inside **cmux**. Do **not** say tmux is missing or that they are "not inside tmux"; `omc team` will launch a **detached tmux session** for workers instead of splitting the cmux surface.
-- If neither `$TMUX` nor `CMUX_SURFACE_ID` is set, report that the user is in a **plain terminal**. `omc team` can still launch a **detached tmux session**, but if they specifically want in-place pane/window topology they should start from a classic tmux session first.
+- If `$TMUX` is set, `omcb team` can reuse the current tmux window/panes directly.
+- If `$TMUX` is empty but `CMUX_SURFACE_ID` is set, report that the user is running inside **cmux**. Do **not** say tmux is missing or that they are "not inside tmux"; `omcb team` will launch a **detached tmux session** for workers instead of splitting the cmux surface.
+- If neither `$TMUX` nor `CMUX_SURFACE_ID` is set, report that the user is in a **plain terminal**. `omcb team` can still launch a **detached tmux session**, but if they specifically want in-place pane/window topology they should start from a classic tmux session first.
 - If you need to confirm the active tmux session, use:
 
 ```bash
@@ -66,14 +66,14 @@ tmux display-message -p '#S'
 Extract:
 
 - `N` — worker count (1–10)
-- `agent-type` — `claude|codex|gemini`
+- `agent-type` — `codebuddy|codex|gemini`
 - `task` — task description
 
 Validate before decomposing or running anything:
 
-- Reject unsupported agent types up front. `/omc-teams` only supports **`claude`**, **`codex`**, and **`gemini`**.
+- Reject unsupported agent types up front. `/omc-teams` only supports **`codebuddy`**, **`codex`**, and **`gemini`**.
 - If the user asks for an unsupported type such as `expert`, explain that `/omc-teams` launches external CLI workers only.
-- For native Claude Code team agents/roles, direct them to **`/oh-my-claudecode:team`** instead.
+- For native CodeBuddy Code team agents/roles, direct them to **`/oh-my-codebuddy:team`** instead.
 
 ### Phase 2: Decompose task
 
@@ -81,7 +81,7 @@ Break work into N independent subtasks (file- or concern-scoped) to avoid write 
 
 ### Phase 2.5: Resolve workspace root for multi-repo plans
 
-`omc team` launches all workers with one shared working directory. For single-repo
+`omcb team` launches all workers with one shared working directory. For single-repo
 tasks, the current repo is usually correct. For multi-repo tasks, especially when a
 plan lives in one repo but the implementation touches sibling repos, resolve the
 working directory before launch:
@@ -94,7 +94,7 @@ working directory before launch:
   plan after `--cwd` changes the launch directory.
 - Include the explicit repo paths or repo names in the task text and subtasks.
 - Do not anchor the launch cwd to only the repo containing `.omc/plans/...` when
-  target repos are siblings; that strands `codex`, `claude`, and `gemini` workers in
+  target repos are siblings; that strands `codex`, `codebuddy`, and `gemini` workers in
   the plan repo instead of the implementation workspace.
 - If no safe shared workspace root can be identified, do not launch `/omc-teams`.
   Report the single-cwd constraint and ask for, or derive from evidence, the intended
@@ -111,14 +111,14 @@ state_write(mode="team", current_phase="team-exec", active=true)
 Start workers via CLI:
 
 ```bash
-omc team <N>:<claude|codex|gemini> "<task>"
+omcb team <N>:<codebuddy|codex|gemini> "<task>"
 ```
 
 For the multi-repo case resolved in Phase 2.5, launch from the shared workspace root
 with the existing `--cwd` contract and keep the plan reference absolute:
 
 ```bash
-omc team <N>:<claude|codex|gemini> "<task with absolute plan path and explicit repo paths>" --cwd <workspace-root>
+omcb team <N>:<codebuddy|codex|gemini> "<task with absolute plan path and explicit repo paths>" --cwd <workspace-root>
 ```
 
 Team name defaults to a slug from the task text (example: `review-auth-flow`).
@@ -135,17 +135,17 @@ Do not claim the team started successfully unless pane output shows the command 
 ### Phase 4: Monitor + lifecycle API
 
 ```bash
-omc team status <team-name>
-omc team api list-tasks --input '{"team_name":"<team-name>"}' --json
+omcb team status <team-name>
+omcb team api list-tasks --input '{"team_name":"<team-name>"}' --json
 ```
 
-Use `omc team api ...` for task claiming, task transitions, mailbox delivery, and worker state updates.
+Use `omcb team api ...` for task claiming, task transitions, mailbox delivery, and worker state updates.
 
 ### Phase 5: Shutdown (only when needed)
 
 ```bash
-omc team shutdown <team-name>
-omc team shutdown <team-name> --force
+omcb team shutdown <team-name>
+omcb team shutdown <team-name> --force
 ```
 
 Use shutdown for intentional cancellation or stale-state cleanup. Prefer non-force shutdown first.
@@ -167,25 +167,25 @@ Legacy MCP runtime tools are deprecated for execution:
 - `omc_run_team_wait`
 - `omc_run_team_cleanup`
 
-If encountered, switch to `omc team ...` CLI commands.
+If encountered, switch to `omcb team ...` CLI commands.
 
 ## Error Reference
 
 | Error                        | Cause                               | Fix                                                                                 |
 | ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
-| `not inside tmux`            | Requested in-place pane topology from a non-tmux surface | Start tmux and rerun, or let `omc team` use its detached-session fallback           |
-| `cmux surface detected`      | Running inside cmux without `$TMUX` | Use the normal `omc team ...` flow; OMC will launch a detached tmux session         |
-| `Unsupported agent type`     | Requested agent is not claude/codex/gemini | Use `claude`, `codex`, or `gemini`; for native Claude Code agents use `/oh-my-claudecode:team` |
+| `not inside tmux`            | Requested in-place pane topology from a non-tmux surface | Start tmux and rerun, or let `omcb team` use its detached-session fallback           |
+| `cmux surface detected`      | Running inside cmux without `$TMUX` | Use the normal `omcb team ...` flow; OMC will launch a detached tmux session         |
+| `Unsupported agent type`     | Requested agent is not codebuddy/codex/gemini | Use `codebuddy`, `codex`, or `gemini`; for native CodeBuddy Code agents use `/oh-my-codebuddy:team` |
 | `codex: command not found`   | Codex CLI not installed             | `npm install -g @openai/codex`                                                      |
 | `gemini: command not found`  | Gemini CLI not installed            | `npm install -g @google/gemini-cli`                                                 |
-| `Team <name> is not running` | stale or missing runtime state      | `omc team status <team-name>` then `omc team shutdown <team-name> --force` if stale |
+| `Team <name> is not running` | stale or missing runtime state      | `omcb team status <team-name>` then `omcb team shutdown <team-name> --force` if stale |
 | `status: failed`             | Workers exited with incomplete work | inspect runtime output, narrow scope, rerun                                         |
 
 ## Relationship to `/team`
 
 | Aspect       | `/team`                                   | `/omc-teams`                                         |
 | ------------ | ----------------------------------------- | ---------------------------------------------------- |
-| Worker type  | Claude Code native team agents            | claude / codex / gemini CLI processes in tmux        |
-| Invocation   | `TeamCreate` / `Task` / `SendMessage`     | `omc team [N:agent]` + `status` + `shutdown` + `api` |
+| Worker type  | CodeBuddy Code native team agents            | codebuddy / codex / gemini CLI processes in tmux        |
+| Invocation   | `TeamCreate` / `Task` / `SendMessage`     | `omcb team [N:agent]` + `status` + `shutdown` + `api` |
 | Coordination | Native team messaging and staged pipeline | tmux worker runtime + CLI API state files            |
-| Use when     | You want Claude-native team orchestration | You want external CLI worker execution               |
+| Use when     | You want CodeBuddy-native team orchestration | You want external CLI worker execution               |

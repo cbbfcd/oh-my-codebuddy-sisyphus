@@ -9,17 +9,17 @@ level: 2
 
 `psm` is the compatibility alias for this canonical skill entrypoint.
 
-> **Quick Start (worktree-first):** Start with `omc teleport` when you want an isolated issue/PR/feature worktree before adding any tmux/session orchestration:
+> **Quick Start (worktree-first):** Start with `omcb teleport` when you want an isolated issue/PR/feature worktree before adding any tmux/session orchestration:
 > ```bash
-> omc teleport #123          # Create worktree for issue/PR
-> omc teleport my-feature    # Create worktree for feature
-> omc teleport list          # List worktrees
+> omcb teleport #123          # Create worktree for issue/PR
+> omcb teleport my-feature    # Create worktree for feature
+> omcb teleport list          # List worktrees
 > ```
 > See [Teleport Command](#teleport-command) below for details.
 
-Automate isolated development environments using git worktrees and tmux sessions with Claude Code. Enables parallel work across multiple tasks, projects, and repositories.
+Automate isolated development environments using git worktrees and tmux sessions with CodeBuddy Code. Enables parallel work across multiple tasks, projects, and repositories.
 
-Canonical slash command: `/oh-my-claudecode:project-session-manager` (alias: `/oh-my-claudecode:psm`).
+Canonical slash command: `/oh-my-codebuddy:project-session-manager` (alias: `/oh-my-codebuddy:psm`).
 
 ## Commands
 
@@ -50,8 +50,8 @@ Supported formats:
 {
   "aliases": {
     "omc": {
-      "repo": "Yeachan-Heo/oh-my-claudecode",
-      "local": "~/Workspace/oh-my-claudecode",
+      "repo": "Yeachan-Heo/oh-my-codebuddy",
+      "local": "~/Workspace/oh-my-codebuddy",
       "default_base": "main"
     }
   },
@@ -171,7 +171,7 @@ When the user invokes a PSM command, follow this protocol:
 Parse `{{ARGUMENTS}}` to determine:
 1. **Subcommand**: review, fix, feature, list, attach, kill, cleanup, status
 2. **Reference**: project#number, URL, or session ID
-3. **Options**: --branch, --base, --no-claude, --no-tmux, etc.
+3. **Options**: --branch, --base, --no-codebuddy, --no-tmux, etc.
 
 ### Subcommand: `review <ref>`
 
@@ -248,15 +248,15 @@ Parse `{{ARGUMENTS}}` to determine:
    tmux new-session -d -s "psm:$project_alias:pr-$pr_number" -c "$worktree_path"
    ```
 
-8. **Launch Claude Code** (unless --no-claude):
+8. **Launch CodeBuddy Code** (unless --no-codebuddy):
    ```bash
    # --dangerously-skip-permissions prevents the "Do you trust this directory?" prompt
    # and repeated tool-approval prompts from stalling the session (issue #2508).
-   tmux send-keys -t "psm:$project_alias:pr-$pr_number" "claude --dangerously-skip-permissions" Enter
+   tmux send-keys -t "psm:$project_alias:pr-$pr_number" "codebuddy --dangerously-skip-permissions" Enter
 
-   # After claude boots (PSM_CLAUDE_STARTUP_DELAY, default 5s), deliver the task.
+   # After codebuddy boots (PSM_CODEBUDDY_STARTUP_DELAY, default 5s), deliver the task.
    # Use -l (literal) so special characters are not misinterpreted by tmux.
-   sleep "${PSM_CLAUDE_STARTUP_DELAY:-5}"
+   sleep "${PSM_CODEBUDDY_STARTUP_DELAY:-5}"
    tmux send-keys -t "psm:$project_alias:pr-$pr_number" -l \
      "Review PR #$pr_number: \"$pr_title\" by @$pr_author ($head_branch → $base_branch). URL: $pr_url." Enter
    ```
@@ -301,11 +301,11 @@ Parse `{{ARGUMENTS}}` to determine:
 
 5. **Create session metadata** (similar to review, type="fix")
 
-6. **Update registry, create tmux, launch claude**:
+6. **Update registry, create tmux, launch codebuddy**:
    Same as review, but pass issue context as the initial task prompt:
    ```bash
-   tmux send-keys -t "psm:$project_alias:issue-$issue_number" "claude --dangerously-skip-permissions" Enter
-   # After claude boots, deliver the task (see PSM_CLAUDE_STARTUP_DELAY):
+   tmux send-keys -t "psm:$project_alias:issue-$issue_number" "codebuddy --dangerously-skip-permissions" Enter
+   # After codebuddy boots, deliver the task (see PSM_CODEBUDDY_STARTUP_DELAY):
    tmux send-keys -t "psm:$project_alias:issue-$issue_number" -l \
      "Fix issue #$issue_number: \"$issue_title\". URL: $issue_url. Branch: $branch_name." Enter
    ```
@@ -332,9 +332,9 @@ Parse `{{ARGUMENTS}}` to determine:
    git worktree add "$worktree_path" "$branch_name"
    ```
 
-4. **Create session, tmux, launch claude** with feature context as initial prompt:
+4. **Create session, tmux, launch codebuddy** with feature context as initial prompt:
    ```bash
-   tmux send-keys -t "psm:$project_alias:feat-$feature_name" "claude --dangerously-skip-permissions" Enter
+   tmux send-keys -t "psm:$project_alias:feat-$feature_name" "codebuddy --dangerously-skip-permissions" Enter
    tmux send-keys -t "psm:$project_alias:feat-$feature_name" -l \
      "Implement feature \"$feature_name\" for project $project. Branch: $branch_name." Enter
    ```
@@ -483,25 +483,25 @@ Parse `{{ARGUMENTS}}` to determine:
 
 ## Teleport Command
 
-The `omc teleport` command provides a lightweight alternative to full PSM sessions. It creates git worktrees without tmux session management — ideal for quick, isolated development.
+The `omcb teleport` command provides a lightweight alternative to full PSM sessions. It creates git worktrees without tmux session management — ideal for quick, isolated development.
 
 ### Usage
 
 ```bash
 # Create worktree for an issue or PR
-omc teleport #123
-omc teleport owner/repo#123
-omc teleport https://github.com/owner/repo/issues/42
+omcb teleport #123
+omcb teleport owner/repo#123
+omcb teleport https://github.com/owner/repo/issues/42
 
 # Create worktree for a feature
-omc teleport my-feature
+omcb teleport my-feature
 
 # List existing worktrees
-omc teleport list
+omcb teleport list
 
 # Remove a worktree
-omc teleport remove issue/my-repo-123
-omc teleport remove --force feat/my-repo-my-feature
+omcb teleport remove issue/my-repo-123
+omcb teleport remove --force feat/my-repo-my-feature
 ```
 
 ### Options
@@ -531,7 +531,7 @@ omc teleport remove --force feat/my-repo-my-feature
 |---------|-----|----------|
 | Git worktree | Yes | Yes |
 | Tmux session | Yes | No |
-| Claude Code launch | Yes | No |
+| CodeBuddy Code launch | Yes | No |
 | Session registry | Yes | No |
 | Auto-cleanup | Yes | No |
 | Project aliases | Yes | No (uses current repo) |
@@ -564,8 +564,8 @@ if [[ ! -f ~/.psm/projects.json ]]; then
 {
   "aliases": {
     "omc": {
-      "repo": "Yeachan-Heo/oh-my-claudecode",
-      "local": "~/Workspace/oh-my-claudecode",
+      "repo": "Yeachan-Heo/oh-my-codebuddy",
+      "local": "~/Workspace/oh-my-codebuddy",
       "default_base": "main"
     }
   },

@@ -13,13 +13,13 @@ Autoresearch is a stateful skill for bounded, evaluator-driven iterative improve
 - You already have a mission and evaluator from `/deep-interview --autoresearch`
 - You want persistent single-mission improvement with strict evaluation
 - You need durable experiment logs under `.omc/autoresearch/`
-- You want a supported path for periodic reruns via Claude Code native cron
+- You want a supported path for periodic reruns via CodeBuddy Code native cron
 </Use_When>
 
 <Do_Not_Use_When>
 - You need evaluator generation at runtime — use `/deep-interview --autoresearch` first
 - You need multiple missions orchestrated together — v1 forbids that
-- You want the deprecated `omc autoresearch` CLI flow — it is no longer authoritative
+- You want the deprecated `omcb autoresearch` CLI flow — it is no longer authoritative
 </Do_Not_Use_When>
 
 <Contract>
@@ -74,7 +74,7 @@ Reuse existing runtime artifacts when available rather than duplicating them unn
 </Workflow>
 
 <Cron_Integration>
-Claude Code native cron is a supported integration point for periodic mission enhancement. In v1, prefer documenting/configuring cron inputs over building a large scheduler UI.
+CodeBuddy Code native cron is a supported integration point for periodic mission enhancement. In v1, prefer documenting/configuring cron inputs over building a large scheduler UI.
 
 If cron is used:
 - keep one mission per scheduled job
@@ -83,7 +83,7 @@ If cron is used:
 </Cron_Integration>
 
 <Execution_Policy>
-- Do not hand execution back to `omc autoresearch`
+- Do not hand execution back to `omcb autoresearch`
 - Do not create multi-mission orchestration
 - Prefer reusing `src/autoresearch/*` runtime/schema helpers where they already match the stricter contract
 - Keep logs useful to humans, not only machines

@@ -7,7 +7,7 @@ level: 2
 
 # Skill Management CLI
 
-Meta-skill for managing oh-my-claudecode skills via CLI-like commands.
+Meta-skill for managing oh-my-codebuddy skills via CLI-like commands.
 
 ## Subcommands
 
@@ -17,19 +17,19 @@ Show all available skills organized by scope.
 
 **Behavior:**
 1. Scan bundled built-in skills in the plugin `skills/` directory (read-only)
-2. Scan user skills at `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/`
+2. Scan user skills at `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/`
 3. Scan project skills at `.omc/skills/`
 4. Parse YAML frontmatter for metadata
 5. Display in organized table format:
 
 ```
-BUILT-IN SKILLS (bundled with oh-my-claudecode):
+BUILT-IN SKILLS (bundled with oh-my-codebuddy):
 | Name              | Description                    | Scope    |
 |-------------------|--------------------------------|----------|
 | visual-verdict    | Structured visual QA verdicts  | built-in |
 | ralph             | Persistence loop               | built-in |
 
-USER SKILLS (~/.claude/skills/omc-learned/):
+USER SKILLS (~/.codebuddy/skills/omc-learned/):
 | Name              | Triggers           | Quality | Usage | Scope |
 |-------------------|--------------------|---------|-------|-------|
 | error-handler     | fix, error         | 95%     | 42    | user  |
@@ -43,7 +43,7 @@ PROJECT SKILLS (.omc/skills/):
 
 **Fallback:** If quality/usage stats not available, show "N/A"
 
-**Built-in skill note:** Built-in skills are bundled with oh-my-claudecode and are discoverable/readable, but not removed or edited through `/skill remove` or `/skill edit`.
+**Built-in skill note:** Built-in skills are bundled with oh-my-codebuddy and are discoverable/readable, but not removed or edited through `/skill remove` or `/skill edit`.
 
 ---
 
@@ -61,7 +61,7 @@ Interactive wizard for creating a new skill.
 4. **Ask for argument hint** (optional)
    - Example: "<file> [options]"
 5. **Ask for scope:**
-   - `user` → `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/<name>/SKILL.md`
+   - `user` → `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/<name>/SKILL.md`
    - `project` → `.omc/skills/<name>/SKILL.md`
 6. **Create skill file** with template:
 
@@ -94,7 +94,7 @@ argument-hint: "<args>"
 ## Examples
 
 ```
-/oh-my-claudecode:<name> example-arg
+/oh-my-codebuddy:<name> example-arg
 ```
 
 ## Notes
@@ -115,7 +115,7 @@ Triggers (comma-separated): log, logger, logging
 Argument hint (optional): <level> [message]
 Scope (user/project): user
 
-✓ Created skill at ~/.claude/skills/omc-learned/custom-logger/SKILL.md
+✓ Created skill at ~/.codebuddy/skills/omc-learned/custom-logger/SKILL.md
 → Edit with: /skill edit custom-logger
 ```
 
@@ -127,13 +127,13 @@ Remove a skill by name.
 
 **Behavior:**
 1. **Search for skill** in both scopes:
-   - `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/<name>/SKILL.md`
+   - `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/<name>/SKILL.md`
    - `.omc/skills/<name>/SKILL.md`
 2. **If found:**
    - Display skill info (name, description, scope)
    - **Ask for confirmation:** "Delete '<name>' skill from <scope>? (yes/no)"
 3. **If confirmed:**
-   - Delete entire skill directory (e.g., `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/<name>/`)
+   - Delete entire skill directory (e.g., `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/<name>/`)
    - Report: "✓ Removed skill '<name>' from <scope>"
 4. **If not found:**
    - Report: "✗ Skill '<name>' not found in user or project scope"
@@ -145,7 +145,7 @@ Remove a skill by name.
 User: /skill remove old-logger
 Assistant: Found skill 'old-logger' in user scope:
   Description: Legacy logging utility
-  Scope: user (~/.claude/skills/omc-learned/)
+  Scope: user (~/.codebuddy/skills/omc-learned/)
 
 Delete 'old-logger' skill? (yes/no)
 
@@ -261,13 +261,13 @@ Show detailed information about a skill.
 
 ```
 Skill: custom-logger
-Scope: user (~/.claude/skills/omc-learned/custom-logger/)
+Scope: user (~/.codebuddy/skills/omc-learned/custom-logger/)
 Description: Enhanced logging with structured output
 Triggers: log, logger, logging
 Argument Hint: <level> [message]
 Quality: 95% (if available)
 Usage Count: 42 times (if available)
-File Path: /home/user/.claude/skills/omc-learned/custom-logger/SKILL.md
+File Path: /home/user/.codebuddy/skills/omc-learned/custom-logger/SKILL.md
 
 --- FULL CONTENT ---
 [entire markdown content]
@@ -282,7 +282,7 @@ Assistant: Skill: custom-logger
 Scope: user
 Description: Enhanced logging with structured output
 Triggers: log, logger, logging
-File: ~/.claude/skills/omc-learned/custom-logger/SKILL.md
+File: ~/.codebuddy/skills/omc-learned/custom-logger/SKILL.md
 
 --- CONTENT ---
 # Custom Logger Skill
@@ -300,7 +300,7 @@ Sync skills between user and project scopes.
 
 **Behavior:**
 1. **Scan both scopes:**
-   - User skills: `${CLAUDE_CONFIG_DIR:-~/.claude}/skills/omc-learned/`
+   - User skills: `${CODEBUDDY_CONFIG_DIR:-~/.codebuddy}/skills/omc-learned/`
    - Project skills: `.omc/skills/`
 2. **Compare and categorize:**
    - User-only skills (not in project)
@@ -370,7 +370,7 @@ First, check if skill directories exist and create them if needed:
 
 ```bash
 # Check and create user-level skills directory
-USER_SKILLS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/omc-learned"
+USER_SKILLS_DIR="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/skills/omc-learned"
 if [ -d "$USER_SKILLS_DIR" ]; then
   echo "User skills directory exists: $USER_SKILLS_DIR"
 else
@@ -394,15 +394,15 @@ Scan both directories and show a comprehensive inventory:
 
 ```bash
 # Scan user-level skills
-echo "=== USER-LEVEL SKILLS (~/.claude/skills/omc-learned/) ==="
-if [ -d "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/omc-learned" ]; then
-  USER_COUNT=$(find "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/omc-learned" -name "*.md" 2>/dev/null | wc -l)
+echo "=== USER-LEVEL SKILLS (~/.codebuddy/skills/omc-learned/) ==="
+if [ -d "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/skills/omc-learned" ]; then
+  USER_COUNT=$(find "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/skills/omc-learned" -name "*.md" 2>/dev/null | wc -l)
   echo "Total skills: $USER_COUNT"
 
   if [ $USER_COUNT -gt 0 ]; then
     echo ""
     echo "Skills found:"
-    find "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/omc-learned" -name "*.md" -type f -exec sh -c '
+    find "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/skills/omc-learned" -name "*.md" -type f -exec sh -c '
       FILE="$1"
       NAME=$(grep -m1 "^name:" "$FILE" 2>/dev/null | sed "s/name: //")
       DESC=$(grep -m1 "^description:" "$FILE" 2>/dev/null | sed "s/description: //")
@@ -477,7 +477,7 @@ Ask user to provide either:
 - **Paste content**: Paste skill markdown content directly
 
 Then ask for scope:
-- **User-level** (~/.claude/skills/omc-learned/) - Available across all projects
+- **User-level** (~/.codebuddy/skills/omc-learned/) - Available across all projects
 - **Project-level** (.omc/skills/) - Only for this project
 
 Validate the skill format and save to the chosen location.
@@ -711,9 +711,9 @@ How to work with this integration correctly:
 
 When invoked with an argument, skip the interactive wizard:
 
-- `/oh-my-claudecode:skill list` - Show detailed skill inventory
-- `/oh-my-claudecode:skill add` - Start skill creation (invoke skillify)
-- `/oh-my-claudecode:skill scan` - Scan both skill directories
+- `/oh-my-codebuddy:skill list` - Show detailed skill inventory
+- `/oh-my-codebuddy:skill add` - Start skill creation (invoke skillify)
+- `/oh-my-codebuddy:skill scan` - Scan both skill directories
 
 ### Interactive Mode
 
@@ -723,13 +723,13 @@ When invoked without arguments, run the full guided wizard.
 
 ## Benefits of Local Skills
 
-**Automatic Application**: Claude detects triggers and applies skills automatically - no need to remember or search for solutions.
+**Automatic Application**: CodeBuddy detects triggers and applies skills automatically - no need to remember or search for solutions.
 
 **Version Control**: Project-level skills (`.omc/skills/`) are intended to be committed with your code so the whole team benefits. In linked worktrees, uncommitted skills remain local to that worktree and disappear if it is removed.
 
 **Evolving Knowledge**: Skills improve over time as you discover better approaches and refine triggers.
 
-**Reduced Token Usage**: Instead of re-solving the same problems, Claude applies known patterns efficiently.
+**Reduced Token Usage**: Instead of re-solving the same problems, CodeBuddy applies known patterns efficiently.
 
 **Codebase Memory**: Preserves institutional knowledge that would otherwise be lost in conversation history.
 
@@ -759,19 +759,19 @@ Good skills are:
 
 ## Related Skills
 
-- `/oh-my-claudecode:skillify` - Extract a skill from current conversation (`/oh-my-claudecode:learner` is a deprecated alias)
-- `/oh-my-claudecode:note` - Save quick notes (less formal than skills)
-- `/oh-my-claudecode:deepinit` - Generate AGENTS.md codebase hierarchy
+- `/oh-my-codebuddy:skillify` - Extract a skill from current conversation (`/oh-my-codebuddy:learner` is a deprecated alias)
+- `/oh-my-codebuddy:note` - Save quick notes (less formal than skills)
+- `/oh-my-codebuddy:deepinit` - Generate AGENTS.md codebase hierarchy
 
 ---
 
 ## Example Session
 
 ```
-> /oh-my-claudecode:skill list
+> /oh-my-codebuddy:skill list
 
 Checking skill directories...
-✓ User skills directory exists: ~/.claude/skills/omc-learned/
+✓ User skills directory exists: ~/.codebuddy/skills/omc-learned/
 ✓ Project skills directory exists: .omc/skills/
 
 Scanning for skills...
@@ -811,7 +811,7 @@ What would you like to do?
 
 ## Tips for Users
 
-- Run `/oh-my-claudecode:skill list` periodically to review your skill library
+- Run `/oh-my-codebuddy:skill list` periodically to review your skill library
 - After solving a tricky bug, immediately run skillify to capture it
 - Use project-level skills for codebase-specific knowledge
 - Use user-level skills for general patterns that apply everywhere
@@ -832,9 +832,9 @@ What would you like to do?
 
 ## Related Skills
 
-- `/oh-my-claudecode:skillify` - Extract a skill from current conversation (`/oh-my-claudecode:learner` is a deprecated alias)
-- `/oh-my-claudecode:note` - Save quick notes (less formal than skills)
-- `/oh-my-claudecode:deepinit` - Generate AGENTS.md codebase hierarchy
+- `/oh-my-codebuddy:skillify` - Extract a skill from current conversation (`/oh-my-codebuddy:learner` is a deprecated alias)
+- `/oh-my-codebuddy:note` - Save quick notes (less formal than skills)
+- `/oh-my-codebuddy:deepinit` - Generate AGENTS.md codebase hierarchy
 
 ---
 

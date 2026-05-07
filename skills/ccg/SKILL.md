@@ -1,12 +1,12 @@
 ---
 name: ccg
-description: Claude-Codex-Gemini tri-model orchestration via /ask codex + /ask gemini, then Claude synthesizes results
+description: CodeBuddy-Codex-Gemini tri-model orchestration via /ask codex + /ask gemini, then CodeBuddy synthesizes results
 level: 5
 ---
 
-# CCG - Claude-Codex-Gemini Tri-Model Orchestration
+# CCG - CodeBuddy-Codex-Gemini Tri-Model Orchestration
 
-CCG routes through the canonical `/ask` skill (`/ask codex` + `/ask gemini`), then Claude synthesizes both outputs into one answer.
+CCG routes through the canonical `/ask` skill (`/ask codex` + `/ask gemini`), then CodeBuddy synthesizes both outputs into one answer.
 
 Use this when you want parallel external perspectives without launching tmux team workers.
 
@@ -21,28 +21,28 @@ Use this when you want parallel external perspectives without launching tmux tea
 
 - **Codex CLI**: `npm install -g @openai/codex` (or `@openai/codex`)
 - **Gemini CLI**: `npm install -g @google/gemini-cli`
-- `omc ask` command available
+- `omcb ask` command available
 - If either CLI is unavailable, continue with whichever provider is available and note the limitation
 
 ## How It Works
 
 ```text
-1. Claude decomposes the request into two advisor prompts:
+1. CodeBuddy decomposes the request into two advisor prompts:
    - Codex prompt (analysis/architecture/backend)
    - Gemini prompt (UX/design/docs/alternatives)
 
-2. Claude runs via CLI (skill nesting not supported):
-   - `omc ask codex "<codex prompt>"`
-   - `omc ask gemini "<gemini prompt>"`
+2. CodeBuddy runs via CLI (skill nesting not supported):
+   - `omcb ask codex "<codex prompt>"`
+   - `omcb ask gemini "<gemini prompt>"`
 
 3. Artifacts are written under `.omc/artifacts/ask/`
 
-4. Claude synthesizes both outputs into one final response
+4. CodeBuddy synthesizes both outputs into one final response
 ```
 
 ## Execution Protocol
 
-When invoked, Claude MUST follow this workflow:
+When invoked, CodeBuddy MUST follow this workflow:
 
 ### 1. Decompose Request
 Split the user request into:
@@ -53,13 +53,13 @@ Split the user request into:
 
 ### 2. Invoke advisors via CLI
 
-> **Note:** Skill nesting (invoking a skill from within an active skill) is not supported in Claude Code. Always use the direct CLI path via Bash tool.
+> **Note:** Skill nesting (invoking a skill from within an active skill) is not supported in CodeBuddy Code. Always use the direct CLI path via Bash tool.
 
 Run both advisors:
 
 ```bash
-omc ask codex "<codex prompt>"
-omc ask gemini "<gemini prompt>"
+omcb ask codex "<codex prompt>"
+omcb ask gemini "<gemini prompt>"
 ```
 
 ### 3. Collect artifacts
@@ -84,21 +84,21 @@ Return one unified answer with:
 
 If one provider is unavailable:
 
-- Continue with available provider + Claude synthesis
+- Continue with available provider + CodeBuddy synthesis
 - Clearly note missing perspective and risk
 
 If both unavailable:
 
-- Fall back to Claude-only answer and state CCG external advisors were unavailable
+- Fall back to CodeBuddy-only answer and state CCG external advisors were unavailable
 
 ## Invocation
 
 ```bash
-/oh-my-claudecode:ccg <task description>
+/oh-my-codebuddy:ccg <task description>
 ```
 
 Example:
 
 ```bash
-/oh-my-claudecode:ccg Review this PR - architecture/security via Codex and UX/readability via Gemini
+/oh-my-codebuddy:ccg Review this PR - architecture/security via Codex and UX/readability via Gemini
 ```

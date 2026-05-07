@@ -6,27 +6,27 @@
 
 **Note**: If resuming and `lastCompletedStep >= 3`, skip to Step 2.2.
 
-The HUD shows real-time status in Claude Code's status bar. Delegate all HUD/statusLine setup to the `hud` skill:
+The HUD shows real-time status in CodeBuddy Code's status bar. Delegate all HUD/statusLine setup to the `hud` skill:
 
 Use the Skill tool to invoke: `hud` with args: `setup`
 
 Do not generate, normalize, or patch `statusLine` paths inline in this phase. This is especially important on Windows, where backslash path handling must stay inside the `hud` skill.
 
 This will:
-1. Install the HUD wrapper script to `~/.claude/hud/omc-hud.mjs`
-2. Configure `statusLine` in `~/.claude/settings.json`
+1. Install the HUD wrapper script to `~/.codebuddy/hud/omc-hud.mjs`
+2. Configure `statusLine` in `~/.codebuddy/settings.json`
 3. Report status and prompt to restart if needed
 
 After HUD setup completes, save progress:
 ```bash
 CONFIG_TYPE=$(jq -r '.configType // "unknown"' ".omc/state/setup-state.json" 2>/dev/null || echo "unknown")
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/setup-progress.sh" save 3 "$CONFIG_TYPE"
+bash "${CODEBUDDY_PLUGIN_ROOT}/scripts/setup-progress.sh" save 3 "$CONFIG_TYPE"
 ```
 
 ## Step 2.2: Clear Stale Plugin Cache
 
 ```bash
-node -e "const p=require('path'),f=require('fs'),h=require('os').homedir(),d=process.env.CLAUDE_CONFIG_DIR||p.join(h,'.claude'),b=p.join(d,'plugins','cache','omc','oh-my-claudecode');try{const v=f.readdirSync(b).filter(x=>/^\d/.test(x)).sort((a,c)=>a.localeCompare(c,void 0,{numeric:true}));if(v.length<=1){console.log('Cache is clean');process.exit()}v.slice(0,-1).forEach(x=>{f.rmSync(p.join(b,x),{recursive:true,force:true})});console.log('Cleared',v.length-1,'stale cache version(s)')}catch{console.log('No cache directory found (normal for new installs)')}"
+node -e "const p=require('path'),f=require('fs'),h=require('os').homedir(),d=process.env.CODEBUDDY_CONFIG_DIR||p.join(h,'.codebuddy'),b=p.join(d,'plugins','cache','omc','oh-my-codebuddy');try{const v=f.readdirSync(b).filter(x=>/^\d/.test(x)).sort((a,c)=>a.localeCompare(c,void 0,{numeric:true}));if(v.length<=1){console.log('Cache is clean');process.exit()}v.slice(0,-1).forEach(x=>{f.rmSync(p.join(b,x),{recursive:true,force:true})});console.log('Cleared',v.length-1,'stale cache version(s)')}catch{console.log('No cache directory found (normal for new installs)')}"
 ```
 
 ## Step 2.3: Check for Updates
@@ -37,20 +37,20 @@ Notify user if a newer version is available:
 # Detect installed version (cross-platform)
 node -e "
 const p=require('path'),f=require('fs'),h=require('os').homedir();
-const d=process.env.CLAUDE_CONFIG_DIR||p.join(h,'.claude');
+const d=process.env.CODEBUDDY_CONFIG_DIR||p.join(h,'.codebuddy');
 let v='';
 // Try cache directory first
-const b=p.join(d,'plugins','cache','omc','oh-my-claudecode');
+const b=p.join(d,'plugins','cache','omc','oh-my-codebuddy');
 try{const vs=f.readdirSync(b).filter(x=>/^\d/.test(x)).sort((a,c)=>a.localeCompare(c,void 0,{numeric:true}));if(vs.length)v=vs[vs.length-1]}catch{}
 // Try .omc-version.json second
 if(v==='')try{const j=JSON.parse(f.readFileSync('.omc-version.json','utf-8'));v=j.version||''}catch{}
-// Try CLAUDE.md header third
-if(v==='')for(const c of['.claude/CLAUDE.md',p.join(d,'CLAUDE.md')]){try{const m=f.readFileSync(c,'utf-8').match(/^# oh-my-claudecode.*?(v?\d+\.\d+\.\d+)/m);if(m){v=m[1].replace(/^v/,'');break}}catch{}}
+// Try CODEBUDDY.md header third
+if(v==='')for(const c of['.codebuddy/CODEBUDDY.md',p.join(d,'CODEBUDDY.md')]){try{const m=f.readFileSync(c,'utf-8').match(/^# oh-my-codebuddy.*?(v?\d+\.\d+\.\d+)/m);if(m){v=m[1].replace(/^v/,'');break}}catch{}}
 console.log('Installed:',v||'(not found)');
 "
 
 # Check npm for latest version
-LATEST_VERSION=$(npm view oh-my-claude-sisyphus version 2>/dev/null)
+LATEST_VERSION=$(npm view oh-my-codebuddy-sisyphus version 2>/dev/null)
 
 if [ -n "$INSTALLED_VERSION" ] && [ -n "$LATEST_VERSION" ]; then
   if [ "$INSTALLED_VERSION" != "$LATEST_VERSION" ]; then
@@ -59,7 +59,7 @@ if [ -n "$INSTALLED_VERSION" ] && [ -n "$LATEST_VERSION" ]; then
     echo "  Installed: v$INSTALLED_VERSION"
     echo "  Latest:    v$LATEST_VERSION"
     echo ""
-    echo "To update, run: claude /install-plugin oh-my-claudecode"
+    echo "To update, run: codebuddy /install-plugin oh-my-codebuddy"
   else
     echo "You're on the latest version: v$INSTALLED_VERSION"
   fi
@@ -77,10 +77,10 @@ Use the AskUserQuestion tool to prompt the user:
 **Options:**
 1. **ultrawork (maximum capability)** - Uses all agent tiers including Opus for complex tasks. Best for challenging work where quality matters most. (Recommended)
 
-Store the preference in `~/.claude/.omc-config.json`:
+Store the preference in `~/.codebuddy/.omc-config.json`:
 
 ```bash
-CONFIG_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.omc-config.json"
+CONFIG_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/.omc-config.json"
 mkdir -p "$(dirname "$CONFIG_FILE")"
 
 if [ -f "$CONFIG_FILE" ]; then
@@ -98,7 +98,7 @@ echo "Default execution mode set to: USER_CHOICE"
 
 ## Step 2.5: Install OMC CLI Tool
 
-The OMC CLI (`omc` command) provides standalone helper commands such as `omc hud`, `omc teleport`, and `omc team ...`.
+The OMC CLI (`omcb` command) provides standalone helper commands such as `omc hud`, `omcb teleport`, and `omcb team ...`.
 
 First, check if the CLI is already installed:
 
@@ -116,20 +116,20 @@ If `OMC_CLI_INSTALLED` is `"true"`, skip the rest of this step.
 
 If `OMC_CLI_INSTALLED` is `"false"`, use AskUserQuestion:
 
-**Question:** "Would you like to install the OMC CLI globally for standalone helper commands? (`omc`, `omc hud`, `omc teleport`)"
+**Question:** "Would you like to install the OMC CLI globally for standalone helper commands? (`omcb`, `omc hud`, `omcb teleport`)"
 
 **Options:**
-1. **Yes (Recommended)** - Install `oh-my-claude-sisyphus` via `npm install -g`
-2. **No - Skip** - Skip installation (can install manually later with `npm install -g oh-my-claude-sisyphus`)
+1. **Yes (Recommended)** - Install `oh-my-codebuddy-sisyphus` via `npm install -g`
+2. **No - Skip** - Skip installation (can install manually later with `npm install -g oh-my-codebuddy-sisyphus`)
 
 If user chooses **Yes**:
 
 ```bash
 if ! command -v npm &>/dev/null; then
   echo "WARNING: npm not found. Cannot install OMC CLI automatically."
-  echo "Install Node.js/npm first, then run: npm install -g oh-my-claude-sisyphus"
+  echo "Install Node.js/npm first, then run: npm install -g oh-my-codebuddy-sisyphus"
 else
-  if npm install -g oh-my-claude-sisyphus 2>&1; then
+  if npm install -g oh-my-codebuddy-sisyphus 2>&1; then
     echo "OMC CLI installed successfully."
     if command -v omc &>/dev/null; then
       OMC_CLI_VERSION=$(omc --version 2>/dev/null | head -1 || echo "installed")
@@ -139,8 +139,8 @@ else
     fi
   else
     echo "WARNING: Failed to install OMC CLI (permission issue or network error)."
-    echo "You can install manually later: npm install -g oh-my-claude-sisyphus"
-    echo "Or with sudo: sudo npm install -g oh-my-claude-sisyphus"
+    echo "You can install manually later: npm install -g oh-my-codebuddy-sisyphus"
+    echo "Or with sudo: sudo npm install -g oh-my-codebuddy-sisyphus"
   fi
 fi
 ```
@@ -180,7 +180,7 @@ If beads or beads-rust is detected, use AskUserQuestion:
 **Question:** "Which task management tool should I use for tracking work?"
 
 **Options:**
-1. **Built-in Tasks (default)** - Use Claude Code's native TaskCreate/TodoWrite. Tasks are session-only.
+1. **Built-in Tasks (default)** - Use CodeBuddy Code's native TaskCreate/TodoWrite. Tasks are session-only.
 2. **Beads (bd)** - Git-backed persistent tasks. Survives across sessions. [Only if detected]
 3. **Beads-Rust (br)** - Lightweight Rust port of beads. [Only if detected]
 
@@ -189,7 +189,7 @@ If beads or beads-rust is detected, use AskUserQuestion:
 Store the preference:
 
 ```bash
-CONFIG_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.omc-config.json"
+CONFIG_FILE="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/.omc-config.json"
 mkdir -p "$(dirname "$CONFIG_FILE")"
 
 if [ -f "$CONFIG_FILE" ]; then
@@ -209,5 +209,5 @@ echo "Task tool set to: USER_CHOICE"
 
 ```bash
 CONFIG_TYPE=$(jq -r '.configType // "unknown"' ".omc/state/setup-state.json" 2>/dev/null || echo "unknown")
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/setup-progress.sh" save 4 "$CONFIG_TYPE"
+bash "${CODEBUDDY_PLUGIN_ROOT}/scripts/setup-progress.sh" save 4 "$CONFIG_TYPE"
 ```

@@ -7,7 +7,7 @@
 
 ## Purpose
 
-Skills are reusable workflow templates that can be invoked via `/oh-my-claudecode:skill-name`. Each skill provides:
+Skills are reusable workflow templates that can be invoked via `/oh-my-codebuddy:skill-name`. Each skill provides:
 - Structured prompts for specific workflows
 - Activation triggers (manual or automatic)
 - Integration with execution modes
@@ -53,7 +53,7 @@ Skills are reusable workflow templates that can be invoked via `/oh-my-claudecod
 | `ai-slop-cleaner/SKILL.md` | ai-slop-cleaner | Regression-safe cleanup workflow for AI-generated code slop |
 | `skillify/SKILL.md` | skillify | Extract reusable skill from session |
 | `learner/SKILL.md` | learner | Deprecated compatibility alias/internal implementation history for skillify |
-| `ask/SKILL.md` | ask | Ask Claude, Codex, or Gemini via `omc ask` and capture an artifact |
+| `ask/SKILL.md` | ask | Ask CodeBuddy, Codex, or Gemini via `omcb ask` and capture an artifact |
 | `note/SKILL.md` | note | Save notes for compaction resilience |
 | `cancel/SKILL.md` | cancel | Cancel any active OMC mode |
 | `hud/SKILL.md` | hud | Configure HUD display |
@@ -114,10 +114,10 @@ Any configurable options.
 
 ```bash
 # Manual invocation
-/oh-my-claudecode:skill-name
+/oh-my-codebuddy:skill-name
 
 # With arguments
-/oh-my-claudecode:skill-name arg1 arg2
+/oh-my-codebuddy:skill-name arg1 arg2
 
 # Auto-detected from keywords
 "autopilot build me a REST API"  # Triggers autopilot skill
@@ -158,7 +158,7 @@ If `pipeline` / `next-skill` metadata is present, OMC appends a standardized **S
 ### Testing Requirements
 
 - Skills are verified via integration tests
-- Test skill invocation with `/oh-my-claudecode:skill-name`
+- Test skill invocation with `/oh-my-codebuddy:skill-name`
 - Verify trigger keywords activate correct skill
 - For git-related skills, follow `templates/rules/git-workflow.md`
 

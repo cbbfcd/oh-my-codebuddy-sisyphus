@@ -7,20 +7,20 @@ level: 4
 
 # External Context Skill
 
-Fetch external documentation, references, and context for a query. Decomposes into 2-5 facets and spawns parallel document-specialist Claude agents.
+Fetch external documentation, references, and context for a query. Decomposes into 2-5 facets and spawns parallel document-specialist CodeBuddy agents.
 
 ## Usage
 
 ```
-/oh-my-claudecode:external-context <topic or question>
+/oh-my-codebuddy:external-context <topic or question>
 ```
 
 ### Examples
 
 ```
-/oh-my-claudecode:external-context What are the best practices for JWT token rotation in Node.js?
-/oh-my-claudecode:external-context Compare Prisma vs Drizzle ORM for PostgreSQL
-/oh-my-claudecode:external-context Latest React Server Components patterns and conventions
+/oh-my-codebuddy:external-context What are the best practices for JWT token rotation in Node.js?
+/oh-my-codebuddy:external-context Compare Prisma vs Drizzle ORM for PostgreSQL
+/oh-my-codebuddy:external-context Latest React Server Components patterns and conventions
 ```
 
 ## Protocol
@@ -47,9 +47,9 @@ Given a query, decompose into 2-5 independent search facets:
 Fire independent facets in parallel via Task tool:
 
 ```
-Task(subagent_type="oh-my-claudecode:document-specialist", model="sonnet", prompt="Search for: <facet 1 description>. Use WebSearch and WebFetch to find official documentation and examples. Cite all sources with URLs.")
+Task(subagent_type="oh-my-codebuddy:document-specialist", model="sonnet", prompt="Search for: <facet 1 description>. Use WebSearch and WebFetch to find official documentation and examples. Cite all sources with URLs.")
 
-Task(subagent_type="oh-my-claudecode:document-specialist", model="sonnet", prompt="Search for: <facet 2 description>. Use WebSearch and WebFetch to find official documentation and examples. Cite all sources with URLs.")
+Task(subagent_type="oh-my-codebuddy:document-specialist", model="sonnet", prompt="Search for: <facet 2 description>. Use WebSearch and WebFetch to find official documentation and examples. Cite all sources with URLs.")
 ```
 
 Maximum 5 parallel document-specialist agents.

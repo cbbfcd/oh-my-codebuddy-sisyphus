@@ -1,6 +1,6 @@
 ---
 name: trace
-description: Evidence-driven tracing lane that orchestrates competing tracer hypotheses in Claude built-in team mode
+description: Evidence-driven tracing lane that orchestrates competing tracer hypotheses in CodeBuddy built-in team mode
 argument-hint: "<observation to trace>"
 agent: tracer
 level: 2
@@ -14,7 +14,7 @@ This is the orchestration layer on top of the built-in `tracer` agent. The goal 
 
 ## Good entry cases
 
-Use `/oh-my-claudecode:trace` when the problem is:
+Use `/oh-my-codebuddy:trace` when the problem is:
 
 - ambiguous
 - causal
@@ -84,7 +84,7 @@ Down-rank a hypothesis when:
 
 ## Team-mode orchestration shape
 
-Use **Claude built-in team mode** for `/trace`.
+Use **CodeBuddy built-in team mode** for `/trace`.
 
 The lead should:
 
@@ -206,7 +206,7 @@ Use a team-oriented orchestration prompt along these lines:
 
 1. “Restate the observation exactly.”
 2. “Generate 3 deliberately different hypotheses.”
-3. “Create one tracer lane per hypothesis using Claude built-in team mode.”
+3. “Create one tracer lane per hypothesis using CodeBuddy built-in team mode.”
 4. “For each lane, gather evidence for and against, rank evidence strength, and name the critical unknown plus best discriminating probe.”
 5. “Apply systems, premortem, and science lenses to the leaders if useful.”
 6. “Run a rebuttal round between the top two explanations.”

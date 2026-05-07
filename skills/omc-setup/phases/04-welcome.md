@@ -5,7 +5,7 @@
 Check if user has existing 2.x configuration:
 
 ```bash
-ls "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/commands/ralph-loop.md 2>/dev/null || ls "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/commands/ultrawork.md 2>/dev/null
+ls "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}"/commands/ralph-loop.md 2>/dev/null || ls "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}"/commands/ultrawork.md 2>/dev/null
 ```
 
 If found, this is an upgrade from 2.x. Set `IS_UPGRADE=true`.
@@ -40,23 +40,23 @@ Just include these words naturally in your request:
 
 TEAMS:
 Spawn coordinated agents with shared task lists and real-time messaging:
-- /oh-my-claudecode:team 3:executor "fix all TypeScript errors"
-- /oh-my-claudecode:team 5:debugger "fix build errors in src/"
-Teams use Claude Code native tools (TeamCreate/SendMessage/TaskCreate).
+- /oh-my-codebuddy:team 3:executor "fix all TypeScript errors"
+- /oh-my-codebuddy:team 5:debugger "fix build errors in src/"
+Teams use CodeBuddy Code native tools (TeamCreate/SendMessage/TaskCreate).
 
 MCP SERVERS:
-Run /oh-my-claudecode:mcp-setup to add tools like web search, GitHub, etc.
+Run /oh-my-codebuddy:mcp-setup to add tools like web search, GitHub, etc.
 
 HUD STATUSLINE:
-The status bar now shows OMC state. Restart Claude Code to see it.
+The status bar now shows OMC state. Restart CodeBuddy Code to see it.
 
 OMC CLI HELPERS (if installed):
 - omc hud         - Render the current HUD statusline
-- omc teleport    - Create an isolated git worktree
-- omc team status - Inspect a running team job
+- omcb teleport    - Create an isolated git worktree
+- omcb team status - Inspect a running team job
 - Session summaries are written to `.omc/sessions/*.json`
 
-That's it! Just use Claude Code normally.
+That's it! Just use CodeBuddy Code normally.
 ```
 
 ### For Users Upgrading from 2.x (IS_UPGRADE is true):
@@ -85,16 +85,16 @@ MAGIC KEYWORDS (power-user shortcuts):
 
 TEAMS (NEW!):
 Spawn coordinated agents with shared task lists and real-time messaging:
-- /oh-my-claudecode:team 3:executor "fix all TypeScript errors"
-- Uses Claude Code native tools (TeamCreate/SendMessage/TaskCreate)
+- /oh-my-codebuddy:team 3:executor "fix all TypeScript errors"
+- Uses CodeBuddy Code native tools (TeamCreate/SendMessage/TaskCreate)
 
 HUD STATUSLINE:
-The status bar now shows OMC state. Restart Claude Code to see it.
+The status bar now shows OMC state. Restart CodeBuddy Code to see it.
 
 OMC CLI HELPERS (if installed):
 - omc hud         - Render the current HUD statusline
-- omc teleport    - Create an isolated git worktree
-- omc team status - Inspect a running team job
+- omcb teleport    - Create an isolated git worktree
+- omcb team status - Inspect a running team job
 - Session summaries are written to `.omc/sessions/*.json`
 
 Your workflow won't break - it just got easier!
@@ -102,7 +102,7 @@ Your workflow won't break - it just got easier!
 
 ## Optional Rule Templates
 
-OMC includes rule templates you can copy to your project's `.claude/rules/` directory for automatic context injection:
+OMC includes rule templates you can copy to your project's `.codebuddy/rules/` directory for automatic context injection:
 
 | Template | Purpose |
 |----------|---------|
@@ -115,8 +115,8 @@ OMC includes rule templates you can copy to your project's `.claude/rules/` dire
 
 Copy with:
 ```bash
-mkdir -p .claude/rules
-cp "${CLAUDE_PLUGIN_ROOT}/templates/rules/"*.md .claude/rules/
+mkdir -p .codebuddy/rules
+cp "${CODEBUDDY_PLUGIN_ROOT}/templates/rules/"*.md .codebuddy/rules/
 ```
 
 See `templates/rules/README.md` for details.
@@ -134,7 +134,7 @@ gh auth status &>/dev/null
 **Before prompting, check if the repository is already starred:**
 
 ```bash
-gh api user/starred/Yeachan-Heo/oh-my-claudecode &>/dev/null
+gh api user/starred/Yeachan-Heo/oh-my-codebuddy &>/dev/null
 ```
 
 **If already starred (exit code 0):**
@@ -145,7 +145,7 @@ gh api user/starred/Yeachan-Heo/oh-my-claudecode &>/dev/null
 
 Use AskUserQuestion:
 
-**Question:** "If you're enjoying oh-my-claudecode, would you like to support the project by starring it on GitHub?"
+**Question:** "If you're enjoying oh-my-codebuddy, would you like to support the project by starring it on GitHub?"
 
 **Options:**
 1. **Yes, star it!** - Star the repository
@@ -155,7 +155,7 @@ Use AskUserQuestion:
 If user chooses "Yes, star it!":
 
 ```bash
-gh api -X PUT /user/starred/Yeachan-Heo/oh-my-claudecode 2>/dev/null && echo "Thanks for starring!" || true
+gh api -X PUT /user/starred/Yeachan-Heo/oh-my-codebuddy 2>/dev/null && echo "Thanks for starring!" || true
 ```
 
 **Note:** Fail silently if the API call doesn't work - never block setup completion.
@@ -164,8 +164,8 @@ gh api -X PUT /user/starred/Yeachan-Heo/oh-my-claudecode 2>/dev/null && echo "Th
 
 ```bash
 echo ""
-echo "If you enjoy oh-my-claudecode, consider starring the repo:"
-echo "  https://github.com/Yeachan-Heo/oh-my-claudecode"
+echo "If you enjoy oh-my-codebuddy, consider starring the repo:"
+echo "  https://github.com/Yeachan-Heo/oh-my-codebuddy"
 echo ""
 ```
 
@@ -174,12 +174,12 @@ echo ""
 Get the current OMC version and mark setup complete:
 
 ```bash
-# Get current OMC version from CLAUDE.md
+# Get current OMC version from CODEBUDDY.md
 OMC_VERSION=""
-if [ -f ".claude/CLAUDE.md" ]; then
-  OMC_VERSION=$(grep -m1 'OMC:VERSION:' .claude/CLAUDE.md 2>/dev/null | sed -E 's/.*OMC:VERSION:([^ ]+).*/\1/' || true)
-elif [ -f "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/CLAUDE.md" ]; then
-  OMC_VERSION=$(grep -m1 'OMC:VERSION:' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/CLAUDE.md" 2>/dev/null | sed -E 's/.*OMC:VERSION:([^ ]+).*/\1/' || true)
+if [ -f ".codebuddy/CODEBUDDY.md" ]; then
+  OMC_VERSION=$(grep -m1 'OMC:VERSION:' .codebuddy/CODEBUDDY.md 2>/dev/null | sed -E 's/.*OMC:VERSION:([^ ]+).*/\1/' || true)
+elif [ -f "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/CODEBUDDY.md" ]; then
+  OMC_VERSION=$(grep -m1 'OMC:VERSION:' "${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/CODEBUDDY.md" 2>/dev/null | sed -E 's/.*OMC:VERSION:([^ ]+).*/\1/' || true)
 fi
 if [ -z "$OMC_VERSION" ]; then
   OMC_VERSION=$(omc --version 2>/dev/null | head -1 || true)
@@ -188,5 +188,5 @@ if [ -z "$OMC_VERSION" ]; then
   OMC_VERSION="unknown"
 fi
 
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/setup-progress.sh" complete "$OMC_VERSION"
+bash "${CODEBUDDY_PLUGIN_ROOT}/scripts/setup-progress.sh" complete "$OMC_VERSION"
 ```

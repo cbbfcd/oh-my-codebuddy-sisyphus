@@ -65,9 +65,9 @@ Sequential task execution wastes time when tasks are independent. Ultrawork enab
 </Steps>
 
 <Tool_Usage>
-- Use `Task(subagent_type="oh-my-claudecode:executor", model="haiku", ...)` for simple changes
-- Use `Task(subagent_type="oh-my-claudecode:executor", model="sonnet", ...)` for standard work
-- Use `Task(subagent_type="oh-my-claudecode:executor", model="opus", ...)` for complex work
+- Use `Task(subagent_type="oh-my-codebuddy:executor", model="haiku", ...)` for simple changes
+- Use `Task(subagent_type="oh-my-codebuddy:executor", model="sonnet", ...)` for standard work
+- Use `Task(subagent_type="oh-my-codebuddy:executor", model="opus", ...)` for complex work
 - Use `run_in_background: true` for package installs, builds, and test suites
 - Use foreground execution for quick status checks and file operations
 </Tool_Usage>
@@ -76,9 +76,9 @@ Sequential task execution wastes time when tasks are independent. Ultrawork enab
 <Good>
 Three independent tasks fired simultaneously:
 ```
-Task(subagent_type="oh-my-claudecode:executor", model="haiku", prompt="Add missing type export for Config interface")
-Task(subagent_type="oh-my-claudecode:executor", model="sonnet", prompt="Implement the /api/users endpoint with validation")
-Task(subagent_type="oh-my-claudecode:executor", model="sonnet", prompt="Add integration tests for the auth middleware")
+Task(subagent_type="oh-my-codebuddy:executor", model="haiku", prompt="Add missing type export for Config interface")
+Task(subagent_type="oh-my-codebuddy:executor", model="sonnet", prompt="Implement the /api/users endpoint with validation")
+Task(subagent_type="oh-my-codebuddy:executor", model="sonnet", prompt="Add integration tests for the auth middleware")
 ```
 Why good: Independent tasks at appropriate tiers, all fired at once.
 </Good>
@@ -86,8 +86,8 @@ Why good: Independent tasks at appropriate tiers, all fired at once.
 <Good>
 Correct use of background execution:
 ```
-Task(subagent_type="oh-my-claudecode:executor", model="sonnet", prompt="npm install && npm run build", run_in_background=true)
-Task(subagent_type="oh-my-claudecode:executor", model="haiku", prompt="Update the README with new API endpoints")
+Task(subagent_type="oh-my-codebuddy:executor", model="sonnet", prompt="npm install && npm run build", run_in_background=true)
+Task(subagent_type="oh-my-codebuddy:executor", model="haiku", prompt="Update the README with new API endpoints")
 ```
 Why good: Long build runs in background while short task runs in foreground.
 </Good>
@@ -105,7 +105,7 @@ Why bad: These tasks are independent. Running them sequentially wastes time.
 <Bad>
 Wrong tier selection:
 ```
-Task(subagent_type="oh-my-claudecode:executor", model="opus", prompt="Add a missing semicolon")
+Task(subagent_type="oh-my-codebuddy:executor", model="opus", prompt="Add a missing semicolon")
 ```
 Why bad: Opus is expensive overkill for a trivial fix. Use executor with Haiku instead.
 </Bad>
