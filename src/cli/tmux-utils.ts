@@ -196,11 +196,11 @@ export function isTmuxAvailable(): boolean {
 }
 
 /**
- * Check if claude CLI is available on the system
+ * Check if codebuddy CLI is available on the system
  */
-export function isClaudeAvailable(): boolean {
+export function isCodebuddyAvailable(): boolean {
   try {
-    execFileSync('claude', ['--version'], {
+    execFileSync('codebuddy', ['--version'], {
       stdio: 'ignore',
       shell: process.platform === 'win32',
     });
@@ -209,6 +209,11 @@ export function isClaudeAvailable(): boolean {
     return false;
   }
 }
+
+/**
+ * @deprecated Use isCodebuddyAvailable() instead
+ */
+export const isClaudeAvailable = isCodebuddyAvailable;
 
 /**
  * Options for `resolveLaunchPolicy`. `requireTmux=true` makes
@@ -279,7 +284,7 @@ export function buildTmuxSessionName(cwd: string): string {
     `${pad(now.getUTCMinutes())}` +
     `${pad(now.getUTCSeconds())}`;
 
-  const name = `omc-${dirToken}-${branchToken}-${utcTimestamp}`;
+  const name = `omcb-${dirToken}-${branchToken}-${utcTimestamp}`;
   return name.length > 120 ? name.slice(0, 120) : name;
 }
 

@@ -21,7 +21,7 @@ interface ProviderProbe {
 }
 
 const PROVIDER_BINARY: Record<TeamRoleProvider, string> = {
-  claude: 'claude',
+  claude: 'codebuddy',
   codex: 'codex',
   gemini: 'gemini',
 };
@@ -98,7 +98,7 @@ export async function doctorTeamRoutingCommand(options: { json?: boolean }): Pro
         const version = p.version ? ` (${p.version})` : '';
         console.log(`  ${colors.green('✓')} ${p.provider}: ${p.path}${version}`);
       } else {
-        console.log(`  ${colors.yellow('⚠')} ${p.provider}: not found on PATH — /team tasks routed to ${p.provider} will fall back to claude`);
+        console.log(`  ${colors.yellow('⚠')} ${p.provider}: not found on PATH — /team tasks routed to ${p.provider} will fall back to codebuddy`);
       }
     }
     if (missing.length === 0) {
@@ -106,7 +106,7 @@ export async function doctorTeamRoutingCommand(options: { json?: boolean }): Pro
     } else {
       console.log(
         colors.yellow(
-          `\n${missing.length} provider${missing.length === 1 ? '' : 's'} missing (warn only — /team falls back to claude).`,
+          `\n${missing.length} provider${missing.length === 1 ? '' : 's'} missing (warn only — /team falls back to codebuddy).`,
         ),
       );
     }

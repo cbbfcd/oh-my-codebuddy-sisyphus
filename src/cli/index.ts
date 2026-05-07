@@ -116,7 +116,7 @@ async function defaultAction() {
 
 program
   .name('omc')
-  .description('Multi-agent orchestration system for Claude Agent SDK')
+  .description('Multi-agent orchestration system for CodeBuddy Agent SDK')
   .version(version)
   .allowUnknownOption()
   .action(defaultAction);
@@ -126,7 +126,7 @@ program
  */
 program
   .command('launch [args...]')
-  .description('Launch Claude Code with native tmux shell integration')
+  .description('Launch CodeBuddy with native tmux shell integration')
   .allowUnknownOption()
   .addHelpText('after', `
 Examples:
@@ -154,11 +154,11 @@ Environment:
  */
 program
   .command('interop')
-  .description('Launch split-pane tmux session with Claude Code (OMC) and Codex (OMX)')
+  .description('Launch split-pane tmux session with CodeBuddy (OMC) and Codex (OMX)')
   .addHelpText('after', `
 Requirements:
   - Must be running inside a tmux session
-  - Claude CLI must be installed
+  - codebuddy CLI must be installed
   - Codex CLI recommended (graceful fallback if missing)`)
   .action(() => {
     interopCommand();
@@ -288,7 +288,7 @@ Examples:
   $ omc config-stop-callback discord-bot --profile ops --enable --token <tk> --channel-id <id>
 
   # Select profile at launch:
-  $ OMC_NOTIFY_PROFILE=work claude`)
+  $ OMC_NOTIFY_PROFILE=work codebuddy`)
   .action(async (type: string, options) => {
     // When --profile is used, route to profile-based config
     if (options.profile) {
@@ -581,7 +581,7 @@ Examples:
   $ omc config-stop-callback discord --profile work --enable --webhook <url>
 
   # Select profile at launch:
-  $ OMC_NOTIFY_PROFILE=work claude`)
+  $ OMC_NOTIFY_PROFILE=work codebuddy`)
   .action(async (name: string | undefined, options) => {
     const config = getOMCConfig() as OMCConfig & { notificationProfiles?: Record<string, any> };
     const profiles = config.notificationProfiles || {};
@@ -927,7 +927,7 @@ Examples:
         console.log(chalk.gray(`Installed to: ${getCodebuddyConfigDir()}`));
         console.log('');
         console.log(chalk.yellow('Usage:'));
-        console.log('  claude                        # Start Claude Code normally');
+        console.log('  codebuddy                     # Start CodeBuddy normally');
         console.log('');
         console.log(chalk.yellow('Slash Commands:'));
         console.log('  /omc <task>              # Activate OMC orchestration mode');
@@ -967,7 +967,7 @@ Examples:
         console.log('  This ensures you get the newest features and agent behaviors.');
         console.log('');
         console.log(chalk.blue('Quick Start:'));
-        console.log('  1. Run \'claude\' to start Claude Code');
+        console.log('  1. Run \'codebuddy\' to start CodeBuddy');
         console.log('  2. Type \'/omc-default\' for project or \'/omc-default-global\' for global');
         console.log('  3. Or use \'/omc <task>\' for one-time activation');
       }

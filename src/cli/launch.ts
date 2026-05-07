@@ -27,7 +27,7 @@ import {
   buildTmuxShellCommandWithEnv,
   isNativeWindowsShell,
   wrapWithLoginShell,
-  isClaudeAvailable,
+  isCodebuddyAvailable,
   isTmuxAvailable,
   quoteShellArg,
   tmuxExec,
@@ -45,7 +45,7 @@ const TELEGRAM_FLAG = '--telegram';
 const DISCORD_FLAG = '--discord';
 const SLACK_FLAG = '--slack';
 const WEBHOOK_FLAG = '--webhook';
-const OMC_RUNTIME_DIRNAME = '.omc-launch';
+const OMC_RUNTIME_DIRNAME = '.omcb-launch';
 
 function hasOmcMarkers(path: string): boolean {
   if (!existsSync(path)) return false;
@@ -84,7 +84,7 @@ function ensureMirroredPath(sourcePath: string, targetPath: string): void {
 }
 
 export function prepareOmcLaunchConfigDir(baseConfigDir = getCodebuddyConfigDir()): string {
-  const companionPath = join(baseConfigDir, 'CLAUDE-omc.md');
+  const companionPath = join(baseConfigDir, 'CODEBUDDY-omcb.md');
   if (!hasOmcMarkers(companionPath)) {
     return baseConfigDir;
   }
@@ -474,7 +474,7 @@ function runClaudeInsideTmux(cwd: string, args: string[]): void {
 
   // Launch Claude in current pane
   try {
-    execFileSync('claude', args, {
+    execFileSync('codebuddy', args, {
       cwd,
       stdio: 'inherit',
       shell: process.platform === 'win32',
@@ -482,10 +482,10 @@ function runClaudeInsideTmux(cwd: string, args: string[]): void {
   } catch (error) {
     const err = error as NodeJS.ErrnoException & { status?: number | null };
     if (err.code === 'ENOENT') {
-      console.error('[omc] Error: claude CLI not found in PATH.');
+      console.error('[omc] Error: codebuddy CLI not found in PATH.');
       process.exit(1);
     }
-    // Propagate Claude's exit code so omc does not swallow failures
+    // Propagate codebuddy's exit code so omc does not swallow failures
     process.exit(typeof err.status === 'number' ? err.status : 1);
   }
 }
@@ -538,8 +538,8 @@ function runClaudeOutsideTmux(
       .filter(([, value]) => value !== undefined),
   ) as Record<string, string>;
   const rawClaudeCmd = isNativeWindowsShell()
-    ? buildTmuxShellCommandWithEnv('claude', args, forwardedEnv)
-    : buildTmuxShellCommand('claude', args);
+    ? buildTmuxShellCommandWithEnv('codebuddy', args, forwardedEnv)
+    : buildTmuxShellCommand('codebuddy', args);
   const envPrefix = !isNativeWindowsShell() && Object.keys(forwardedEnv).length > 0
     ? buildEnvExportPrefix(TMUX_ENV_FORWARD)
     : '';
@@ -595,7 +595,7 @@ function runClaudeOutsideTmux(
  */
 function runClaudeDirect(cwd: string, args: string[]): void {
   try {
-    execFileSync('claude', args, {
+    execFileSync('codebuddy', args, {
       cwd,
       stdio: 'inherit',
       shell: process.platform === 'win32',
@@ -603,10 +603,10 @@ function runClaudeDirect(cwd: string, args: string[]): void {
   } catch (error) {
     const err = error as NodeJS.ErrnoException & { status?: number | null };
     if (err.code === 'ENOENT') {
-      console.error('[omc] Error: claude CLI not found in PATH.');
+      console.error('[omc] Error: codebuddy CLI not found in PATH.');
       process.exit(1);
     }
-    // Propagate Claude's exit code so omc does not swallow failures
+    // Propagate codebuddy's exit code so omc does not swallow failures
     process.exit(typeof err.status === 'number' ? err.status : 1);
   }
 }
@@ -709,15 +709,15 @@ export async function launchCommand(args: string[]): Promise<void> {
   const cwd = process.cwd();
 
   // Pre-flight: check for nested session
-  if (process.env.CLAUDECODE) {
-    console.error('[omc] Error: Already inside a Claude Code session. Nested launches are not supported.');
+  if (process.env.CODEBUDDY_RUNNING) {
+    console.error('[omc] Error: Already inside a CodeBuddy session. Nested launches are not supported.');
     process.exit(1);
   }
 
-  // Pre-flight: check claude CLI availability
-  if (!isClaudeAvailable()) {
-    console.error('[omc] Error: claude CLI not found. Install Claude Code first:');
-    console.error('  npm install -g @anthropic-ai/claude-code');
+  // Pre-flight: check codebuddy CLI availability
+  if (!isCodebuddyAvailable()) {
+    console.error('[omc] Error: codebuddy CLI not found. Install CodeBuddy first:');
+    console.error('  npm install -g @codebuddy-ai/codebuddy');
     process.exit(1);
   }
 
@@ -729,7 +729,7 @@ export async function launchCommand(args: string[]): Promise<void> {
   }
 
   const normalizedArgs = normalizeClaudeLaunchArgs(argsAfterWebhook);
-  const sessionId = `omc-${Date.now()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 8)}`;
+  const sessionId = `omcb-${Date.now()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 8)}`;
 
   // Phase 1: preLaunch
   try {
