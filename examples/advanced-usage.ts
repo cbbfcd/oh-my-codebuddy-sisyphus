@@ -151,9 +151,9 @@ Always:
   console.log(`
 // Pattern for adding custom tools:
 
-import { createSdkMcpServer, tool } from '@anthropic-ai/claude-agent-sdk';
+import { createSdkMcpServer, tool } from '@tencent-ai/agent-sdk';
 import { z } from 'zod';
-import { createOmcSession } from 'oh-my-claudecode';
+import { createOmcSession } from 'oh-my-codebuddy';
 
 // Create custom MCP server with your tools
 const customTools = createSdkMcpServer({

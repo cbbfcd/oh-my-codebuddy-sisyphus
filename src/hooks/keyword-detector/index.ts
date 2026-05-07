@@ -110,7 +110,7 @@ const SLASH_SKILL_TO_KEYWORD_TYPE: Partial<
 };
 
 const WORKFLOW_SLASH_PATTERN = new RegExp(
-  '^\\s*/(?:oh-my-claudecode:|omc:)?(' +
+  '^\\s*/(?:oh-my-codebuddy:|omc:)?(' +
     CANONICAL_WORKFLOW_SLASH_SKILLS
       .map((skill) => skill.replace(/-/g, '\\-'))
       .join('|') +
@@ -119,7 +119,7 @@ const WORKFLOW_SLASH_PATTERN = new RegExp(
 );
 
 export interface ExplicitWorkflowSlashInvocation {
-  /** Canonical workflow skill name (lowercase, no `oh-my-claudecode:` prefix). */
+  /** Canonical workflow skill name (lowercase, no `oh-my-codebuddy:` prefix). */
   skill: CanonicalWorkflowSlashSkill;
   /** Trailing arguments after the slash command. */
   args: string;
@@ -130,7 +130,7 @@ export interface ExplicitWorkflowSlashInvocation {
 /**
  * Parse an explicit workflow slash invocation at the start of a prompt.
  *
- * Recognizes `/<skill>`, `/omc:<skill>`, and `/oh-my-claudecode:<skill>` for
+ * Recognizes `/<skill>`, `/omc:<skill>`, and `/oh-my-codebuddy:<skill>` for
  * the canonical workflow skill list. Code fences and inline backticks are
  * stripped first so quoted commands do not match. The trailing lookahead
  * (whitespace, end-of-text, or punctuation) prevents file paths like
@@ -608,7 +608,7 @@ export function detectKeywordsWithType(
   // The general sanitizer strips bare `/word` tokens as file paths, so bare
   // commands like `/ralph fix auth` would otherwise never match. This must be
   // robust to surrounding whitespace, namespace prefixes (`/omc:`,
-  // `/oh-my-claudecode:`), and code-fence/backtick wrapping (handled inside
+  // `/oh-my-codebuddy:`), and code-fence/backtick wrapping (handled inside
   // the parser via removeCodeBlocks).
   const explicitSlash = parseExplicitWorkflowSlashInvocation(text);
   const explicitSlashType = explicitSlash

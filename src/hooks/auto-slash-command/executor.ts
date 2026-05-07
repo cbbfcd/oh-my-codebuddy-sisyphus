@@ -263,7 +263,7 @@ function renderDeepInterviewAutoresearchGuidance(args: string): string {
     '- If the mission is not already clear, start by asking: "What should autoresearch improve or prove for this repo?"',
     '- Treat evaluator clarity as a required readiness gate before launch.',
     '- When the mission and evaluator are ready, write setup artifacts and hand off with:',
-    '  `Skill("oh-my-claudecode:autoresearch")`',
+    '  `Skill("oh-my-codebuddy:autoresearch")`',
     '- Do **not** hand off to `omc-plan`, `autopilot`, `ralph`, `team`, or the hard-deprecated `omc autoresearch` CLI in this mode.',
   ];
 

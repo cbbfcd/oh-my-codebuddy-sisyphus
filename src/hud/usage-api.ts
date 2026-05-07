@@ -194,14 +194,14 @@ interface MinimaxCodingPlanResponse {
  * Get the legacy (pre-split) cache file path
  */
 function getLegacyCachePath(): string {
-  return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-claudecode', '.usage-cache.json');
+  return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-codebuddy', '.usage-cache.json');
 }
 
 /**
  * Get the provider-specific cache file path
  */
 function getCachePath(source: 'anthropic' | 'zai' | 'minimax'): string {
-  return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-claudecode', `.usage-cache-${source}.json`);
+  return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-codebuddy', `.usage-cache-${source}.json`);
 }
 
 /**

@@ -1079,7 +1079,7 @@ describe("Stop Hook Blocking Contract", () => {
           active: true,
           session_id: sessionId,
           current_phase: "ralplan",
-          original_prompt: "/oh-my-claudecode:ralplan issue #2622",
+          original_prompt: "/oh-my-codebuddy:ralplan issue #2622",
           awaiting_confirmation: true,
           awaiting_confirmation_set_at: new Date().toISOString(),
           started_at: new Date().toISOString(),
@@ -1522,7 +1522,7 @@ describe("Stop Hook Blocking Contract", () => {
 
       expect(output.decision).toBe("block");
       expect(output.reason).toContain("AUTOPILOT");
-      expect(output.reason).not.toContain('/oh-my-claudecode:cancel');
+      expect(output.reason).not.toContain('/oh-my-codebuddy:cancel');
     });
 
     it("auto-deactivates ultrawork state when no incomplete work remains in cjs script", () => {

@@ -10,11 +10,11 @@ Compaction-resilient memory system at `.omc/notepad.md` with three tiers:
 | **Working Memory** | Timestamped entries, auto-pruned after 7 days | Debugging breadcrumbs, temporary findings |
 | **MANUAL** | Never auto-pruned | Team contacts, deployment info, permanent notes |
 
-**User skill:** `/oh-my-claudecode:note`
-- `/oh-my-claudecode:note <content>` - Add to Working Memory
-- `/oh-my-claudecode:note --priority <content>` - Add to Priority Context
-- `/oh-my-claudecode:note --manual <content>` - Add to MANUAL section
-- `/oh-my-claudecode:note --show` - Display notepad contents
+**User skill:** `/oh-my-codebuddy:note`
+- `/oh-my-codebuddy:note <content>` - Add to Working Memory
+- `/oh-my-codebuddy:note --priority <content>` - Add to Priority Context
+- `/oh-my-codebuddy:note --manual <content>` - Add to MANUAL section
+- `/oh-my-codebuddy:note --show` - Display notepad contents
 
 **Automatic capture:** `<remember>` tags in Task agent output are automatically captured:
 - `<remember>content</remember>` → Working Memory with timestamp
@@ -117,6 +117,6 @@ Standardized state file locations.
 | ultraqa | `ultraqa-state.json` |
 | pipeline | `pipeline-state.json` |
 
-**Important:** Never store OMC state in `~/.claude/` - that directory is reserved for Claude Code itself.
+**Important:** Never store OMC state in `~/.codebuddy/` - that directory is reserved for CodeBuddy Code itself.
 
 Legacy locations auto-migrated on read.

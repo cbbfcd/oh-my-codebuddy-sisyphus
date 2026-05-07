@@ -157,7 +157,7 @@ describe('session-start.mjs regression #1386', () => {
   it('injects model routing override for non-standard providers before lower-priority context', () => {
     writeFileSync(
       join(fakeProject, 'AGENTS.md'),
-      `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+      `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 

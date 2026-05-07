@@ -56,9 +56,9 @@ description: Setup router
 
 ## Routing
 
-- doctor -> /oh-my-claudecode:omc-doctor with remaining args
-- mcp -> /oh-my-claudecode:mcp-setup with remaining args
-- otherwise -> /oh-my-claudecode:omc-setup with remaining args`
+- doctor -> /oh-my-codebuddy:omc-doctor with remaining args
+- mcp -> /oh-my-codebuddy:mcp-setup with remaining args
+- otherwise -> /oh-my-codebuddy:omc-setup with remaining args`
     );
 
     const { executeSlashCommand } = await loadExecutor();
@@ -69,7 +69,7 @@ description: Setup router
     });
 
     expect(result.success).toBe(true);
-    expect(result.replacementText).toContain('doctor -> /oh-my-claudecode:omc-doctor with remaining args');
+    expect(result.replacementText).toContain('doctor -> /oh-my-codebuddy:omc-doctor with remaining args');
     expect(result.replacementText).not.toContain('{{ARGUMENTS_AFTER_DOCTOR}}');
     expect(result.replacementText).not.toContain('{{ARGUMENTS_AFTER_MCP}}');
   });
@@ -205,7 +205,7 @@ Deep interview body`
     expect(result.replacementText).toContain('## Skill Pipeline');
     expect(result.replacementText).toContain('Pipeline: `deep-interview → omc-plan → autopilot`');
     expect(result.replacementText).toContain('Next skill arguments: `--consensus --direct`');
-    expect(result.replacementText).toContain('Skill("oh-my-claudecode:omc-plan")');
+    expect(result.replacementText).toContain('Skill("oh-my-codebuddy:omc-plan")');
     expect(result.replacementText).toContain('`.omc/specs/deep-interview-{slug}.md`');
   });
 
@@ -267,7 +267,7 @@ Deep interview body`
 
     expect(result.success).toBe(true);
     expect(result.replacementText).toContain('## Autoresearch Setup Mode');
-    expect(result.replacementText).toContain('Skill("oh-my-claudecode:autoresearch")');
+    expect(result.replacementText).toContain('Skill("oh-my-codebuddy:autoresearch")');
     expect(result.replacementText).toContain('Mission seed from invocation: `improve startup performance`');
     expect(result.replacementText).not.toContain('## Skill Pipeline');
   });
@@ -296,7 +296,7 @@ Deep interview body`
 
     expect(result.success).toBe(true);
     expect(result.replacementText)
-      .toContain('Skill("oh-my-claudecode:autoresearch")');
+      .toContain('Skill("oh-my-codebuddy:autoresearch")');
   });
 
   it('routes /ccg advisor asks through the plugin bridge inside an active Claude session when CLAUDE_PLUGIN_ROOT is set', async () => {

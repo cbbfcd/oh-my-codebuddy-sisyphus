@@ -6,10 +6,10 @@
 [![npm downloads](https://img.shields.io/npm/dm/oh-my-claude-sisyphus?color=blue)](https://www.npmjs.com/package/oh-my-claude-sisyphus)
 [![GitHub stars](https://img.shields.io/github/stars/anthropic-ai/oh-my-codebuddy?style=flat&color=yellow)](https://github.com/anthropic-ai/oh-my-codebuddy/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Sponsor](https://img.shields.io/badge/Sponsor-❤️-red?style=flat&logo=github)](https://github.com/sponsors/Yeachan-Heo)
+[![Sponsor](https://img.shields.io/badge/Sponsor-❤️-red?style=flat&logo=github)](https://github.com/sponsors/oh-my-codebuddy)
 [![Discord](https://img.shields.io/discord/1452487457085063218?color=5865F2&logo=discord&logoColor=white&label=Discord)](https://discord.gg/PUwSMR9XNk)
 
-> **Codex 用户：** 查看 [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) — 为 OpenAI Codex CLI 提供同样的编排体验。
+> **Codex 用户：** 查看 [oh-my-codex](https://github.com/oh-my-codebuddy/oh-my-codebuddy) — 为 OpenAI Codex CLI 提供同样的编排体验。
 
 **CodeBuddy Code 的多智能体编排系统。零学习曲线。**
 
@@ -386,7 +386,7 @@ MIT
 
 如果 oh-my-codebuddy 帮助了你的工作流，请考虑赞助：
 
-[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-❤️-red?style=for-the-badge&logo=github)](https://github.com/sponsors/Yeachan-Heo)
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-❤️-red?style=for-the-badge&logo=github)](https://github.com/sponsors/oh-my-codebuddy)
 
 ### 为什么赞助？
 

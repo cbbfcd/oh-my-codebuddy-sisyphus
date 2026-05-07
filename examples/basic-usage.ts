@@ -5,11 +5,11 @@
  * with the Claude Agent SDK.
  */
 
-// Note: In real usage, import from 'oh-my-claudecode'
+// Note: In real usage, import from 'oh-my-codebuddy'
 import { createOmcSession, enhancePrompt } from '../src/index.js';
 
-// For demonstration - in real usage, import from '@anthropic-ai/claude-agent-sdk'
-// import { query } from '@anthropic-ai/claude-agent-sdk';
+// For demonstration - in real usage, import from '@tencent-ai/agent-sdk'
+// import { query } from '@tencent-ai/agent-sdk';
 
 async function main() {
   console.log('=== Oh-My-ClaudeCode Example ===\n');
@@ -56,7 +56,7 @@ async function main() {
   console.log('Example 4: Using with Claude Agent SDK');
   console.log(`
 // Real usage with Claude Agent SDK:
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { query } from '@tencent-ai/agent-sdk';
 
 const session = createOmcSession();
 

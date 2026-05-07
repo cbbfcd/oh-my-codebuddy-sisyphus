@@ -100,6 +100,6 @@ All mode state files use standardized locations:
 | ultraqa | `ultraqa-state.json` |
 | pipeline | `pipeline-state.json` |
 
-**Important:** Never store OMC state in `~/.claude/` - that directory is reserved for Claude Code itself.
+**Important:** Never store OMC state in `~/.codebuddy/` - that directory is reserved for CodeBuddy Code itself.
 
 Legacy locations are auto-migrated on read.

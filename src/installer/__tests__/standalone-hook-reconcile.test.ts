@@ -131,7 +131,7 @@ describe('install() standalone hook reconciliation', () => {
       'plugins',
       'cache',
       'omc',
-      'oh-my-claudecode',
+      'oh-my-codebuddy',
       '4.1.5',
     );
 
@@ -236,13 +236,13 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     const pluginsDir = join(testClaudeDir, 'plugins');
     mkdirSync(pluginsDir, { recursive: true });
     writeFileSync(join(pluginsDir, 'installed_plugins.json'), JSON.stringify({
-      'oh-my-claudecode': [{ installPath: fakePluginRoot }],
+      'oh-my-codebuddy': [{ installPath: fakePluginRoot }],
     }));
 
     // Mark plugin as enabled in settings.json
     mkdirSync(testClaudeDir, { recursive: true });
     writeFileSync(join(testClaudeDir, 'settings.json'), JSON.stringify({
-      enabledPlugins: { 'oh-my-claudecode': true },
+      enabledPlugins: { 'oh-my-codebuddy': true },
     }, null, 2));
   }
 
@@ -288,7 +288,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     // Pre-populate settings.json with stale OMC hook entries (simulating prior standalone install)
     mkdirSync(testClaudeDir, { recursive: true });
     writeFileSync(join(testClaudeDir, 'settings.json'), JSON.stringify({
-      enabledPlugins: { 'oh-my-claudecode': true },
+      enabledPlugins: { 'oh-my-codebuddy': true },
       hooks: {
         UserPromptSubmit: [
           {
@@ -330,7 +330,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
 
     // Then overwrite settings.json with mixed OMC + non-OMC hooks
     writeFileSync(join(testClaudeDir, 'settings.json'), JSON.stringify({
-      enabledPlugins: { 'oh-my-claudecode': true },
+      enabledPlugins: { 'oh-my-codebuddy': true },
       hooks: {
         UserPromptSubmit: [
           {

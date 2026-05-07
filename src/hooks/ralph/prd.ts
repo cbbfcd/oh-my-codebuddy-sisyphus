@@ -665,7 +665,7 @@ ${prdPath ? `**Active PRD file:** ${prdPath}\n\n` : ''}**Instructions:**
 2. Verify ALL acceptance criteria are met
 3. Run quality checks (tests, typecheck, lint)
 4. When complete, mark story as passes: true in the active PRD file
-5. If ALL stories are done, run \`/oh-my-claudecode:cancel\` to cleanly exit ralph mode and clean up all state files
+5. If ALL stories are done, run \`/oh-my-codebuddy:cancel\` to cleanly exit ralph mode and clean up all state files
 
 </current-story>
 

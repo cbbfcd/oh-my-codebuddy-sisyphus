@@ -256,9 +256,9 @@ describe('HUD marketplace resolution', () => {
 
     const content = readFileSync(hudScriptPath, 'utf-8');
     expect(content).toContain('"oh-my-claude-sisyphus/dist/hud/index.js"');
-    expect(content).toContain('"oh-my-claudecode/dist/hud/index.js"');
+    expect(content).toContain('"oh-my-codebuddy/dist/hud/index.js"');
     expect(content.indexOf('"oh-my-claude-sisyphus/dist/hud/index.js"')).toBeLessThan(
-      content.indexOf('"oh-my-claudecode/dist/hud/index.js"')
+      content.indexOf('"oh-my-codebuddy/dist/hud/index.js"')
     );
 
     execFileSync(process.execPath, [hudScriptPath], {

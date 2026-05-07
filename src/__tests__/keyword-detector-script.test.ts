@@ -48,7 +48,7 @@ describe('keyword-detector.mjs mode-message dispatch', () => {
     expect(context).toContain('<search-mode>');
     expect(context).toContain('MAXIMIZE SEARCH EFFORT');
     expect(context).not.toContain('[MAGIC KEYWORD: DEEPSEARCH]');
-    expect(context).not.toContain('Skill: oh-my-claudecode:deepsearch');
+    expect(context).not.toContain('Skill: oh-my-codebuddy:deepsearch');
   });
 
   it.each([
@@ -70,7 +70,7 @@ describe('keyword-detector.mjs mode-message dispatch', () => {
     const context = output.hookSpecificOutput?.additionalContext ?? '';
 
     expect(context).toContain('[MAGIC KEYWORD: RALPLAN]');
-    expect(context).toContain('Preferred invocation: /oh-my-claudecode:ralplan');
+    expect(context).toContain('Preferred invocation: /oh-my-codebuddy:ralplan');
     expect(context).not.toContain('name: ralplan');
   });
 
@@ -194,7 +194,7 @@ describe('keyword-detector.mjs mode-message dispatch', () => {
 
     try {
       const sessionId = 'slash-ralplan-session';
-      const output = runKeywordDetector('/oh-my-claudecode:ralplan issue #2622', tempDir, sessionId);
+      const output = runKeywordDetector('/oh-my-codebuddy:ralplan issue #2622', tempDir, sessionId);
       const context = output.hookSpecificOutput?.additionalContext ?? '';
 
       expect(output.continue).toBe(true);
@@ -217,7 +217,7 @@ describe('keyword-detector.mjs mode-message dispatch', () => {
       expect(state.current_phase).toBe('ralplan');
       expect(state.awaiting_confirmation).toBe(true);
       expect(typeof state.awaiting_confirmation_set_at).toBe('string');
-      expect(state.original_prompt).toBe('/oh-my-claudecode:ralplan issue #2622');
+      expect(state.original_prompt).toBe('/oh-my-codebuddy:ralplan issue #2622');
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }
@@ -280,7 +280,7 @@ OMC Ultrawork = "특수부대 작전 반"
     const output = runKeywordDetector(`Investigate why this pasted transcript branched sessions:
 
 [MAGIC KEYWORD: RALPH]
-Skill: oh-my-claudecode:ralph
+Skill: oh-my-codebuddy:ralph
 User request:
 ralph fix parser`);
     const context = output.hookSpecificOutput?.additionalContext ?? '';

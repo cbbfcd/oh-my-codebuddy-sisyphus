@@ -20,7 +20,7 @@ function writePayloadTree(root: string, version = '9.9.9-test'): void {
   writeFile(join(root, 'agents', 'executor.md'), '# executor\n');
   writeFile(join(root, 'templates', 'deliverables.json'), '{}\n');
   writeFile(join(root, 'docs', 'CLAUDE.md'), '# docs\n');
-  writeFile(join(root, '.claude-plugin', 'plugin.json'), '{"name":"oh-my-claudecode"}\n');
+  writeFile(join(root, '.claude-plugin', 'plugin.json'), '{"name":"oh-my-codebuddy"}\n');
   writeFile(join(root, '.mcp.json'), '{}\n');
   writeFile(join(root, 'README.md'), '# readme\n');
   writeFile(join(root, 'LICENSE'), 'MIT\n');
@@ -53,7 +53,7 @@ describe('syncInstalledPluginPayload', () => {
 
   it('repairs incomplete cache installs from the known marketplace source instead of reusing the installed root', async () => {
     const configDir = process.env.CLAUDE_CONFIG_DIR as string;
-    const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-claudecode', '4.12.0');
+    const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.12.0');
     const sourceRoot = join(tempRoot, 'marketplace-source');
 
     writePayloadTree(sourceRoot);
@@ -65,7 +65,7 @@ describe('syncInstalledPluginPayload', () => {
       JSON.stringify({
         version: 2,
         plugins: {
-          'oh-my-claudecode@omc': [{ installPath: cacheRoot, version: '4.12.0' }],
+          'oh-my-codebuddy@omc': [{ installPath: cacheRoot, version: '4.12.0' }],
         },
       }, null, 2),
     );
@@ -95,7 +95,7 @@ describe('syncInstalledPluginPayload', () => {
 
   it('repairs incomplete cache installs during setup before plugin-provided file detection runs', async () => {
     const configDir = process.env.CLAUDE_CONFIG_DIR as string;
-    const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-claudecode', '4.12.0');
+    const cacheRoot = join(configDir, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '4.12.0');
     const sourceRoot = join(tempRoot, 'marketplace-source-install');
 
     writePayloadTree(sourceRoot, '4.12.0');
@@ -107,7 +107,7 @@ describe('syncInstalledPluginPayload', () => {
       JSON.stringify({
         version: 2,
         plugins: {
-          'oh-my-claudecode@omc': [{ installPath: cacheRoot, version: '4.12.0' }],
+          'oh-my-codebuddy@omc': [{ installPath: cacheRoot, version: '4.12.0' }],
         },
       }, null, 2),
     );
@@ -122,7 +122,7 @@ describe('syncInstalledPluginPayload', () => {
     );
     writeFileSync(
       join(configDir, 'settings.json'),
-      JSON.stringify({ enabledPlugins: ['oh-my-claudecode@omc'] }, null, 2),
+      JSON.stringify({ enabledPlugins: ['oh-my-codebuddy@omc'] }, null, 2),
     );
 
     const installer = await freshInstaller();
@@ -159,7 +159,7 @@ describe('syncInstalledPluginPayload', () => {
       JSON.stringify({
         version: 2,
         plugins: {
-          'oh-my-claudecode@omc': [{ installPath: escapedInstallPath, version: '4.12.0' }],
+          'oh-my-codebuddy@omc': [{ installPath: escapedInstallPath, version: '4.12.0' }],
         },
       }, null, 2),
     );

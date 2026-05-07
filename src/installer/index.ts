@@ -303,7 +303,7 @@ export function isHudEnabledInConfig(): boolean {
 }
 
 /**
- * Detect whether a statusLine config belongs to oh-my-claudecode.
+ * Detect whether a statusLine config belongs to oh-my-codebuddy.
  *
  * Checks the command string for known OMC HUD paths so that custom
  * (non-OMC) statusLine configurations are preserved during forced
@@ -344,11 +344,11 @@ const OMC_HOOK_FILENAMES = new Set([
 ]);
 
 /**
- * Detect whether a hook command belongs to oh-my-claudecode.
+ * Detect whether a hook command belongs to oh-my-codebuddy.
  *
  * Recognition strategy (any match is sufficient):
  * 1. Command path contains "omc" as a path/word segment (e.g. `omc-hook.mjs`, `/omc/`)
- * 2. Command path contains "oh-my-claudecode"
+ * 2. Command path contains "oh-my-codebuddy"
  * 3. Command references a known OMC hook filename inside .claude/hooks/
  *
  * @param command - The hook command string
@@ -359,7 +359,7 @@ export function isOmcHook(command: string): boolean {
   // Match "omc" as a path segment or word boundary
   // Matches: /omc/, /omc-, omc/, -omc, _omc, omc_
   const omcPattern = /(?:^|[\/\\_-])omc(?:$|[\/\\_-])/;
-  const fullNamePattern = /oh-my-claudecode/;
+  const fullNamePattern = /oh-my-codebuddy/;
   if (omcPattern.test(lowerCommand) || fullNamePattern.test(lowerCommand)) {
     return true;
   }
@@ -961,7 +961,7 @@ export function getInstalledOmcPluginRoots(): string[] {
     const plugins = raw.plugins ?? raw;
 
     for (const [pluginId, entries] of Object.entries(plugins)) {
-      if (!pluginId.toLowerCase().includes('oh-my-claudecode') || !Array.isArray(entries)) {
+      if (!pluginId.toLowerCase().includes('oh-my-codebuddy') || !Array.isArray(entries)) {
         continue;
       }
 
@@ -1019,7 +1019,7 @@ function getKnownMarketplaceInstallRoots(): string[] {
 
     for (const [marketplaceId, entry] of Object.entries(raw)) {
       const isOmcMarketplace = marketplaceId.toLowerCase().includes('omc')
-        || marketplaceId.toLowerCase().includes('oh-my-claudecode');
+        || marketplaceId.toLowerCase().includes('oh-my-codebuddy');
       if (!isOmcMarketplace) {
         continue;
       }
@@ -1215,13 +1215,13 @@ export function hasEnabledOmcPlugin(): boolean {
     for (const candidate of [settings.enabledPlugins, settings.plugins]) {
       if (Array.isArray(candidate)) {
         if (candidate.some(plugin =>
-          typeof plugin === 'string' && plugin.toLowerCase().includes('oh-my-claudecode')
+          typeof plugin === 'string' && plugin.toLowerCase().includes('oh-my-codebuddy')
         )) {
           return true;
         }
       } else if (candidate && typeof candidate === 'object') {
         if (Object.entries(candidate as Record<string, unknown>).some(([pluginId, value]) =>
-          pluginId.toLowerCase().includes('oh-my-claudecode') && value !== false
+          pluginId.toLowerCase().includes('oh-my-codebuddy') && value !== false
         )) {
           return true;
         }
@@ -1238,13 +1238,13 @@ function isOmcPluginEnabledInSettings(settings: Record<string, unknown>): boolea
   for (const candidate of [settings.enabledPlugins, settings.plugins]) {
     if (Array.isArray(candidate)) {
       if (candidate.some(plugin =>
-        typeof plugin === 'string' && plugin.toLowerCase().includes('oh-my-claudecode')
+        typeof plugin === 'string' && plugin.toLowerCase().includes('oh-my-codebuddy')
       )) {
         return true;
       }
     } else if (candidate && typeof candidate === 'object') {
       if (Object.entries(candidate as Record<string, unknown>).some(([pluginId, value]) =>
-        pluginId.toLowerCase().includes('oh-my-claudecode') && value !== false
+        pluginId.toLowerCase().includes('oh-my-codebuddy') && value !== false
       )) {
         return true;
       }
@@ -1439,7 +1439,7 @@ export function extractOmcVersionFromClaudeMd(content: string): string | null {
     return markerVersion.startsWith('v') ? markerVersion : `v${markerVersion}`;
   }
 
-  const headingMatch = content.match(/^#\s+oh-my-claudecode.*?\b(v?\d+\.\d+\.\d+(?:[-+][^\s]+)?)\b/m);
+  const headingMatch = content.match(/^#\s+oh-my-codebuddy.*?\b(v?\d+\.\d+\.\d+(?:[-+][^\s]+)?)\b/m);
   if (headingMatch?.[1]) {
     const headingVersion = headingMatch[1].trim();
     return headingVersion.startsWith('v') ? headingVersion : `v${headingVersion}`;

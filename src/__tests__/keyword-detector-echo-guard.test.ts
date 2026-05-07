@@ -63,7 +63,7 @@ describe('keyword-detector.mjs — pasted system-echo re-entry guard', () => {
     const sid = 'sess-bare-ralph';
     const prompt = [
       '[RALPH LOOP - ITERATION 3/100] Work is NOT done. Continue working.',
-      'When FULLY complete (after Architect verification), run /oh-my-claudecode:cancel to cleanly exit ralph mode and clean up all state files. If cancel fails, retry with /oh-my-claudecode:cancel --force.',
+      'When FULLY complete (after Architect verification), run /oh-my-codebuddy:cancel to cleanly exit ralph mode and clean up all state files. If cancel fails, retry with /oh-my-codebuddy:cancel --force.',
       'Task: keep iterating on ralph until tests pass',
     ].join('\n');
 
@@ -122,7 +122,7 @@ describe('keyword-detector.mjs — pasted system-echo re-entry guard', () => {
     const prompt = [
       'Stop hook feedback:',
       '[RALPH LOOP - ITERATION 5/100] Work is NOT done.',
-      'When FULLY complete (after Architect verification), run /oh-my-claudecode:cancel ...',
+      'When FULLY complete (after Architect verification), run /oh-my-codebuddy:cancel ...',
       'Task: previous ralph task prompt',
     ].join('\n');
 
@@ -146,7 +146,7 @@ describe('keyword-detector.mjs — pasted system-echo re-entry guard', () => {
 
   // Regression for Codex automated review P1/P2 (third round): the previous
   // revision added standalone single-line strippers for `Task:\s`,
-  // `When FULLY complete`, and `run /oh-my-claudecode:cancel`, which meant
+  // `When FULLY complete`, and `run /oh-my-codebuddy:cancel`, which meant
   // a user's legitimate "Task: ralph로 이거 해줘" prompt would have its
   // only line removed before keyword dispatch. Continuation stripping must
   // happen ONLY in the context of an echo block header.

@@ -46,7 +46,7 @@ For `local` installs inside a git repository, the script also seeds `.git/info/e
 
 **FALLBACK** if curl fails:
 Tell user to manually download from:
-https://raw.githubusercontent.com/Yeachan-Heo/oh-my-codebuddy/main/docs/CODEBUDDY.md
+https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy/main/docs/CODEBUDDY.md
 
 **Note**: The downloaded CODEBUDDY.md includes Context Persistence instructions with `<remember>` tags for surviving conversation compaction.
 

@@ -198,7 +198,7 @@ describe('trace-tools', () => {
 
     it('should show execution flow section', async () => {
       appendReplayEvent(testDir, 'flow-exec', { agent: 'system', event: 'keyword_detected', keyword: 'plan' });
-      appendReplayEvent(testDir, 'flow-exec', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-claudecode:plan' });
+      appendReplayEvent(testDir, 'flow-exec', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-codebuddy:plan' });
       appendReplayEvent(testDir, 'flow-exec', { agent: 'a1', event: 'agent_start', agent_type: 'planner', model: 'opus' });
       appendReplayEvent(testDir, 'flow-exec', { agent: 'a1', event: 'agent_stop', agent_type: 'planner', success: true, duration_ms: 40000 });
 
@@ -207,7 +207,7 @@ describe('trace-tools', () => {
 
       expect(text).toContain('Execution Flow');
       expect(text).toContain('Keyword "plan" detected');
-      expect(text).toContain('oh-my-claudecode:plan invoked');
+      expect(text).toContain('oh-my-codebuddy:plan invoked');
       expect(text).toContain('planner agent spawned');
       expect(text).toContain('planner agent completed');
     });
@@ -215,29 +215,29 @@ describe('trace-tools', () => {
 
   describe('skills_invoked in summary', () => {
     it('should show skills invoked via Skill tool', async () => {
-      appendReplayEvent(testDir, 'sk-sess', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-claudecode:plan' });
-      appendReplayEvent(testDir, 'sk-sess', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-claudecode:ultrawork' });
+      appendReplayEvent(testDir, 'sk-sess', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-codebuddy:plan' });
+      appendReplayEvent(testDir, 'sk-sess', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-codebuddy:ultrawork' });
 
       const result = await traceSummaryTool.handler({ sessionId: 'sk-sess', workingDirectory: testDir });
       const text = result.content[0].text;
 
       expect(text).toContain('Skills Invoked');
-      expect(text).toContain('oh-my-claudecode:plan');
-      expect(text).toContain('oh-my-claudecode:ultrawork');
+      expect(text).toContain('oh-my-codebuddy:plan');
+      expect(text).toContain('oh-my-codebuddy:ultrawork');
     });
 
     it('should format skill_invoked in timeline', async () => {
-      appendReplayEvent(testDir, 'sk-tl', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-claudecode:plan' });
+      appendReplayEvent(testDir, 'sk-tl', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-codebuddy:plan' });
 
       const result = await traceTimelineTool.handler({ sessionId: 'sk-tl', workingDirectory: testDir });
       const text = result.content[0].text;
 
       expect(text).toContain('SKILL');
-      expect(text).toContain('oh-my-claudecode:plan invoked');
+      expect(text).toContain('oh-my-codebuddy:plan invoked');
     });
 
     it('should include skill_invoked in skills filter', async () => {
-      appendReplayEvent(testDir, 'sk-flt', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-claudecode:plan' });
+      appendReplayEvent(testDir, 'sk-flt', { agent: 'system', event: 'skill_invoked', skill_name: 'oh-my-codebuddy:plan' });
       appendReplayEvent(testDir, 'sk-flt', { agent: 'a1', event: 'agent_start', agent_type: 'planner' });
 
       const result = await traceTimelineTool.handler({ sessionId: 'sk-flt', filter: 'skills', workingDirectory: testDir });

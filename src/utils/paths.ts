@@ -167,13 +167,13 @@ export function getGlobalOmcStateCandidates(...segments: string[]): string[] {
 }
 
 /**
- * Get the plugin cache base directory for oh-my-claudecode.
+ * Get the plugin cache base directory for oh-my-codebuddy.
  * This is the directory containing version subdirectories.
  *
- * Structure: <configDir>/plugins/cache/omc/oh-my-claudecode/
+ * Structure: <configDir>/plugins/cache/omc/oh-my-codebuddy/
  */
 export function getPluginCacheBase(): string {
-  return join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
+  return join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
 }
 
 /**

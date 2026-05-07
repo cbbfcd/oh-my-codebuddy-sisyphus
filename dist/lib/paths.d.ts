@@ -4,8 +4,8 @@
  * scripts/plugin-setup.mjs; keep them in sync (enforced by paths-consistency.test.ts).
  */
 export declare const OMC_PLUGIN_MARKETPLACE_SLUG = "omc";
-export declare const OMC_PLUGIN_PACKAGE_NAME = "oh-my-claudecode";
-export declare const OMC_PLUGIN_CACHE_REL = "plugins/cache/omc/oh-my-claudecode";
+export declare const OMC_PLUGIN_PACKAGE_NAME = "oh-my-codebuddy";
+export declare const OMC_PLUGIN_CACHE_REL = "plugins/cache/omc/oh-my-codebuddy";
 export declare const OMC_PLUGIN_MARKETPLACE_REL = "plugins/marketplaces/omc";
 export declare const OMC_HUD_DIST_REL = "dist/hud/index.js";
 export declare const OMC_HUD_WRAPPER_REL = "hud/omc-hud.mjs";

@@ -131,8 +131,8 @@ describe('isOmcHook()', () => {
     expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/persistent-mode.mjs"')).toBe(true);
   });
 
-  it('recognises oh-my-claudecode in command path', () => {
-    expect(isOmcHook('/path/to/oh-my-claudecode/hook.mjs')).toBe(true);
+  it('recognises oh-my-codebuddy in command path', () => {
+    expect(isOmcHook('/path/to/oh-my-codebuddy/hook.mjs')).toBe(true);
   });
 
   it('recognises omc as a path segment', () => {

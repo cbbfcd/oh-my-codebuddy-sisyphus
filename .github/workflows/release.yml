@@ -63,7 +63,7 @@ jobs:
             cp .github/release-body.md release-notes.md
           else
             echo "Falling back to minimal release notes"
-            echo "## oh-my-claudecode v${VERSION}" > release-notes.md
+            echo "## oh-my-codebuddy v${VERSION}" > release-notes.md
             echo "" >> release-notes.md
             echo "### Install / Update" >> release-notes.md
             echo '```bash' >> release-notes.md

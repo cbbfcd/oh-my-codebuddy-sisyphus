@@ -44,7 +44,7 @@ function getCachePath(): string {
   return join(
     getCodebuddyConfigDir(),
     'plugins',
-    'oh-my-claudecode',
+    'oh-my-codebuddy',
     '.custom-rate-cache.json',
   );
 }

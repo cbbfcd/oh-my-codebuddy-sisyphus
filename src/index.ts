@@ -248,7 +248,7 @@ export interface OmcSession {
  *
  * @example
  * ```typescript
- * import { createOmcSession } from 'oh-my-claudecode';
+ * import { createOmcSession } from 'oh-my-codebuddy';
  * import { query } from '@tencent-ai/agent-sdk';
  *
  * const session = createOmcSession();

@@ -143,7 +143,7 @@ describe('Bedrock model routing repro', () => {
       const executorResult = enforceModel({
         description: 'Implement feature',
         prompt: 'Write the code',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
       });
       expect(executorResult.injected).toBe(true);
       expect(executorResult.modifiedInput.model).toBe('sonnet');
@@ -152,7 +152,7 @@ describe('Bedrock model routing repro', () => {
       const exploreResult = enforceModel({
         description: 'Find files',
         prompt: 'Search codebase',
-        subagent_type: 'oh-my-claudecode:explore',
+        subagent_type: 'oh-my-codebuddy:explore',
       });
       expect(exploreResult.injected).toBe(true);
       expect(exploreResult.modifiedInput.model).toBe('haiku');
@@ -161,7 +161,7 @@ describe('Bedrock model routing repro', () => {
       const architectResult = enforceModel({
         description: 'Design system',
         prompt: 'Analyze architecture',
-        subagent_type: 'oh-my-claudecode:architect',
+        subagent_type: 'oh-my-codebuddy:architect',
       });
       expect(architectResult.injected).toBe(true);
       expect(architectResult.modifiedInput.model).toBe('opus');
@@ -190,7 +190,7 @@ describe('Bedrock model routing repro', () => {
         const result = enforceModel({
           description: 'test',
           prompt: 'test',
-          subagent_type: `oh-my-claudecode:${agent}`,
+          subagent_type: `oh-my-codebuddy:${agent}`,
         });
         expect(result.model).toBe('inherit');
         expect(result.modifiedInput.model).toBeUndefined();
@@ -238,7 +238,7 @@ describe('Bedrock model routing repro', () => {
       const result = enforceModel({
         description: 'Implement feature',
         prompt: 'Write the code',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
       });
       expect(result.injected).toBe(true);
       expect(result.model).toBe('global.anthropic.claude-sonnet-4-6-v1:0');
@@ -277,7 +277,7 @@ describe('Bedrock model routing repro', () => {
       const taskInput: Record<string, unknown> = {
         description: 'Implement feature',
         prompt: 'Write the code',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
         model: 'sonnet', // LLM passes this based on CLAUDE.md instructions
       };
 
@@ -303,7 +303,7 @@ describe('Bedrock model routing repro', () => {
       const taskInput: Record<string, unknown> = {
         description: 'Implement feature',
         prompt: 'Write the code',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
         model: 'sonnet', // LLM passes this based on CLAUDE.md instructions
       };
 
@@ -330,7 +330,7 @@ describe('Bedrock model routing repro', () => {
       const result = enforceModel({
         description: 'Implement feature',
         prompt: 'Write the code',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
         model: 'sonnet', // LLM passes this explicitly
       });
 
@@ -349,7 +349,7 @@ describe('Bedrock model routing repro', () => {
       const result = enforceModel({
         description: 'test',
         prompt: 'test',
-        subagent_type: 'oh-my-claudecode:executor',
+        subagent_type: 'oh-my-codebuddy:executor',
       });
 
       // This is exactly the model ID from the error report
@@ -373,7 +373,7 @@ describe('Bedrock model routing repro', () => {
         toolInput: {
           description: 'Implement feature',
           prompt: 'Write the code',
-          subagent_type: 'oh-my-claudecode:executor',
+          subagent_type: 'oh-my-codebuddy:executor',
           model: 'claude-sonnet-4-6',
         },
         directory: process.cwd(),
@@ -399,7 +399,7 @@ describe('Bedrock model routing repro', () => {
         toolInput: {
           description: 'Implement feature',
           prompt: 'Write the code',
-          subagent_type: 'oh-my-claudecode:executor',
+          subagent_type: 'oh-my-codebuddy:executor',
           // No model param — this is the correct behavior
         },
         directory: process.cwd(),
@@ -422,7 +422,7 @@ describe('Bedrock model routing repro', () => {
         toolInput: {
           description: 'Implement feature',
           prompt: 'Write the code',
-          subagent_type: 'oh-my-claudecode:executor',
+          subagent_type: 'oh-my-codebuddy:executor',
           model: 'sonnet',
         },
         directory: process.cwd(),

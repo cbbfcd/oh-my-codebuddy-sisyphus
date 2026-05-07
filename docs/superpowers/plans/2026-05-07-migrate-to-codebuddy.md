@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 将 oh-my-claudecode（fork 自 Yeachan-Heo/oh-my-claudecode）完整迁移为基于 CodeBuddy Code 的 oh-my-codebuddy，1:1 功能对等，移除原项目痕迹，保留中文文档。同时从 oh-my-codex 移植 5 项低成本高价值功能。
+**Goal:** 将 oh-my-codebuddy（fork 自 anthropic-ai/oh-my-codebuddy）完整迁移为基于 CodeBuddy Code 的 oh-my-codebuddy，1:1 功能对等，移除原项目痕迹，保留中文文档。同时从 oh-my-codex 移植 5 项低成本高价值功能。
 
 **Architecture:** 
 - 将所有 Claude Code SDK 引用替换为 CodeBuddy SDK 等价物
 - 将 `.claude/` 路径映射到 `.codebuddy/`
 - 将 hook event 名称和 MCP 配置格式适配为 CodeBuddy 规范
-- 将 `@anthropic-ai/claude-agent-sdk` 替换为 CodeBuddy TypeScript SDK
+- 将 `@tencent-ai/agent-sdk` 替换为 CodeBuddy TypeScript SDK
 - 重写 installer 将安装目标从 `~/.claude/` 改为 `~/.codebuddy/`
 - 从 oh-my-codex 移植确认的 skills 和 agents
 
@@ -20,16 +20,16 @@
 
 ### 背景
 
-经代码验证，oh-my-claudecode 已是功能超集（~95% 覆盖）。oh-my-codex 的"独有功能"（Mixed CLI Workers、Auto-Nudge、Autoresearch）实际上在 oh-my-claudecode 中都已存在。真正的差异仅为 Rust 二进制和一些额外 skill/agent markdown 文件。
+经代码验证，oh-my-codebuddy 已是功能超集（~95% 覆盖）。oh-my-codex 的"独有功能"（Mixed CLI Workers、Auto-Nudge、Autoresearch）实际上在 oh-my-codebuddy 中都已存在。真正的差异仅为 Rust 二进制和一些额外 skill/agent markdown 文件。
 
 ### 确认集成项 ✅
 
 | # | 功能 | 来源 | 成本 |
 |---|---|---|---|
-| 1 | `ecomode` skill | `Yeachan-Heo/oh-my-codex/skills/ecomode/` | 低（1 个 .md 文件） |
-| 2 | `build-fix` skill | `Yeachan-Heo/oh-my-codex/skills/build-fix/` | 低（1 个 .md 文件） |
-| 3 | `frontend-ui-ux` skill | `Yeachan-Heo/oh-my-codex/skills/frontend-ui-ux/` | 低（1 个 .md 文件） |
-| 4 | `worker` skill | `Yeachan-Heo/oh-my-codex/skills/worker/` | 低（1 个 .md 文件） |
+| 1 | `ecomode` skill | `anthropic-ai/oh-my-codex/skills/ecomode/` | 低（1 个 .md 文件） |
+| 2 | `build-fix` skill | `anthropic-ai/oh-my-codex/skills/build-fix/` | 低（1 个 .md 文件） |
+| 3 | `frontend-ui-ux` skill | `anthropic-ai/oh-my-codex/skills/frontend-ui-ux/` | 低（1 个 .md 文件） |
+| 4 | `worker` skill | `anthropic-ai/oh-my-codex/skills/worker/` | 低（1 个 .md 文件） |
 | 5 | 3 个额外 agent | `build-fixer`, `dependency-expert`, `performance-reviewer` | 低（3 个 .md 文件） |
 
 ### 确认不集成项 ❌
@@ -72,7 +72,7 @@
 
 移除：
 ```
-"@anthropic-ai/claude-agent-sdk": "^0.1.0"
+"@tencent-ai/agent-sdk": "^0.1.0"
 "@anthropic-ai/sdk": "^0.78.0"
 ```
 
@@ -146,7 +146,7 @@ git commit -m "refactor: 全量迁移路径从 .claude 到 .codebuddy"
 
 - [ ] **Step 1: 移除 Claude Agent SDK import**
 
-替换 `@anthropic-ai/claude-agent-sdk` 引用为 CodeBuddy SDK 等价物或纯 MCP SDK。
+替换 `@tencent-ai/agent-sdk` 引用为 CodeBuddy SDK 等价物或纯 MCP SDK。
 
 - [ ] **Step 2: 重写 MCP server 创建（使用标准 `@modelcontextprotocol/sdk`）**
 
@@ -374,18 +374,18 @@ git commit -m "refactor: 适配 agent 定义为 CodeBuddy Code 格式"
 
 ```bash
 # 从 GitHub 获取原始内容
-gh api repos/Yeachan-Heo/oh-my-codex/contents/skills/ecomode/SKILL.md --jq '.content' | base64 -d > skills/ecomode/SKILL.md
-gh api repos/Yeachan-Heo/oh-my-codex/contents/skills/build-fix/SKILL.md --jq '.content' | base64 -d > skills/build-fix/SKILL.md
-gh api repos/Yeachan-Heo/oh-my-codex/contents/skills/frontend-ui-ux/SKILL.md --jq '.content' | base64 -d > skills/frontend-ui-ux/SKILL.md
-gh api repos/Yeachan-Heo/oh-my-codex/contents/skills/worker/SKILL.md --jq '.content' | base64 -d > skills/worker/SKILL.md
+gh api repos/anthropic-ai/oh-my-codex/contents/skills/ecomode/SKILL.md --jq '.content' | base64 -d > skills/ecomode/SKILL.md
+gh api repos/anthropic-ai/oh-my-codex/contents/skills/build-fix/SKILL.md --jq '.content' | base64 -d > skills/build-fix/SKILL.md
+gh api repos/anthropic-ai/oh-my-codex/contents/skills/frontend-ui-ux/SKILL.md --jq '.content' | base64 -d > skills/frontend-ui-ux/SKILL.md
+gh api repos/anthropic-ai/oh-my-codex/contents/skills/worker/SKILL.md --jq '.content' | base64 -d > skills/worker/SKILL.md
 ```
 
 - [ ] **Step 2: 获取 3 个 agent 文件**
 
 ```bash
-gh api repos/Yeachan-Heo/oh-my-codex/contents/prompts/build-fixer.md --jq '.content' | base64 -d > agents/build-fixer.md
-gh api repos/Yeachan-Heo/oh-my-codex/contents/prompts/dependency-expert.md --jq '.content' | base64 -d > agents/dependency-expert.md
-gh api repos/Yeachan-Heo/oh-my-codex/contents/prompts/performance-reviewer.md --jq '.content' | base64 -d > agents/performance-reviewer.md
+gh api repos/anthropic-ai/oh-my-codex/contents/prompts/build-fixer.md --jq '.content' | base64 -d > agents/build-fixer.md
+gh api repos/anthropic-ai/oh-my-codex/contents/prompts/dependency-expert.md --jq '.content' | base64 -d > agents/dependency-expert.md
+gh api repos/anthropic-ai/oh-my-codex/contents/prompts/performance-reviewer.md --jq '.content' | base64 -d > agents/performance-reviewer.md
 ```
 
 - [ ] **Step 3: 将内容中的 "codex"/"omx" 引用替换为 "codebuddy"/"omcb"**
@@ -434,7 +434,7 @@ mv README.zh.md README.md
 - [ ] **Step 1: 全量替换文档中的 Claude/Anthropic/omc 引用**
 
 替换规则：
-- "oh-my-claudecode" → "oh-my-codebuddy"
+- "oh-my-codebuddy" → "oh-my-codebuddy"
 - "Claude Code" → "CodeBuddy Code"
 - "omc" (CLI) → "omcb"
 - "~/.claude/" → "~/.codebuddy/"
@@ -502,7 +502,7 @@ Run: `node bridge/cli.cjs --help`
 - [ ] **Step 2: 删除残留配置** (`.codex`, `.clawhip`)
 - [ ] **Step 3: 最终全量搜索**
 
-Run: `grep -rn "Yeachan-Heo\|oh-my-claudecode\|oh-my-opencode\|anthropic-ai/claude-agent-sdk" . --include="*.ts" --include="*.md" --include="*.json" | grep -v node_modules | grep -v ".git/"`
+Run: `grep -rn "anthropic-ai\|oh-my-codebuddy\|oh-my-opencode\|anthropic-ai/claude-agent-sdk" . --include="*.ts" --include="*.md" --include="*.json" | grep -v node_modules | grep -v ".git/"`
 Expected: 0 结果
 
 - [ ] **Step 4: Commit**
@@ -540,7 +540,7 @@ Task 1 → Task 2 → Task 3 → Task 4, 5, 6 (可并行)
 ### 全局替换映射表
 
 ```
-@anthropic-ai/claude-agent-sdk  →  @tencent-ai/agent-sdk
+@tencent-ai/agent-sdk  →  @tencent-ai/agent-sdk
 CLAUDE.md                        →  CODEBUDDY.md
 CLAUDE.local.md                  →  CODEBUDDY.local.md
 ~/.claude/                       →  ~/.codebuddy/

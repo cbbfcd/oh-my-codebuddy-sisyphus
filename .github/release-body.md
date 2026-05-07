@@ -1,4 +1,4 @@
-# oh-my-claudecode v4.13.6: Reliability & macOS Hardening
+# oh-my-codebuddy v4.13.6: Reliability & macOS Hardening
 
 Bug fixes for session lifecycle, macOS launch path, and team auth, plus reviewer/designer agent upgrades for Opus 4.7. Net delivery is **14 PRs**: the omx-teams backport (#2903) shipped and was reverted (#2910) within the window, so team-runtime behavior matches v4.13.5.
 
@@ -55,13 +55,13 @@ npm install -g oh-my-claude-sisyphus@4.13.6
 
 Or reinstall the plugin:
 ```bash
-claude /install-plugin oh-my-claudecode
+claude /install-plugin oh-my-codebuddy
 ```
 
-**Full Changelog**: https://github.com/Yeachan-Heo/oh-my-claudecode/compare/v4.13.5...v4.13.6
+**Full Changelog**: https://github.com/anthropic-ai/oh-my-codebuddy/compare/v4.13.5...v4.13.6
 
 ## Contributors
 
 Thank you to all contributors who made this release possible!
 
-@devswha @EthanJStark @RobinNorberg @stevenmorrisroe @Yeachan-Heo
+@devswha @EthanJStark @RobinNorberg @stevenmorrisroe @anthropic-ai

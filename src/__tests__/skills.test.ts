@@ -245,7 +245,7 @@ describe('Builtin Skills', () => {
       expect(skill).toBeDefined();
       expect(skill?.description).toContain('install/update routing');
       expect(skill?.template).toContain('Process the request by the **first argument only**');
-      expect(skill?.template).toContain('/oh-my-claudecode:setup doctor --json');
+      expect(skill?.template).toContain('/oh-my-codebuddy:setup doctor --json');
       expect(skill?.template).not.toContain('{{ARGUMENTS_AFTER_DOCTOR}}');
     });
 
@@ -293,7 +293,7 @@ describe('Builtin Skills', () => {
       // Verify per-lane critical unknowns (B3 fix)
       expect(skill?.template).toContain('Per-Lane Critical Unknowns');
       // Verify pipeline handoff is fully wired (B1 fix)
-      expect(skill?.template).toContain('Skill("oh-my-claudecode:autopilot")');
+      expect(skill?.template).toContain('Skill("oh-my-codebuddy:autopilot")');
       expect(skill?.template).toContain('consensus plan as Phase 0+1 output');
       // Verify untrusted data guard (NB1 fix)
       expect(skill?.template).toContain('trace-context');
@@ -318,7 +318,7 @@ describe('Builtin Skills', () => {
       });
       expect(skill?.template).toContain('## Skill Pipeline');
       expect(skill?.template).toContain('Pipeline: `deep-interview → omc-plan → autopilot`');
-      expect(skill?.template).toContain('Skill("oh-my-claudecode:omc-plan")');
+      expect(skill?.template).toContain('Skill("oh-my-codebuddy:omc-plan")');
       expect(skill?.template).toContain('`--consensus --direct`');
       expect(skill?.template).toContain('`.omc/specs/deep-interview-{slug}.md`');
       expect(skill?.template).toContain('Why now: {one_sentence_targeting_rationale}');
@@ -327,7 +327,7 @@ describe('Builtin Skills', () => {
       expect(skill?.template).toContain('Every round explicitly names the weakest dimension and why it is the next target');
       expect(skill?.argumentHint).toContain('--autoresearch');
       expect(skill?.template).toContain('zero-learning-curve setup lane for the stateful `autoresearch` skill');
-      expect(skill?.template).toContain('Skill("oh-my-claudecode:autoresearch")');
+      expect(skill?.template).toContain('Skill("oh-my-codebuddy:autoresearch")');
     });
 
     it('loads deep-interview ambiguityThreshold from settings before state init and updates the announcement copy', () => {
@@ -551,7 +551,7 @@ describe('Builtin Skills', () => {
         expect(deepInterviewSkill?.template)
           .toContain('zero-learning-curve setup lane for the stateful `autoresearch` skill');
         expect(deepInterviewSkill?.template)
-          .toContain('Skill("oh-my-claudecode:autoresearch")');
+          .toContain('Skill("oh-my-codebuddy:autoresearch")');
         expect(askSkill?.template)
           .toContain('node "$CLAUDE_PLUGIN_ROOT"/bridge/cli.cjs ask {{ARGUMENTS}}');
       } finally {
@@ -584,7 +584,7 @@ describe('Builtin Skills', () => {
       });
       expect(skill?.template).toContain('## Skill Pipeline');
       expect(skill?.template).toContain('Next skill: `autopilot`');
-      expect(skill?.template).toContain('Skill("oh-my-claudecode:autopilot")');
+      expect(skill?.template).toContain('Skill("oh-my-codebuddy:autopilot")');
       expect(skill?.template).toContain('`.omc/plans/ralplan-*.md`');
     });
 
@@ -616,7 +616,7 @@ describe('Builtin Skills', () => {
       expect(skill).toBeDefined();
       expect(skill?.template).toContain('/omc-teams` only supports **`claude`**, **`codex`**, and **`gemini`**');
       expect(skill?.template).toContain('unsupported type such as `expert`');
-      expect(skill?.template).toContain('/oh-my-claudecode:team');
+      expect(skill?.template).toContain('/oh-my-codebuddy:team');
     });
 
     it('should preserve the multi-repo omc-teams cwd and plan-path contract', () => {

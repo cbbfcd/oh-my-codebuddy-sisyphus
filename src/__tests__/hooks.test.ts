@@ -483,8 +483,8 @@ describe('Keyword Detector', () => {
       expect(ralphMatch).toBeUndefined();
     });
 
-    it('should not detect ralph in /oh-my-claudecode:ralph-init', () => {
-      const primary = getPrimaryKeyword('/oh-my-claudecode:ralph-init "my project"');
+    it('should not detect ralph in /oh-my-codebuddy:ralph-init', () => {
+      const primary = getPrimaryKeyword('/oh-my-codebuddy:ralph-init "my project"');
       expect(primary?.type).not.toBe('ralph');
     });
 
@@ -583,7 +583,7 @@ describe('Team staged workflow integration', () => {
   });
 
   it('compacts OMC-style root AGENTS guidance on session-start without dropping key sections', async () => {
-    const agentsContent = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+    const agentsContent = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>
 schema
@@ -637,7 +637,7 @@ schema
     );
     writeFileSync(
       join(testDir, 'AGENTS.md'),
-      `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+      `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 
@@ -667,7 +667,7 @@ ${'- preserve this startup guidance\n'.repeat(400)}
     );
     writeFileSync(
       join(testDir, 'AGENTS.md'),
-      `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+      `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 
