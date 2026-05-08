@@ -8,7 +8,7 @@ describe('Builtin Skills', () => {
   const originalPluginRoot = process.env.CODEBUDDY_PLUGIN_ROOT;
   const originalPath = process.env.PATH;
   const originalUserType = process.env.USER_TYPE;
-  const originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+  const originalCodebuddyConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
   const originalCwd = process.cwd();
   let tempDirs: string[] = [];
 
@@ -29,10 +29,10 @@ describe('Builtin Skills', () => {
     } else {
       process.env.USER_TYPE = originalUserType;
     }
-    if (originalClaudeConfigDir === undefined) {
+    if (originalCodebuddyConfigDir === undefined) {
       delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalCodebuddyConfigDir;
     }
     process.chdir(originalCwd);
     tempDirs = [];
@@ -55,10 +55,10 @@ describe('Builtin Skills', () => {
     } else {
       process.env.USER_TYPE = originalUserType;
     }
-    if (originalClaudeConfigDir === undefined) {
+    if (originalCodebuddyConfigDir === undefined) {
       delete process.env.CODEBUDDY_CONFIG_DIR;
     } else {
-      process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
+      process.env.CODEBUDDY_CONFIG_DIR = originalCodebuddyConfigDir;
     }
     process.chdir(originalCwd);
     for (const dir of tempDirs) {
@@ -435,7 +435,7 @@ describe('Builtin Skills', () => {
     it('ships a config-aware deep-interview SKILL.md for native skill-loader paths (issue #2723)', () => {
       const raw = readFileSync(join(originalCwd, 'skills', 'deep-interview', 'SKILL.md'), 'utf-8');
       expect(raw).toContain('Load runtime settings');
-      expect(raw).toContain('Read `[$CODEBUDDY_CONFIG_DIR|~/.claude]/settings.json` and `./.codebuddy/settings.json`');
+      expect(raw).toContain('Read `[$CODEBUDDY_CONFIG_DIR|~/.codebuddy]/settings.json` and `./.codebuddy/settings.json`');
       expect(raw).toContain('"threshold": <resolvedThreshold>,');
       expect(raw).toContain('ambiguity drops below <resolvedThresholdPercent>');
       expect(raw).toContain('Gate: ≤<resolvedThresholdPercent> ambiguity');
@@ -505,7 +505,7 @@ describe('Builtin Skills', () => {
       const raw = readFileSync(join(originalCwd, 'skills', 'deep-dive', 'SKILL.md'), 'utf-8');
 
       expect(raw).toContain('Load runtime settings');
-      expect(raw).toContain('Read `[$CODEBUDDY_CONFIG_DIR|~/.claude]/settings.json` and `./.codebuddy/settings.json`');
+      expect(raw).toContain('Read `[$CODEBUDDY_CONFIG_DIR|~/.codebuddy]/settings.json` and `./.codebuddy/settings.json`');
       expect(raw).toContain('Resolve `omc.deepInterview.ambiguityThreshold` into `<resolvedThreshold>`');
       expect(raw).toContain('"threshold": <resolvedThreshold>,');
       expect(raw).toContain('Gate: ≤<resolvedThresholdPercent> ambiguity');
@@ -541,15 +541,15 @@ describe('Builtin Skills', () => {
     it('rewrites built-in skill command examples to plugin-safe bridge invocations when omc is unavailable', () => {
       process.env.CODEBUDDY_PLUGIN_ROOT = '/plugin-root';
       process.env.PATH = '';
-      // Simulate a non-Claude-session context: the ask-skill rewriter only keeps
-      // `omc ask` form when running *inside* an active Claude session, so we must
+      // Simulate a non-Codebuddy-session context: the ask-skill rewriter only keeps
+      // `omc ask` form when running *inside* an active Codebuddy session, so we must
       // clear the session-detection vars that may leak in from the test runner.
-      const savedClaudeCode = process.env.CLAUDECODE;
-      const savedSessionId = process.env.CLAUDE_SESSION_ID;
-      const savedCodeSessionId = process.env.CLAUDECODE_SESSION_ID;
-      delete process.env.CLAUDECODE;
-      delete process.env.CLAUDE_SESSION_ID;
-      delete process.env.CLAUDECODE_SESSION_ID;
+      const savedCodebuddyCode = process.env.CODEBUDDYCODE;
+      const savedSessionId = process.env.CODEBUDDY_SESSION_ID;
+      const savedCodeSessionId = process.env.CODEBUDDYCODE_SESSION_ID;
+      delete process.env.CODEBUDDYCODE;
+      delete process.env.CODEBUDDY_SESSION_ID;
+      delete process.env.CODEBUDDYCODE_SESSION_ID;
       clearSkillsCache();
 
       try {
@@ -564,12 +564,12 @@ describe('Builtin Skills', () => {
         expect(askSkill?.template)
           .toContain('omcb ask {{ARGUMENTS}}');
       } finally {
-        if (savedClaudeCode === undefined) delete process.env.CLAUDECODE;
-        else process.env.CLAUDECODE = savedClaudeCode;
-        if (savedSessionId === undefined) delete process.env.CLAUDE_SESSION_ID;
-        else process.env.CLAUDE_SESSION_ID = savedSessionId;
-        if (savedCodeSessionId === undefined) delete process.env.CLAUDECODE_SESSION_ID;
-        else process.env.CLAUDECODE_SESSION_ID = savedCodeSessionId;
+        if (savedCodebuddyCode === undefined) delete process.env.CODEBUDDYCODE;
+        else process.env.CODEBUDDYCODE = savedCodebuddyCode;
+        if (savedSessionId === undefined) delete process.env.CODEBUDDY_SESSION_ID;
+        else process.env.CODEBUDDY_SESSION_ID = savedSessionId;
+        if (savedCodeSessionId === undefined) delete process.env.CODEBUDDYCODE_SESSION_ID;
+        else process.env.CODEBUDDYCODE_SESSION_ID = savedCodeSessionId;
       }
     });
 
