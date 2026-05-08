@@ -11,16 +11,16 @@ describe('WorkerInfo.worker_cli round-trip', () => {
     return JSON.parse(JSON.stringify(w)) as WorkerInfo;
   }
 
-  it('preserves worker_cli=claude through JSON serialization', () => {
+  it('preserves worker_cli=codebuddy through JSON serialization', () => {
     const w: WorkerInfo = {
       name: 'worker-1',
       index: 1,
       role: 'executor',
-      worker_cli: 'claude',
+      worker_cli: 'codebuddy',
       assigned_tasks: ['1', '2'],
     };
     const out = roundtrip(w);
-    expect(out.worker_cli).toBe('claude');
+    expect(out.worker_cli).toBe('codebuddy');
     expect(out.assigned_tasks).toEqual(['1', '2']);
   });
 

@@ -11,11 +11,11 @@ const MODEL_ENV_KEYS = [
   'CLAUDE_MODEL',
   'ANTHROPIC_MODEL',
   'ANTHROPIC_BASE_URL',
-  'CLAUDE_CODE_USE_BEDROCK',
-  'CLAUDE_CODE_USE_VERTEX',
-  'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-  'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-  'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+  'CODEBUDDY_CODE_USE_BEDROCK',
+  'CODEBUDDY_CODE_USE_VERTEX',
+  'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
   'ANTHROPIC_DEFAULT_OPUS_MODEL',
   'ANTHROPIC_DEFAULT_SONNET_MODEL',
   'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -87,9 +87,9 @@ describe('Agent Registry Validation', () => {
   });
 
   test('resolves agent models from env-based tier defaults when forceInherit is disabled', async () => {
-    process.env.CLAUDE_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
-    process.env.CLAUDE_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
-    process.env.CLAUDE_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
+    process.env.CODEBUDDY_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
+    process.env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
+    process.env.CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
 
     process.env.OMC_ROUTING_FORCE_INHERIT = 'false';
 

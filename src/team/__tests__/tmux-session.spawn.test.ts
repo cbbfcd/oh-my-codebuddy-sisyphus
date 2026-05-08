@@ -40,7 +40,7 @@ describe('spawnWorkerInPane', () => {
     );
     expect(literalSend).toBeDefined();
     const launchLine = literalSend?.[literalSend.length - 1] ?? '';
-    expect(launchLine).toContain('exec "$@"');
+    expect(launchLine).toMatch(/exec ("\$@"|\$argv)/);
     expect(launchLine).toContain("'--'");
     expect(launchLine).toContain("'gpt-5;touch /tmp/pwn'");
     expect(launchLine).not.toContain('exec codex --full-auto');

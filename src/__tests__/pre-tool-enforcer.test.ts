@@ -42,15 +42,15 @@ function runPreToolEnforcerWithEnv(
       CLAUDE_MODEL: '',
       ANTHROPIC_MODEL: '',
       ANTHROPIC_BASE_URL: '',
-      CLAUDE_CODE_USE_BEDROCK: '',
-      CLAUDE_CODE_USE_VERTEX: '',
+      CODEBUDDY_CODE_USE_BEDROCK: '',
+      CODEBUDDY_CODE_USE_VERTEX: '',
       // Reset tier-resolution chain env vars (resolveTierAliasToSafeModel reads these).
       OMC_MODEL_LOW: '',
       OMC_MODEL_MEDIUM: '',
       OMC_MODEL_HIGH: '',
-      CLAUDE_CODE_BEDROCK_HAIKU_MODEL: '',
-      CLAUDE_CODE_BEDROCK_SONNET_MODEL: '',
-      CLAUDE_CODE_BEDROCK_OPUS_MODEL: '',
+      CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL: '',
+      CODEBUDDY_CODE_BEDROCK_SONNET_MODEL: '',
+      CODEBUDDY_CODE_BEDROCK_OPUS_MODEL: '',
       ANTHROPIC_DEFAULT_HAIKU_MODEL: '',
       ANTHROPIC_DEFAULT_SONNET_MODEL: '',
       ANTHROPIC_DEFAULT_OPUS_MODEL: '',
@@ -686,7 +686,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
     expect(hookOutput.permissionDecisionReason as string).toContain('MODEL ROUTING');
   });
 
-  it('preserves provider-specific validation for CLAUDE_CODE_BEDROCK_*_MODEL in proxy mode', () => {
+  it('preserves provider-specific validation for CODEBUDDY_CODE_BEDROCK_*_MODEL in proxy mode', () => {
     const output = runPreToolEnforcerWithEnv(
       {
         tool_name: 'Agent',
@@ -697,7 +697,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
       {
         OMC_ROUTING_FORCE_INHERIT: 'true',
         OMC_SUBAGENT_MODEL: '',
-        CLAUDE_CODE_BEDROCK_SONNET_MODEL: 'glm-5.1:cloud',
+        CODEBUDDY_CODE_BEDROCK_SONNET_MODEL: 'glm-5.1:cloud',
         ANTHROPIC_DEFAULT_SONNET_MODEL: '',
       },
     );
@@ -793,7 +793,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
     expect(JSON.stringify(output)).not.toContain('MODEL ROUTING');
   });
 
-  it('resolves via CLAUDE_CODE_BEDROCK_SONNET_MODEL as sole configured env var', () => {
+  it('resolves via CODEBUDDY_CODE_BEDROCK_SONNET_MODEL as sole configured env var', () => {
     const output = runPreToolEnforcerWithEnv(
       {
         tool_name: 'Agent',
@@ -804,7 +804,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
       {
         OMC_ROUTING_FORCE_INHERIT: 'true',
         OMC_SUBAGENT_MODEL: '',
-        CLAUDE_CODE_BEDROCK_SONNET_MODEL: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        CODEBUDDY_CODE_BEDROCK_SONNET_MODEL: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
       },
     );
 
@@ -837,7 +837,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
 
   it('blocks tier alias when only OMC_MODEL_* is set (not a CC-side routing proof)', () => {
     // OMC_MODEL_* proves OMC-bridge routing, not CC model resolution. Without a CC-native
-    // var (ANTHROPIC_DEFAULT_* or CLAUDE_CODE_BEDROCK_*), CC cannot route the tier alias
+    // var (ANTHROPIC_DEFAULT_* or CODEBUDDY_CODE_BEDROCK_*), CC cannot route the tier alias
     // and the downstream Agent/Task call would fail — so the hook must deny.
     const output = runPreToolEnforcerWithEnv(
       {
@@ -851,7 +851,7 @@ describe('pre-tool-enforcer fallback gating (issue #970)', () => {
         OMC_SUBAGENT_MODEL: '',
         OMC_MODEL_MEDIUM: 'global.anthropic.claude-sonnet-4-6',
         ANTHROPIC_DEFAULT_SONNET_MODEL: '',
-        CLAUDE_CODE_BEDROCK_SONNET_MODEL: '',
+        CODEBUDDY_CODE_BEDROCK_SONNET_MODEL: '',
       },
     );
 

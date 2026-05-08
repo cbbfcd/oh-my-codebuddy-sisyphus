@@ -124,7 +124,7 @@ describe('getCodebuddyConfigDir', () => {
     // Spread process.env but override CLAUDE_CONFIG_DIR and HOME, and unset
     // CODEBUDDY_CONFIG_DIR so inherited values don't interfere.
     const { CODEBUDDY_CONFIG_DIR: _omit, ...restEnv } = process.env as Record<string, string | undefined>;
-    const output = execFileSync('bash', ['-c', `. "${join(process.cwd(), 'scripts', 'lib', 'config-dir.sh')}"; resolve_claude_config_dir`], {
+    const output = execFileSync('bash', ['-c', `. "${join(process.cwd(), 'scripts', 'lib', 'config-dir.sh')}"; resolve_codebuddy_config_dir`], {
       cwd: process.cwd(),
       env: {
         ...restEnv,

@@ -21,7 +21,7 @@ interface ProviderProbe {
 }
 
 const PROVIDER_BINARY: Record<TeamRoleProvider, string> = {
-  claude: 'codebuddy',
+  codebuddy: 'codebuddy',
   codex: 'codex',
   gemini: 'gemini',
 };

@@ -1217,7 +1217,7 @@ $ ultrawork search the codebase`,
             ppid: 999999,
             transcript_path: join(tempDir, '.codebuddy', 'projects', 'prior.jsonl'),
             source: 'startup',
-            model: 'claude-sonnet-4-6',
+            model: 'codebuddy-sonnet-4-6',
           }),
         );
 
@@ -1451,7 +1451,7 @@ $ ultrawork search the codebase`,
 
   describe('input normalization', () => {
     it('should normalize snake_case tool_name to camelCase toolName', async () => {
-      // Send snake_case input (as Claude Code would)
+      // Send snake_case input (as Codebuddy Code would)
       const rawInput = {
         session_id: 'test-session',
         tool_name: 'Bash',
@@ -1763,7 +1763,7 @@ $ ultrawork search the codebase`,
     it('snake_case input should be normalized and pass validation', async () => {
       const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      // Raw snake_case input as Claude Code would send
+      // Raw snake_case input as Codebuddy Code would send
       const rawInput = {
         session_id: 'test-session-xyz',
         cwd: '/tmp/test-routing',
@@ -1925,7 +1925,7 @@ $ ultrawork search the codebase`,
   // --------------------------------------------------------------------------
   // Regression #858 — snake_case fields must reach handlers after normalization
   //
-  // processHook() normalizes Claude Code's snake_case payload (session_id,
+  // processHook() normalizes Codebuddy Code's snake_case payload (session_id,
   // cwd, tool_name, tool_input) to camelCase before routing.  The handlers
   // for session-end, pre-compact, setup-init, setup-maintenance, and
   // permission-request all expect the original snake_case field names, so

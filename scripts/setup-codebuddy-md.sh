@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# setup-claude-md.sh - Unified CLAUDE.md download/merge script
-# Usage: setup-claude-md.sh <local|global> [overwrite|preserve]
+# setup-codebuddy-md.sh - Unified CODEBUDDY.md download/merge script
+# Usage: setup-codebuddy-md.sh <local|global> [overwrite|preserve]
 #
 # Handles: version extraction, backup, download, marker stripping, merge, version reporting.
 # For global mode, defaults to overwrite; preserve mode keeps the user's base
-# CLAUDE.md and writes OMC content to a companion file for `omc` launch.
+# CODEBUDDY.md and writes OMC content to a companion file for `omc` launch.
 
 set -euo pipefail
 
-MODE="${1:?Usage: setup-claude-md.sh <local|global> [overwrite|preserve]}"
+MODE="${1:?Usage: setup-codebuddy-md.sh <local|global> [overwrite|preserve]}"
 INSTALL_STYLE="${2:-overwrite}"
-DOWNLOAD_URL="https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy/main/docs/CLAUDE.md"
+DOWNLOAD_URL="https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy/main/docs/CODEBUDDY.md"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 . "$SCRIPT_DIR/lib/config-dir.sh"
@@ -22,7 +22,7 @@ SCRIPT_PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 resolve_active_plugin_root() {
   is_valid_plugin_root() {
     local candidate="$1"
-    [ -d "$candidate" ] && [ -f "${candidate}/docs/CLAUDE.md" ]
+    [ -d "$candidate" ] && [ -f "${candidate}/docs/CODEBUDDY.md" ]
   }
 
   list_cache_versions() {
@@ -31,7 +31,7 @@ resolve_active_plugin_root() {
   }
 
   local config_dir
-  config_dir="$(resolve_claude_config_dir)"
+  config_dir="$(resolve_codebuddy_config_dir)"
   local installed_plugins="${config_dir}/plugins/installed_plugins.json"
   local cache_base
   cache_base="$(dirname "$SCRIPT_PLUGIN_ROOT")"
@@ -89,7 +89,7 @@ resolve_active_plugin_root() {
 }
 
 ACTIVE_PLUGIN_ROOT="$(resolve_active_plugin_root)"
-CANONICAL_CLAUDE_MD="${ACTIVE_PLUGIN_ROOT}/docs/CLAUDE.md"
+CANONICAL_CLAUDE_MD="${ACTIVE_PLUGIN_ROOT}/docs/CODEBUDDY.md"
 CANONICAL_OMC_REFERENCE_SKILL="${ACTIVE_PLUGIN_ROOT}/skills/omc-reference/SKILL.md"
 
 ensure_local_omc_git_exclude() {
@@ -126,14 +126,14 @@ EOF
 }
 
 # Determine target path
-CONFIG_DIR="$(resolve_claude_config_dir)"
+CONFIG_DIR="$(resolve_codebuddy_config_dir)"
 if [ "$MODE" = "local" ]; then
   mkdir -p .codebuddy/skills/omc-reference
-  TARGET_PATH=".codebuddy/CLAUDE.md"
+  TARGET_PATH=".codebuddy/CODEBUDDY.md"
   SKILL_TARGET_PATH=".codebuddy/skills/omc-reference/SKILL.md"
 elif [ "$MODE" = "global" ]; then
   mkdir -p "$CONFIG_DIR/skills/omc-reference"
-  TARGET_PATH="$CONFIG_DIR/CLAUDE.md"
+  TARGET_PATH="$CONFIG_DIR/CODEBUDDY.md"
   SKILL_TARGET_PATH="$CONFIG_DIR/skills/omc-reference/SKILL.md"
 else
   echo "ERROR: Invalid mode '$MODE'. Use 'local' or 'global'." >&2
@@ -190,7 +190,7 @@ if [ -f "$TARGET_PATH" ]; then
   BACKUP_DATE=$(date +%Y-%m-%d_%H%M%S)
   BACKUP_PATH="${TARGET_PATH}.backup.${BACKUP_DATE}"
   cp "$TARGET_PATH" "$BACKUP_PATH"
-  echo "Backed up existing CLAUDE.md to $BACKUP_PATH"
+  echo "Backed up existing CODEBUDDY.md to $BACKUP_PATH"
 fi
 
 # Load canonical OMC content to temp file
@@ -214,13 +214,9 @@ write_wrapped_omc_file() {
 ensure_managed_companion_import() {
   local target_path="$1"
   local companion_name="$2"
-  local import_block
-  import_block=$(cat <<EOF
-$OMC_IMPORT_START
+  local import_block="$OMC_IMPORT_START
 @${companion_name}
-$OMC_IMPORT_END
-EOF
-)
+$OMC_IMPORT_END"
 
   if grep -Fq "$OMC_IMPORT_START" "$target_path"; then
     perl -0pe 's/^<!-- OMC:IMPORT:START -->\R[\s\S]*?^<!-- OMC:IMPORT:END -->(?:\R)?//msg' "$target_path" > "${target_path}.importless"
@@ -250,24 +246,24 @@ SOURCE_LABEL=""
 if [ -f "$CANONICAL_CLAUDE_MD" ]; then
   cp "$CANONICAL_CLAUDE_MD" "$TEMP_OMC"
   SOURCE_LABEL="$CANONICAL_CLAUDE_MD"
-elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -f "${CLAUDE_PLUGIN_ROOT}/docs/CLAUDE.md" ]; then
-  cp "${CLAUDE_PLUGIN_ROOT}/docs/CLAUDE.md" "$TEMP_OMC"
-  SOURCE_LABEL="${CLAUDE_PLUGIN_ROOT}/docs/CLAUDE.md"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -f "${CLAUDE_PLUGIN_ROOT}/docs/CODEBUDDY.md" ]; then
+  cp "${CLAUDE_PLUGIN_ROOT}/docs/CODEBUDDY.md" "$TEMP_OMC"
+  SOURCE_LABEL="${CLAUDE_PLUGIN_ROOT}/docs/CODEBUDDY.md"
 else
   curl -fsSL "$DOWNLOAD_URL" -o "$TEMP_OMC"
   SOURCE_LABEL="$DOWNLOAD_URL"
 fi
 
 if [ ! -s "$TEMP_OMC" ]; then
-  echo "ERROR: Failed to download CLAUDE.md. Aborting."
+  echo "ERROR: Failed to download CODEBUDDY.md. Aborting."
   echo "FALLBACK: Manually download from: $DOWNLOAD_URL"
   rm -f "$TEMP_OMC"
   exit 1
 fi
 
 if ! grep -q '<!-- OMC:START -->' "$TEMP_OMC" || ! grep -q '<!-- OMC:END -->' "$TEMP_OMC"; then
-  echo "ERROR: Canonical CLAUDE.md source is missing required OMC markers: $SOURCE_LABEL" >&2
-  echo "Refusing to install a summarized or malformed CLAUDE.md." >&2
+  echo "ERROR: Canonical CODEBUDDY.md source is missing required OMC markers: $SOURCE_LABEL" >&2
+  echo "Refusing to install a summarized or malformed CODEBUDDY.md." >&2
   exit 1
 fi
 
@@ -282,7 +278,7 @@ if [ ! -f "$TARGET_PATH" ]; then
   # Fresh install: wrap in markers
   write_wrapped_omc_file "$TARGET_PATH"
   rm -f "$TEMP_OMC"
-  echo "Installed CLAUDE.md (fresh)"
+  echo "Installed CODEBUDDY.md (fresh)"
 else
   # Merge: preserve user content outside OMC markers
   if grep -q '<!-- OMC:START -->' "$TARGET_PATH"; then
@@ -321,16 +317,16 @@ else
     echo "Updated OMC section (user customizations preserved)"
   elif [ "$MODE" = "global" ] && [ "$INSTALL_STYLE" = "preserve" ]; then
     COMPANION_TARGET_PATH="$CONFIG_DIR/$COMPANION_FILENAME"
-    ensure_not_symlink_path "$COMPANION_TARGET_PATH" "OMC companion CLAUDE.md"
-    ensure_not_symlink_path "$TARGET_PATH" "base CLAUDE.md import block"
+    ensure_not_symlink_path "$COMPANION_TARGET_PATH" "OMC companion CODEBUDDY.md"
+    ensure_not_symlink_path "$TARGET_PATH" "base CODEBUDDY.md import block"
     if [ -f "$COMPANION_TARGET_PATH" ] && [ -n "$BACKUP_DATE" ]; then
       cp "$COMPANION_TARGET_PATH" "${COMPANION_TARGET_PATH}.backup.${BACKUP_DATE}"
-      echo "Backed up existing companion CLAUDE.md to ${COMPANION_TARGET_PATH}.backup.${BACKUP_DATE}"
+      echo "Backed up existing companion CODEBUDDY.md to ${COMPANION_TARGET_PATH}.backup.${BACKUP_DATE}"
     fi
     write_wrapped_omc_file "$COMPANION_TARGET_PATH"
     ensure_managed_companion_import "$TARGET_PATH" "$COMPANION_FILENAME"
     VALIDATION_PATH="$COMPANION_TARGET_PATH"
-    echo "Installed OMC companion file and preserved existing CLAUDE.md"
+    echo "Installed OMC companion file and preserved existing CODEBUDDY.md"
   else
     # No markers: wrap new content in markers, append old content as user section
     # Strip any preserve-mode import block left by a prior preserve install
@@ -344,17 +340,17 @@ else
       cat "$TEMP_OMC"
       echo '<!-- OMC:END -->'
       echo ""
-      echo "<!-- User customizations (migrated from previous CLAUDE.md) -->"
+      echo "<!-- User customizations (migrated from previous CODEBUDDY.md) -->"
       printf '%s\n' "$OLD_CONTENT"
     } > "${TARGET_PATH}.tmp"
     mv "${TARGET_PATH}.tmp" "$TARGET_PATH"
-    echo "Migrated existing CLAUDE.md (added OMC markers, preserved old content)"
+    echo "Migrated existing CODEBUDDY.md (added OMC markers, preserved old content)"
   fi
   rm -f "$TEMP_OMC"
 
   # Clean up orphaned companion file from a prior preserve-mode install.
   # If left behind, prepareOmcLaunchConfigDir reads stale companion content
-  # instead of the freshly-updated CLAUDE.md during omc launches.
+  # instead of the freshly-updated CODEBUDDY.md during omc launches.
   if [ "$MODE" = "global" ] && [ "$INSTALL_STYLE" = "overwrite" ]; then
     COMPANION_TARGET_PATH="$CONFIG_DIR/$COMPANION_FILENAME"
     if [ -f "$COMPANION_TARGET_PATH" ]; then
@@ -368,7 +364,7 @@ else
 fi
 
 if ! grep -q '<!-- OMC:START -->' "$VALIDATION_PATH" || ! grep -q '<!-- OMC:END -->' "$VALIDATION_PATH"; then
-  echo "ERROR: Installed CLAUDE.md is missing required OMC markers: $VALIDATION_PATH" >&2
+  echo "ERROR: Installed CODEBUDDY.md is missing required OMC markers: $VALIDATION_PATH" >&2
   exit 1
 fi
 
@@ -387,11 +383,11 @@ if [ -z "$NEW_VERSION" ]; then
   NEW_VERSION="unknown"
 fi
 if [ "$OLD_VERSION" = "none" ]; then
-  echo "Installed CLAUDE.md: $NEW_VERSION"
+  echo "Installed CODEBUDDY.md: $NEW_VERSION"
 elif [ "$OLD_VERSION" = "$NEW_VERSION" ]; then
-  echo "CLAUDE.md unchanged: $NEW_VERSION"
+  echo "CODEBUDDY.md unchanged: $NEW_VERSION"
 else
-  echo "Updated CLAUDE.md: $OLD_VERSION -> $NEW_VERSION"
+  echo "Updated CODEBUDDY.md: $OLD_VERSION -> $NEW_VERSION"
 fi
 
 # Legacy hooks cleanup (global mode only)

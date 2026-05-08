@@ -16,15 +16,15 @@ describe('AC-3: behavior snapshot — empty config preserves pre-patch /team sem
   it('every canonical role resolves to provider=claude when no routing is configured', () => {
     for (const role of CANONICAL_TEAM_ROLES) {
       const out = resolveRoleAssignment(role, EMPTY);
-      expect(out.provider, `role=${role}`).toBe('claude');
+      expect(out.provider, `role=${role}`).toBe('codebuddy');
     }
   });
 
   it('snapshot primary === fallback when no roles are externally routed', () => {
     const snap = buildResolvedRoutingSnapshot(EMPTY);
     for (const role of CANONICAL_TEAM_ROLES) {
-      expect(snap[role].primary.provider).toBe('claude');
-      expect(snap[role].fallback.provider).toBe('claude');
+      expect(snap[role].primary.provider).toBe('codebuddy');
+      expect(snap[role].fallback.provider).toBe('codebuddy');
       expect(snap[role].primary.model).toBe(snap[role].fallback.model);
       expect(snap[role].primary.agent).toBe(snap[role].fallback.agent);
     }
@@ -46,8 +46,8 @@ describe('AC-3: behavior snapshot — empty config preserves pre-patch /team sem
       team: { roleRouting: { orchestrator: { model: 'HIGH' } } },
     };
     const snap = buildResolvedRoutingSnapshot(cfg);
-    expect(snap.orchestrator.primary.provider).toBe('claude');
-    expect(snap.orchestrator.fallback.provider).toBe('claude');
+    expect(snap.orchestrator.primary.provider).toBe('codebuddy');
+    expect(snap.orchestrator.fallback.provider).toBe('codebuddy');
   });
 
   it('externally-routed role keeps non-routed siblings on claude (per-role isolation)', () => {
@@ -59,7 +59,7 @@ describe('AC-3: behavior snapshot — empty config preserves pre-patch /team sem
     // Siblings: every other role still claude
     for (const role of CANONICAL_TEAM_ROLES) {
       if (role === 'critic') continue;
-      expect(snap[role].primary.provider, `sibling role=${role}`).toBe('claude');
+      expect(snap[role].primary.provider, `sibling role=${role}`).toBe('codebuddy');
     }
   });
 

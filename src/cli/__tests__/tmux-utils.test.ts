@@ -24,7 +24,7 @@ import {
   buildTmuxShellCommand,
   buildTmuxShellCommandWithEnv,
   createHudWatchPane,
-  isClaudeAvailable,
+  isCodebuddyAvailable,
   killTmuxPane,
   listHudWatchPaneIdsInCurrentWindow,
   resolveLaunchPolicy,
@@ -167,13 +167,13 @@ describe('resolveLaunchPolicy', () => {
   });
 });
 
-describe('isClaudeAvailable', () => {
+describe('isCodebuddyAvailable', () => {
   it('uses shell:true on win32 so npm .cmd wrappers resolve', () => {
     const originalPlatform = process.platform;
     Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
     mockedExecFileSync.mockReturnValue(Buffer.from('2.1.116'));
 
-    expect(isClaudeAvailable()).toBe(true);
+    expect(isCodebuddyAvailable()).toBe(true);
     expect(mockedExecFileSync).toHaveBeenCalledWith('codebuddy', ['--version'], {
       stdio: 'ignore',
       shell: true,

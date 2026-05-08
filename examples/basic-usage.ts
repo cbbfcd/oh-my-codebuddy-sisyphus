@@ -1,7 +1,7 @@
 /**
  * Basic Usage Example
  *
- * This example demonstrates how to use Oh-My-ClaudeCode
+ * This example demonstrates how to use Oh-My-Codebuddy
  * with the Claude Agent SDK.
  */
 
@@ -12,7 +12,7 @@ import { createOmcSession, enhancePrompt } from '../src/index.js';
 // import { query } from '@tencent-ai/agent-sdk';
 
 async function main() {
-  console.log('=== Oh-My-ClaudeCode Example ===\n');
+  console.log('=== Oh-My-Codebuddy Example ===\n');
 
   // Create a OMC session
   const session = createOmcSession({

@@ -19,14 +19,14 @@ describe('isNonClaudeProvider (issue #1201)', () => {
     'ANTHROPIC_MODEL',
     'ANTHROPIC_BASE_URL',
     'OMC_ROUTING_FORCE_INHERIT',
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
     'OMC_MODEL_HIGH',
     'OMC_MODEL_MEDIUM',
     'OMC_MODEL_LOW',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -105,8 +105,8 @@ describe('isNonClaudeProvider (issue #1201)', () => {
 
   // --- Bedrock detection ---
 
-  it('returns true when CLAUDE_CODE_USE_BEDROCK=1', () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+  it('returns true when CODEBUDDY_CODE_USE_BEDROCK=1', () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
     expect(isNonClaudeProvider()).toBe(true);
   });
 
@@ -132,8 +132,8 @@ describe('isNonClaudeProvider (issue #1201)', () => {
 
   // --- Vertex AI detection ---
 
-  it('returns true when CLAUDE_CODE_USE_VERTEX=1', () => {
-    process.env.CLAUDE_CODE_USE_VERTEX = '1';
+  it('returns true when CODEBUDDY_CODE_USE_VERTEX=1', () => {
+    process.env.CODEBUDDY_CODE_USE_VERTEX = '1';
     expect(isNonClaudeProvider()).toBe(true);
   });
 
@@ -145,7 +145,7 @@ describe('isNonClaudeProvider (issue #1201)', () => {
 
 describe('isBedrock()', () => {
   const savedEnv: Record<string, string | undefined> = {};
-  const envKeys = ['CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL'];
+  const envKeys = ['CODEBUDDY_CODE_USE_BEDROCK', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL'];
 
   beforeEach(() => {
     for (const key of envKeys) {
@@ -164,17 +164,17 @@ describe('isBedrock()', () => {
     }
   });
 
-  it('returns true when CLAUDE_CODE_USE_BEDROCK=1', () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+  it('returns true when CODEBUDDY_CODE_USE_BEDROCK=1', () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
     expect(isBedrock()).toBe(true);
   });
 
-  it('returns false when CLAUDE_CODE_USE_BEDROCK is not set', () => {
+  it('returns false when CODEBUDDY_CODE_USE_BEDROCK is not set', () => {
     expect(isBedrock()).toBe(false);
   });
 
-  it('returns false when CLAUDE_CODE_USE_BEDROCK=0', () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '0';
+  it('returns false when CODEBUDDY_CODE_USE_BEDROCK=0', () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '0';
     expect(isBedrock()).toBe(false);
   });
 
@@ -221,7 +221,7 @@ describe('isBedrock()', () => {
 
 describe('isVertexAI()', () => {
   const savedEnv: Record<string, string | undefined> = {};
-  const envKeys = ['CLAUDE_CODE_USE_VERTEX', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL'];
+  const envKeys = ['CODEBUDDY_CODE_USE_VERTEX', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL'];
 
   beforeEach(() => {
     for (const key of envKeys) {
@@ -240,17 +240,17 @@ describe('isVertexAI()', () => {
     }
   });
 
-  it('returns true when CLAUDE_CODE_USE_VERTEX=1', () => {
-    process.env.CLAUDE_CODE_USE_VERTEX = '1';
+  it('returns true when CODEBUDDY_CODE_USE_VERTEX=1', () => {
+    process.env.CODEBUDDY_CODE_USE_VERTEX = '1';
     expect(isVertexAI()).toBe(true);
   });
 
-  it('returns false when CLAUDE_CODE_USE_VERTEX is not set', () => {
+  it('returns false when CODEBUDDY_CODE_USE_VERTEX is not set', () => {
     expect(isVertexAI()).toBe(false);
   });
 
-  it('returns false when CLAUDE_CODE_USE_VERTEX=0', () => {
-    process.env.CLAUDE_CODE_USE_VERTEX = '0';
+  it('returns false when CODEBUDDY_CODE_USE_VERTEX=0', () => {
+    process.env.CODEBUDDY_CODE_USE_VERTEX = '0';
     expect(isVertexAI()).toBe(false);
   });
 
@@ -287,14 +287,14 @@ describe('loadConfig auto-enables forceInherit for non-Claude providers (issue #
     'ANTHROPIC_MODEL',
     'ANTHROPIC_BASE_URL',
     'OMC_ROUTING_FORCE_INHERIT',
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
     'OMC_MODEL_HIGH',
     'OMC_MODEL_MEDIUM',
     'OMC_MODEL_LOW',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -362,8 +362,8 @@ describe('loadConfig auto-enables forceInherit for non-Claude providers (issue #
 
   // --- Bedrock integration ---
 
-  it('auto-enables forceInherit when CLAUDE_CODE_USE_BEDROCK=1', () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+  it('auto-enables forceInherit when CODEBUDDY_CODE_USE_BEDROCK=1', () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
     const config = loadConfig();
     expect(config.routing?.forceInherit).toBe(true);
   });
@@ -375,7 +375,7 @@ describe('loadConfig auto-enables forceInherit for non-Claude providers (issue #
   });
 
   it('respects explicit OMC_ROUTING_FORCE_INHERIT=false even on Bedrock', () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
     process.env.OMC_ROUTING_FORCE_INHERIT = 'false';
     const config = loadConfig();
     expect(config.routing?.forceInherit).toBe(false);
@@ -383,8 +383,8 @@ describe('loadConfig auto-enables forceInherit for non-Claude providers (issue #
 
   // --- Vertex AI integration ---
 
-  it('auto-enables forceInherit when CLAUDE_CODE_USE_VERTEX=1', () => {
-    process.env.CLAUDE_CODE_USE_VERTEX = '1';
+  it('auto-enables forceInherit when CODEBUDDY_CODE_USE_VERTEX=1', () => {
+    process.env.CODEBUDDY_CODE_USE_VERTEX = '1';
     const config = loadConfig();
     expect(config.routing?.forceInherit).toBe(true);
   });

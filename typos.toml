@@ -2,5 +2,5 @@
 # https://github.com/crate-ci/typos
 
 [default.extend-words]
-# Claude API uses "preceeding" in error messages - must match exactly
+# CodeBuddy API uses "preceeding" in error messages - must match exactly
 preceeding = "preceeding"

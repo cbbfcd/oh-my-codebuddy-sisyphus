@@ -24,11 +24,11 @@ import { renderSkillResourcesGuidance } from '../../utils/skill-resources.js';
 import { renderSkillRuntimeGuidance } from '../../features/builtin-skills/runtime-guidance.js';
 import { getSkillsDir, renderBundledSkillBody } from '../../features/builtin-skills/skills.js';
 
-/** Claude config directory */
+/** Codebuddy config directory */
 const CODEBUDDY_CONFIG_DIR = getCodebuddyConfigDir();
 
 /**
- * Claude Code native commands that must not be shadowed by user skills.
+ * Codebuddy Code native commands that must not be shadowed by user skills.
  * Skills whose canonical name or alias matches one of these will be prefixed
  * with `omc-` to avoid overriding built-in CC slash commands.
  */
@@ -356,7 +356,7 @@ export function executeSlashCommand(parsed: ParsedSlashCommand): ExecuteResult {
   if (!command) {
     return {
       success: false,
-      error: `Command "/${parsed.command}" not found. Available commands are in ${CODEBUDDY_CONFIG_DIR}/commands/ or .claude/commands/`,
+      error: `Command "/${parsed.command}" not found. Available commands are in ${CODEBUDDY_CONFIG_DIR}/commands/ or .codebuddy/commands/`,
     };
   }
 

@@ -90,7 +90,7 @@ vi.mock('../tmux-utils.js', async () => {
   const actual = await vi.importActual<typeof import('../tmux-utils.js')>('../tmux-utils.js');
   return {
     ...actual,
-    isClaudeAvailable: () => true,
+    isCodebuddyAvailable: () => true,
     resolveLaunchPolicy: () => 'direct' as const,
   };
 });

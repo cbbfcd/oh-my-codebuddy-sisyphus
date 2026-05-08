@@ -1,7 +1,7 @@
 /**
  * Advanced Usage Example
  *
- * This example demonstrates advanced features of Oh-My-ClaudeCode:
+ * This example demonstrates advanced features of Oh-My-Codebuddy:
  * - Custom agent configuration
  * - Custom system prompts
  * - Context file injection
@@ -16,7 +16,7 @@ import {
 } from '../src/index.js';
 
 async function main() {
-  console.log('=== Advanced Oh-My-ClaudeCode Example ===\n');
+  console.log('=== Advanced Oh-My-Codebuddy Example ===\n');
 
   // Example 1: Custom agent configuration
   console.log('Example 1: Custom Agents');

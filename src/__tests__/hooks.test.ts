@@ -583,7 +583,7 @@ describe('Team staged workflow integration', () => {
   });
 
   it('compacts OMC-style root AGENTS guidance on session-start without dropping key sections', async () => {
-    const agentsContent = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+    const agentsContent = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>
 schema

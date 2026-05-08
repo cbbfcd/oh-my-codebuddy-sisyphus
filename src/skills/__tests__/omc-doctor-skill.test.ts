@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 describe('omc-doctor skill (issue #2254)', () => {
-  it('documents CLAUDE.md OMC version drift check against cached plugin version', () => {
+  it('documents CODEBUDDY.md OMC version drift check against cached plugin version', () => {
     const skillPath = join(process.cwd(), 'skills', 'omc-doctor', 'SKILL.md');
     const content = readFileSync(skillPath, 'utf8');
 

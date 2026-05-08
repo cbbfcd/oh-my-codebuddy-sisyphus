@@ -94,12 +94,12 @@ jobs:
       - name: Check version consistency
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
-          PLUGIN_VERSION=$(node -p "require('./.claude-plugin/plugin.json').version")
-          MARKET_VERSION=$(node -p "require('./.claude-plugin/marketplace.json').version")
+          PLUGIN_VERSION=$(node -p "require('./.codebuddy-plugin/plugin.json').version")
+          MARKET_VERSION=$(node -p "require('./.codebuddy-plugin/marketplace.json').version")
           
           echo "package.json:              $PKG_VERSION"
-          echo ".claude-plugin/plugin.json: $PLUGIN_VERSION"
-          echo ".claude-plugin/marketplace.json: $MARKET_VERSION"
+          echo ".codebuddy-plugin/plugin.json: $PLUGIN_VERSION"
+          echo ".codebuddy-plugin/marketplace.json: $MARKET_VERSION"
           
           if [ "$PKG_VERSION" != "$PLUGIN_VERSION" ] || [ "$PKG_VERSION" != "$MARKET_VERSION" ]; then
             echo ""
@@ -138,7 +138,7 @@ jobs:
           echo "📦 Creating tarball..."
           npm pack
           
-          TARBALL=$(ls -t oh-my-claude-sisyphus-*.tgz | head -1)
+          TARBALL=$(ls -t oh-my-codebuddy-*.tgz | head -1)
           echo "📦 Tarball: $TARBALL"
           
           echo "📦 Testing global install from tarball..."

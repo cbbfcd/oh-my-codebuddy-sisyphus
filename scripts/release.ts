@@ -253,13 +253,13 @@ function bumpVersionFiles(newVersion: string, dryRun: boolean): string[] {
     }
   }
 
-  const claudeMdPath = join(ROOT, 'docs/CLAUDE.md');
+  const claudeMdPath = join(ROOT, 'docs/CODEBUDDY.md');
   if (existsSync(claudeMdPath)) {
     const content = readFileSync(claudeMdPath, 'utf-8');
     const updated = content.replace(/<!-- OMC:VERSION:[^\s]*? -->/, `<!-- OMC:VERSION:${newVersion} -->`);
     if (content !== updated) {
       if (!dryRun) writeFileSync(claudeMdPath, updated, 'utf-8');
-      changes.push(`docs/CLAUDE.md: version marker → ${newVersion}`);
+      changes.push(`docs/CODEBUDDY.md: version marker → ${newVersion}`);
     }
   }
 
@@ -318,7 +318,7 @@ ${clr('Examples:', c.cyan)}
   npm run release -- patch --dry-run    # Preview without writing
 
 ${clr('What it does:', c.cyan)}
-  1. Bumps version in all 5 files (package.json, plugin.json, marketplace.json, docs/CLAUDE.md, lockfile)
+  1. Bumps version in all 5 files (package.json, plugin.json, marketplace.json, docs/CODEBUDDY.md, lockfile)
   2. Generates CHANGELOG.md from the merged PR set when metadata is available
   3. Generates .github/release-body.md with contributor @mentions
   4. Runs sync-metadata to update doc badges

@@ -28,11 +28,11 @@ OMC ships two surfaces and they are designed to coexist:
 | Surface | What you get | Recommended install |
 |---|---|---|
 | **CodeBuddy Code plugin** (`oh-my-codebuddy@omc`) | In-session skills, agents, hooks, statusline, MCP servers — the `/autopilot`, `/ralph`, `/ultrawork`, `/team` slash commands | Marketplace plugin install (Step 1–2 below) |
-| **Terminal CLI** (`omc` binary, package `oh-my-claude-sisyphus`) | Shell commands: `omcb setup`, `omcb update`, `omcb team`, `omcb ask`, and a hard-deprecated `omcb autoresearch` shim | `npm i -g oh-my-claude-sisyphus@latest` |
+| **Terminal CLI** (`omc` binary, package `oh-my-codebuddy-sisyphus`) | Shell commands: `omcb setup`, `omcb update`, `omcb team`, `omcb ask`, and a hard-deprecated `omcb autoresearch` shim | `npm i -g oh-my-codebuddy-sisyphus@latest` |
 
 Most users want **both**: the plugin for the in-session experience, and the npm CLI for shell-side automation and updates. Running them in parallel is fully supported — `omcb update` and `omcb setup` are idempotent and detect the plugin install to avoid duplicating in-session skills (#2252).
 
-> Older versions of this doc said OMC was "plugin-only". That was incorrect: the `omc` CLI is the canonical entry point for `omcb setup`/`omcb update` and is published on npm as `oh-my-claude-sisyphus`. See the [Quick Start in README.md](../README.md#quick-start) for the same two-path layout.
+> Older versions of this doc said OMC was "plugin-only". That was incorrect: the `omc` CLI is the canonical entry point for `omcb setup`/`omcb update` and is published on npm as `oh-my-codebuddy-sisyphus`. See the [Quick Start in README.md](../README.md#quick-start) for the same two-path layout.
 
 ### Step 1: Add the marketplace source
 
@@ -55,7 +55,7 @@ After adding the marketplace, install the plugin:
 If you want `omcb setup`, `omcb update`, `omcb team`, `omcb ask`, etc. on your shell:
 
 ```bash
-npm i -g oh-my-claude-sisyphus@latest
+npm i -g oh-my-codebuddy-sisyphus@latest
 ```
 
 > **Known npm warning:** npm may print `deprecated prebuild-install@7.1.3` during this CLI install.

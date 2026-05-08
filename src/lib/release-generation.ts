@@ -248,7 +248,7 @@ export function generateReleaseBody(
 
   body += `\n### Install / Update\n\n`;
   body += '```bash\n';
-  body += `npm install -g oh-my-claude-sisyphus@${version}\n`;
+  body += `npm install -g oh-my-codebuddy-sisyphus@${version}\n`;
   body += '```\n\n';
   body += 'Or reinstall the plugin:\n```bash\nclaude /install-plugin oh-my-codebuddy\n```\n';
 

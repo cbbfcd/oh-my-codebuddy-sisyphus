@@ -6,7 +6,7 @@ node_modules/
 !.omc/skills/
 !.omc/skills/**
 .idea/
-.claude/
+.codebuddy/
 
 # Windows reserved names (prevent accidental creation)
 nul

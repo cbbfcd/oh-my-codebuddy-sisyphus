@@ -11,8 +11,8 @@ import {
 import { saveAndClear, restore } from "./test-helpers.js";
 
 const ALL_KEYS = [
-  "CLAUDE_CODE_USE_BEDROCK",
-  "CLAUDE_CODE_USE_VERTEX",
+  "CODEBUDDY_CODE_USE_BEDROCK",
+  "CODEBUDDY_CODE_USE_VERTEX",
   "CLAUDE_MODEL",
   "ANTHROPIC_MODEL",
   "ANTHROPIC_BASE_URL",
@@ -20,9 +20,9 @@ const ALL_KEYS = [
   "OMC_MODEL_HIGH",
   "OMC_MODEL_MEDIUM",
   "OMC_MODEL_LOW",
-  "CLAUDE_CODE_BEDROCK_OPUS_MODEL",
-  "CLAUDE_CODE_BEDROCK_SONNET_MODEL",
-  "CLAUDE_CODE_BEDROCK_HAIKU_MODEL",
+  "CODEBUDDY_CODE_BEDROCK_OPUS_MODEL",
+  "CODEBUDDY_CODE_BEDROCK_SONNET_MODEL",
+  "CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL",
   "ANTHROPIC_DEFAULT_OPUS_MODEL",
   "ANTHROPIC_DEFAULT_SONNET_MODEL",
   "ANTHROPIC_DEFAULT_HAIKU_MODEL",
@@ -49,8 +49,8 @@ describe("loadConfig() — auto-forceInherit for non-standard providers", () => 
     expect(config.routing?.forceInherit).toBe(true);
   });
 
-  it("auto-enables forceInherit when CLAUDE_CODE_USE_BEDROCK=1", () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = "1";
+  it("auto-enables forceInherit when CODEBUDDY_CODE_USE_BEDROCK=1", () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = "1";
     const config = loadConfig();
     expect(config.routing?.forceInherit).toBe(true);
   });
@@ -68,8 +68,8 @@ describe("loadConfig() — auto-forceInherit for non-standard providers", () => 
     expect(config.routing?.forceInherit).toBe(true);
   });
 
-  it("auto-enables forceInherit when CLAUDE_CODE_USE_VERTEX=1", () => {
-    process.env.CLAUDE_CODE_USE_VERTEX = "1";
+  it("auto-enables forceInherit when CODEBUDDY_CODE_USE_VERTEX=1", () => {
+    process.env.CODEBUDDY_CODE_USE_VERTEX = "1";
     const config = loadConfig();
     expect(config.routing?.forceInherit).toBe(true);
   });
@@ -131,11 +131,11 @@ describe("loadConfig() — auto-forceInherit for non-standard providers", () => 
   });
 
   it("maps Bedrock family env vars into agent defaults and routing tiers", () => {
-    process.env.CLAUDE_CODE_BEDROCK_OPUS_MODEL =
+    process.env.CODEBUDDY_CODE_BEDROCK_OPUS_MODEL =
       "us.anthropic.claude-opus-4-6-v1:0";
-    process.env.CLAUDE_CODE_BEDROCK_SONNET_MODEL =
+    process.env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL =
       "us.anthropic.claude-sonnet-4-6-v1:0";
-    process.env.CLAUDE_CODE_BEDROCK_HAIKU_MODEL =
+    process.env.CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL =
       "us.anthropic.claude-haiku-4-5-v1:0";
 
     const config = loadConfig();
@@ -179,7 +179,7 @@ describe("startup context compaction", () => {
 
     try {
       const omcAgentsPath = join(tempDir, "AGENTS.md");
-      const omcGuidance = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+      const omcGuidance = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>
 schema
@@ -229,9 +229,9 @@ schema
 
     try {
       const fileA = join(tempDir, "AGENTS.md");
-      const fileB = join(tempDir, "nested", "CLAUDE.md");
+      const fileB = join(tempDir, "nested", "CODEBUDDY.md");
       require("node:fs").mkdirSync(join(tempDir, "nested"), { recursive: true });
-      const largeSection = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+      const largeSection = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 
@@ -256,7 +256,7 @@ ${"- keep this\n".repeat(900)}
   });
 
   it("caps very large OMC guidance after preserving high-value sections", () => {
-    const largeOmc = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+    const largeOmc = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>
 schema

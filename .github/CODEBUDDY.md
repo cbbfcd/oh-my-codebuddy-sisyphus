@@ -21,7 +21,7 @@ Route code to `executor` (use `model=opus` for complex work). Uncertain SDK usag
 
 <model_routing>
 `haiku` (quick lookups), `sonnet` (standard), `opus` (architecture, deep analysis).
-Direct writes OK for: `~/.claude/**`, `.omc/**`, `.claude/**`, `CLAUDE.md`, `AGENTS.md`.
+Direct writes OK for: `~/.claude/**`, `.omc/**`, `.claude/**`, `CODEBUDDY.md`, `AGENTS.md`.
 </model_routing>
 
 <agent_catalog>

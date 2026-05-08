@@ -1,6 +1,6 @@
 # OMC Seminar Demo Scripts
 
-This directory contains demo scripts for showcasing Oh-My-ClaudeCode's capabilities.
+This directory contains demo scripts for showcasing Oh-My-Codebuddy's capabilities.
 
 ## Overview
 
@@ -47,7 +47,7 @@ echo "HUD should display in your terminal prompt"
 ## Demo Flow
 
 ### Opening (1 min)
-"Today I'll show you Oh-My-ClaudeCode - a multi-agent orchestration system that transforms Claude from a single assistant into a coordinated team of specialists. Instead of doing everything yourself, you conduct a symphony of AI agents, each optimized for specific tasks."
+"Today I'll show you Oh-My-Codebuddy - a multi-agent orchestration system that transforms Claude from a single assistant into a coordinated team of specialists. Instead of doing everything yourself, you conduct a symphony of AI agents, each optimized for specific tasks."
 
 ### Demo Sequence (15 min)
 1. **Demo 1: Autopilot** - "The flagship experience - say what you want, get working code"

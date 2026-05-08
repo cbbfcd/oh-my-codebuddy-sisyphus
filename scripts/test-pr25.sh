@@ -20,7 +20,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 . "$SCRIPT_DIR/lib/config-dir.sh"
-CLAUDE_DIR="$(resolve_claude_config_dir)"
+CODEBUDDY_DIR="$(resolve_codebuddy_config_dir)"
 
 # Colors
 RED='\033[0;31m'
@@ -192,23 +192,23 @@ if node dist/cli/index.js postinstall &> /tmp/pr25-postinstall.log; then
     log_pass "Installer postinstall succeeded"
 
     # Verify file exists
-    if [ -f "$CLAUDE_DIR/agents/qa-tester.md" ]; then
-        log_pass "qa-tester.md installed to $CLAUDE_DIR/agents/"
+    if [ -f "$CODEBUDDY_DIR/agents/qa-tester.md" ]; then
+        log_pass "qa-tester.md installed to $CODEBUDDY_DIR/agents/"
 
         # Verify content
-        if grep -q "tmux" "$CLAUDE_DIR/agents/qa-tester.md"; then
+        if grep -q "tmux" "$CODEBUDDY_DIR/agents/qa-tester.md"; then
             log_pass "qa-tester.md contains tmux content"
         else
             log_fail "qa-tester.md missing tmux content"
         fi
 
-        if grep -q "Architect" "$CLAUDE_DIR/agents/qa-tester.md"; then
+        if grep -q "Architect" "$CODEBUDDY_DIR/agents/qa-tester.md"; then
             log_pass "qa-tester.md contains Architect collaboration section"
         else
             log_fail "qa-tester.md missing Architect collaboration section"
         fi
     else
-        log_fail "qa-tester.md NOT installed to $CLAUDE_DIR/agents/"
+        log_fail "qa-tester.md NOT installed to $CODEBUDDY_DIR/agents/"
     fi
 else
     log_fail "Installer postinstall failed"

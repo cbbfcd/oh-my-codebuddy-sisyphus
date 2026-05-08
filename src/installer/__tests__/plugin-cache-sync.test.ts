@@ -19,12 +19,12 @@ function writePayloadTree(root: string, version = '9.9.9-test'): void {
   writeFile(join(root, 'skills', 'plan', 'SKILL.md'), '# plan\n');
   writeFile(join(root, 'agents', 'executor.md'), '# executor\n');
   writeFile(join(root, 'templates', 'deliverables.json'), '{}\n');
-  writeFile(join(root, 'docs', 'CLAUDE.md'), '# docs\n');
+  writeFile(join(root, 'docs', 'CODEBUDDY.md'), '# docs\n');
   writeFile(join(root, '.claude-plugin', 'plugin.json'), '{"name":"oh-my-codebuddy"}\n');
   writeFile(join(root, '.mcp.json'), '{}\n');
   writeFile(join(root, 'README.md'), '# readme\n');
   writeFile(join(root, 'LICENSE'), 'MIT\n');
-  writeFile(join(root, 'package.json'), JSON.stringify({ name: 'oh-my-claude-sisyphus', version }, null, 2));
+  writeFile(join(root, 'package.json'), JSON.stringify({ name: 'oh-my-codebuddy-sisyphus', version }, null, 2));
 }
 
 async function freshInstaller() {

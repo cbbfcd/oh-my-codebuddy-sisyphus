@@ -8,9 +8,9 @@ vi.mock('fs', async () => {
   const { join: pathJoin } = await import('path');
   const repoRoot = process.cwd();
   const sourceAgentsDir = pathJoin(repoRoot, 'src', 'agents');
-  const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CLAUDE.md');
+  const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CODEBUDDY.md');
   const realAgentsDir = pathJoin(repoRoot, 'agents');
-  const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CLAUDE.md');
+  const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CODEBUDDY.md');
 
   const withRedirect = (pathLike: unknown): string => {
     const normalized = String(pathLike).replace(/\\/g, '/');

@@ -11,16 +11,16 @@ import { createRequire } from 'node:module';
 import { homedir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { getClaudeConfigDir } from './lib/config-dir.mjs';
+import { getCodebuddyConfigDir } from './lib/config-dir.mjs';
 import { buildHudWrapper } from './lib/hud-wrapper-template.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const CLAUDE_DIR = getClaudeConfigDir();
-const HUD_DIR = join(CLAUDE_DIR, 'hud');
+const CODEBUDDY_DIR = getCodebuddyConfigDir();
+const HUD_DIR = join(CODEBUDDY_DIR, 'hud');
 const HUD_LIB_DIR = join(HUD_DIR, 'lib');
-const SETTINGS_FILE = join(CLAUDE_DIR, 'settings.json');
+const SETTINGS_FILE = join(CODEBUDDY_DIR, 'settings.json');
 // Use the absolute node binary path so nvm/fnm users don't get
 // "node not found" errors in non-interactive shells (issue #892).
 const nodeBin = process.execPath || 'node';
@@ -72,7 +72,7 @@ try {
 
   // Persist the node binary path to .omc-config.json for use by find-node.sh
   try {
-    const configPath = join(CLAUDE_DIR, '.omc-config.json');
+    const configPath = join(CODEBUDDY_DIR, '.omc-config.json');
     let omcConfig = {};
     if (existsSync(configPath)) {
       omcConfig = JSON.parse(readFileSync(configPath, 'utf-8'));
@@ -92,14 +92,14 @@ try {
 // Patch hooks.json to use the absolute node binary path so hooks work on all
 // platforms: Windows (no `sh`), nvm/fnm users (node not on PATH in hooks), etc.
 //
-// The source hooks.json uses shell-expanded `$CLAUDE_PLUGIN_ROOT` path segments
+// The source hooks.json uses shell-expanded `$CODEBUDDY_PLUGIN_ROOT` path segments
 // so bash preserves spaces in Windows profile paths; this step only substitutes
-// the real process.execPath so Claude Code always invokes the same Node binary
+// the real process.execPath so Codebuddy Code always invokes the same Node binary
 // that ran this setup script.
 //
 // Two patterns are handled:
-//  1. New format  – node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs ... (all platforms)
-//  2. Old format  – sh  "${CLAUDE_PLUGIN_ROOT}/scripts/find-node.sh" ... (Windows
+//  1. New format  – node "$CODEBUDDY_PLUGIN_ROOT"/scripts/run.cjs ... (all platforms)
+//  2. Old format  – sh  "${CODEBUDDY_PLUGIN_ROOT}/scripts/find-node.sh" ... (Windows
 //     backward-compat: migrates old installs to the new run.cjs chain)
 //
 // Fixes issues #909, #899, #892, #869.
@@ -111,7 +111,7 @@ try {
 
     // Pattern 2 (old, Windows backward-compat): sh find-node.sh <target> [args]
     const findNodePattern =
-      /^sh "\$\{CLAUDE_PLUGIN_ROOT\}\/scripts\/find-node\.sh" "\$\{CLAUDE_PLUGIN_ROOT\}\/scripts\/([^"]+)"(.*)$/;
+      /^sh "\$\{CODEBUDDY_PLUGIN_ROOT\}\/scripts\/find-node\.sh" "\$\{CODEBUDDY_PLUGIN_ROOT\}\/scripts\/([^"]+)"(.*)$/;
 
     for (const groups of Object.values(data.hooks ?? {})) {
       for (const group of groups) {
@@ -153,7 +153,7 @@ try {
           if (process.platform === 'win32') {
             const m2 = hook.command.match(findNodePattern);
             if (m2) {
-              hook.command = `"${nodeBin}" "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs "$CLAUDE_PLUGIN_ROOT"/scripts/${m2[1]}${m2[2]}`;
+              hook.command = `"${nodeBin}" "$CODEBUDDY_PLUGIN_ROOT"/scripts/run.cjs "$CODEBUDDY_PLUGIN_ROOT"/scripts/${m2[1]}${m2[2]}`;
               patched = true;
             }
           }
@@ -172,7 +172,7 @@ try {
 
 // 5. Ensure runtime dependencies are installed in the plugin cache directory.
 //    The npm-published tarball includes only the files listed in "files" (package.json),
-//    which does NOT include node_modules.  When Claude Code extracts the plugin into its
+//    which does NOT include node_modules.  When Codebuddy Code extracts the plugin into its
 //    cache the dependencies are therefore missing, causing ERR_MODULE_NOT_FOUND at runtime.
 //    We detect this by probing for a known production dependency (commander) and running a
 //    production-only install when it is absent.  --ignore-scripts avoids re-triggering this
@@ -195,4 +195,4 @@ if (!existsSync(commanderCheck)) {
   console.log('[OMC] Runtime dependencies already present');
 }
 
-console.log('[OMC] Setup complete! Restart Claude Code to activate HUD.');
+console.log('[OMC] Setup complete! Restart Codebuddy Code to activate HUD.');

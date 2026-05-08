@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { resolveRoleAssignment, buildResolvedRoutingSnapshot } from '../stage-router.js';
 import { CANONICAL_TEAM_ROLES } from '../../shared/types.js';
 import type { CanonicalTeamRole, PluginConfig } from '../../shared/types.js';
-import { CLAUDE_FAMILY_DEFAULTS, BUILTIN_EXTERNAL_MODEL_DEFAULTS } from '../../config/models.js';
+import { CODEBUDDY_FAMILY_DEFAULTS, BUILTIN_EXTERNAL_MODEL_DEFAULTS } from '../../config/models.js';
 
 type TeamRoleRoutingConfig = NonNullable<NonNullable<PluginConfig['team']>['roleRouting']>;
 
@@ -12,9 +12,9 @@ const ENV_KEYS = [
   'OMC_MODEL_HIGH',
   'OMC_MODEL_MEDIUM',
   'OMC_MODEL_LOW',
-  'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-  'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-  'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
   'ANTHROPIC_DEFAULT_OPUS_MODEL',
   'ANTHROPIC_DEFAULT_SONNET_MODEL',
   'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -40,29 +40,29 @@ afterAll(() => {
 });
 
 const EXPECTED_DEFAULTS: Record<CanonicalTeamRole, { model: string; agent: string }> = {
-  orchestrator: { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'omc' },
-  planner: { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'planner' },
-  analyst: { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'analyst' },
-  architect: { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'architect' },
-  executor: { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'executor' },
-  debugger: { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'debugger' },
-  critic: { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'critic' },
-  'code-reviewer': { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'codeReviewer' },
-  'security-reviewer': { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'securityReviewer' },
-  'test-engineer': { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'testEngineer' },
-  designer: { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'designer' },
-  writer: { model: CLAUDE_FAMILY_DEFAULTS.HAIKU, agent: 'writer' },
-  'code-simplifier': { model: CLAUDE_FAMILY_DEFAULTS.OPUS, agent: 'codeSimplifier' },
-  explore: { model: CLAUDE_FAMILY_DEFAULTS.HAIKU, agent: 'explore' },
-  'document-specialist': { model: CLAUDE_FAMILY_DEFAULTS.SONNET, agent: 'documentSpecialist' },
+  orchestrator: { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'omc' },
+  planner: { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'planner' },
+  analyst: { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'analyst' },
+  architect: { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'architect' },
+  executor: { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'executor' },
+  debugger: { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'debugger' },
+  critic: { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'critic' },
+  'code-reviewer': { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'codeReviewer' },
+  'security-reviewer': { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'securityReviewer' },
+  'test-engineer': { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'testEngineer' },
+  designer: { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'designer' },
+  writer: { model: CODEBUDDY_FAMILY_DEFAULTS.HAIKU, agent: 'writer' },
+  'code-simplifier': { model: CODEBUDDY_FAMILY_DEFAULTS.OPUS, agent: 'codeSimplifier' },
+  explore: { model: CODEBUDDY_FAMILY_DEFAULTS.HAIKU, agent: 'explore' },
+  'document-specialist': { model: CODEBUDDY_FAMILY_DEFAULTS.SONNET, agent: 'documentSpecialist' },
 };
 
 describe('stage-router resolveRoleAssignment', () => {
   describe('defaults (no team.roleRouting)', () => {
     for (const role of CANONICAL_TEAM_ROLES) {
-      it(`resolves ${role} → claude + tier-default model + canonical agent`, () => {
+      it(`resolves ${role} → codebuddy + tier-default model + canonical agent`, () => {
         const out = resolveRoleAssignment(role, EMPTY);
-        expect(out.provider).toBe('claude');
+        expect(out.provider).toBe('codebuddy');
         expect(out.agent).toBe(EXPECTED_DEFAULTS[role].agent);
         expect(out.model).toBe(EXPECTED_DEFAULTS[role].model);
       });
@@ -90,16 +90,16 @@ describe('stage-router resolveRoleAssignment', () => {
       expect(out.agent).toBe('codeReviewer');
     });
 
-    it('resolves tier name (HIGH) into Claude opus model for claude provider', () => {
+    it('resolves tier name (HIGH) into Codebuddy opus model for codebuddy provider', () => {
       const cfg: PluginConfig = {
-        team: { roleRouting: { executor: { provider: 'claude', model: 'HIGH' } } },
+        team: { roleRouting: { executor: { provider: 'codebuddy', model: 'HIGH' } } },
       };
       const out = resolveRoleAssignment('executor', cfg);
-      expect(out.provider).toBe('claude');
-      expect(out.model).toBe(CLAUDE_FAMILY_DEFAULTS.OPUS);
+      expect(out.provider).toBe('codebuddy');
+      expect(out.model).toBe(CODEBUDDY_FAMILY_DEFAULTS.OPUS);
     });
 
-    it('tier name on external provider falls back to provider builtin (tiers are claude-centric)', () => {
+    it('tier name on external provider falls back to provider builtin (tiers are codebuddy-centric)', () => {
       const cfg: PluginConfig = {
         team: { roleRouting: { executor: { provider: 'codex', model: 'HIGH' } } },
       };
@@ -116,23 +116,23 @@ describe('stage-router resolveRoleAssignment', () => {
       expect(out.agent).toBe('debugger');
     });
 
-    it('respects routing.tierModels overrides for claude tier resolution', () => {
+    it('respects routing.tierModels overrides for codebuddy tier resolution', () => {
       const cfg: PluginConfig = {
-        routing: { tierModels: { HIGH: 'claude-opus-custom-id' } },
-        team: { roleRouting: { critic: { provider: 'claude', model: 'HIGH' } } },
+        routing: { tierModels: { HIGH: 'codebuddy-opus-custom-id' } },
+        team: { roleRouting: { critic: { provider: 'codebuddy', model: 'HIGH' } } },
       };
       const out = resolveRoleAssignment('critic', cfg);
-      expect(out.model).toBe('claude-opus-custom-id');
+      expect(out.model).toBe('codebuddy-opus-custom-id');
     });
   });
 
   describe('orchestrator pinning', () => {
-    it('orchestrator provider always pinned to claude even when user specifies codex', () => {
+    it('orchestrator provider always pinned to codebuddy even when user specifies codex', () => {
       const cfg: PluginConfig = {
         team: { roleRouting: { orchestrator: { model: 'HIGH' } } },
       };
       const out = resolveRoleAssignment('orchestrator', cfg);
-      expect(out.provider).toBe('claude');
+      expect(out.provider).toBe('codebuddy');
       expect(out.agent).toBe('omc');
     });
   });

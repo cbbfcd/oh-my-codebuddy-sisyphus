@@ -156,12 +156,12 @@ describe('MINGW64 escape safety: no "!" in node -e inline scripts (issue #729)',
       expect(combined).not.toContain('if(!v)');
     });
 
-    it('omc-setup extracts CLAUDE.md version from OMC marker', () => {
+    it('omc-setup extracts CODEBUDDY.md version from OMC marker', () => {
       const setupDir = join(REPO_ROOT, 'skills', 'omc-setup');
       const files = [
         join(setupDir, 'SKILL.md'),
         ...readdirSync(join(setupDir, 'phases')).map(f => join(setupDir, 'phases', f)),
-        join(REPO_ROOT, 'scripts', 'setup-claude-md.sh'),
+        join(REPO_ROOT, 'scripts', 'setup-codebuddy-md.sh'),
       ].filter(f => f.endsWith('.md') || f.endsWith('.sh'));
       const combined = files.map(f => readFileSync(f, 'utf-8')).join('\n');
       expect(combined).toContain("grep -m1 'OMC:VERSION:'");

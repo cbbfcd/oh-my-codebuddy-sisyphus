@@ -7,7 +7,7 @@ How to install oh-my-codebuddy from a local development directory as a CodeBuddy
 Use this document for **local development checkouts and git worktrees** where you want CodeBuddy Code to load the plugin from your current repo state.
 
 - **Marketplace/plugin users**: prefer the README quick-start flow
-- **npm users**: prefer `npm i -g oh-my-claude-sisyphus@latest`
+- **npm users**: prefer `npm i -g oh-my-codebuddy-sisyphus@latest`
 - **Local-dev/worktree users**: use this guide so the installed plugin matches the branch/worktree you are editing
 
 ## Quick Install

@@ -14,11 +14,11 @@ describe('BUG 6: team-status provider type for tmux workers', () => {
 
     // Should use a regex that strips both prefixes
     expect(source).toMatch(/replace\(.*mcp.*tmux/s);
-    // Should include 'claude' in the provider union type
-    expect(source).toContain("'claude'");
+    // Should include 'codebuddy' in the provider union type
+    expect(source).toContain("'codebuddy'");
   });
 
-  it('WorkerStatus interface includes claude in provider union', async () => {
+  it('WorkerStatus interface includes codebuddy in provider union', async () => {
     const { readFileSync } = await import('fs');
     const { join } = await import('path');
     const source = readFileSync(
@@ -26,12 +26,12 @@ describe('BUG 6: team-status provider type for tmux workers', () => {
       'utf-8',
     );
 
-    // The interface should have claude in the union
+    // The interface should have codebuddy in the union
     const interfaceMatch = source.match(
       /interface WorkerStatus[\s\S]*?provider:\s*([^;]+);/,
     );
     expect(interfaceMatch).not.toBeNull();
-    expect(interfaceMatch![1]).toContain("'claude'");
+    expect(interfaceMatch![1]).toContain("'codebuddy'");
     expect(interfaceMatch![1]).toContain("'codex'");
     expect(interfaceMatch![1]).toContain("'gemini'");
   });
@@ -43,7 +43,7 @@ describe('BUG 6: team-status provider type for tmux workers', () => {
 
   it('regex correctly strips tmux- prefix', () => {
     const regex = /^(?:mcp|tmux)-/;
-    expect('tmux-claude'.replace(regex, '')).toBe('claude');
+    expect('tmux-codebuddy'.replace(regex, '')).toBe('codebuddy');
   });
 
   it('regex correctly strips tmux-codex to codex', () => {

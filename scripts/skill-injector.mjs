@@ -13,7 +13,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, writeFileSync } from 'fs';
 import { join, basename } from 'path';
 import { homedir } from 'os';
-import { getClaudeConfigDir } from './lib/config-dir.mjs';
+import { getCodebuddyConfigDir } from './lib/config-dir.mjs';
 import { readStdin } from './lib/stdin.mjs';
 import { createRequire } from 'module';
 
@@ -27,7 +27,7 @@ try {
 }
 
 // Constants (used by fallback)
-const cfgDir = getClaudeConfigDir();
+const cfgDir = getCodebuddyConfigDir();
 const USER_SKILLS_DIR = join(cfgDir, 'skills', 'omc-learned');
 const GLOBAL_SKILLS_DIR = join(homedir(), '.omc', 'skills');
 const PROJECT_SKILLS_SUBDIR = join('.omc', 'skills');

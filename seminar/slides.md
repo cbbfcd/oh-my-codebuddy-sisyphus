@@ -1,11 +1,11 @@
 ---
-title: Oh-My-ClaudeCode
+title: Oh-My-Codebuddy
 subtitle: Multi-Agent Orchestration for Autonomous Development
 author: Yeachan Heo
 theme: night
 ---
 
-# Oh-My-ClaudeCode
+# Oh-My-Codebuddy
 
 **Multi-Agent Orchestration for Autonomous Development**
 
@@ -1126,8 +1126,8 @@ Note: Zero learning curve means you can start using OMC immediately after instal
 
 ## Configuration
 
-**Project-level:** `CLAUDE.md` in project root
-**Global:** `~/.claude/CLAUDE.md`
+**Project-level:** `CODEBUDDY.md` in project root
+**Global:** `~/.claude/CODEBUDDY.md`
 
 **Key Settings:**
 

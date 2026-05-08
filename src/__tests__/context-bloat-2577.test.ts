@@ -193,7 +193,7 @@ describe('Bug 3 – nested worktree isolation: only worktree rules are injected'
   });
 
   it('injects only worktree rules when accessing a worktree file, even when cwd=mainRepo', () => {
-    // Claude was started from mainRepo (data.cwd = mainRepo) but accesses a
+    // Codebuddy was started from mainRepo (data.cwd = mainRepo) but accesses a
     // worktree file.  findProjectRoot(file) finds worktree/.git FILE first.
     const hook = createRulesInjectorHook(mainRepo);
     const result = hook.processToolExecution(

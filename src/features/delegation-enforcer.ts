@@ -16,7 +16,7 @@
 import { getAgentDefinitions } from '../agents/definitions.js';
 import { normalizeDelegationRole } from './delegation-routing/types.js';
 import { loadConfig } from '../config/loader.js';
-import { isProviderSpecificModelId, resolveClaudeFamily } from '../config/models.js';
+import { isProviderSpecificModelId, resolveCodebuddyFamily } from '../config/models.js';
 import type { PluginConfig } from '../shared/types.js';
 
 // ---------------------------------------------------------------------------
@@ -35,8 +35,8 @@ const CONFIG_ENV_KEYS = [
   'ANTHROPIC_BASE_URL',
   'CLAUDE_MODEL',
   'ANTHROPIC_MODEL',
-  'CLAUDE_CODE_USE_BEDROCK',
-  'CLAUDE_CODE_USE_VERTEX',
+  'CODEBUDDY_CODE_USE_BEDROCK',
+  'CODEBUDDY_CODE_USE_VERTEX',
   // explicit routing overrides
   'OMC_ROUTING_FORCE_INHERIT',
   'OMC_ROUTING_ENABLED',
@@ -50,9 +50,9 @@ const CONFIG_ENV_KEYS = [
   'OMC_MODEL_HIGH',
   'OMC_MODEL_MEDIUM',
   'OMC_MODEL_LOW',
-  'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
-  'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-  'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+  'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
   'ANTHROPIC_DEFAULT_HAIKU_MODEL',
   'ANTHROPIC_DEFAULT_SONNET_MODEL',
   'ANTHROPIC_DEFAULT_OPUS_MODEL',
@@ -93,7 +93,7 @@ export function normalizeToCcAlias(model: string): string {
     return model;
   }
 
-  const family = resolveClaudeFamily(model);
+  const family = resolveCodebuddyFamily(model);
   return family ? (FAMILY_TO_ALIAS[family] ?? model) : model;
 }
 

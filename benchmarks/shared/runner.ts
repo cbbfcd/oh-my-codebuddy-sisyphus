@@ -40,7 +40,7 @@ export interface BenchmarkCliArgs {
   fixture: string | null;
   /** Where to write results */
   outputDir: string;
-  /** Claude model to use */
+  /** CodeBuddy model to use */
   model: string;
   /** Load fixtures and ground truth but skip API calls */
   dryRun: boolean;
@@ -206,7 +206,7 @@ export function loadAgentPrompt(
 }
 
 // ============================================================
-// Claude API call
+// CodeBuddy API call
 // ============================================================
 
 async function sleep(ms: number): Promise<void> {
@@ -219,7 +219,7 @@ export interface ApiCallResult {
   outputTokens: number;
 }
 
-export async function callClaude(
+export async function callCodeBuddy(
   client: Anthropic,
   systemPrompt: string,
   userMessage: string,
@@ -242,7 +242,7 @@ export async function callClaude(
 
       const textBlock = response.content.find((b) => b.type === 'text');
       if (!textBlock || textBlock.type !== 'text') {
-        throw new Error('No text content in Claude response');
+        throw new Error('No text content in CodeBuddy response');
       }
       return {
         text: textBlock.text,
@@ -431,7 +431,7 @@ export async function runBenchmark(opts: {
 
       let apiResult: ApiCallResult;
       try {
-        apiResult = await callClaude(
+        apiResult = await callCodeBuddy(
           client,
           agent.systemPrompt,
           agent.userMessageTemplate(fixture.content),
@@ -440,7 +440,7 @@ export async function runBenchmark(opts: {
       } catch (err) {
         const elapsedS = ((Date.now() - startMs) / 1000).toFixed(1);
         console.log(`FAILED (${elapsedS}s)`);
-        console.error(`  Error calling Claude API: ${err}`);
+        console.error(`  Error calling CodeBuddy API: ${err}`);
         process.exit(1);
       }
 

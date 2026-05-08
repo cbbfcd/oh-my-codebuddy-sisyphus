@@ -310,7 +310,7 @@ describe('delegation-enforcement-levels', () => {
       const allowedPaths = [
         '.omc/plans/test.md',
         '.codebuddy/settings.json',
-        'docs/CLAUDE.md',
+        'docs/CODEBUDDY.md',
         'AGENTS.md',
       ];
 
@@ -631,9 +631,9 @@ describe('delegation-enforcement-levels', () => {
       }
     });
 
-    it('returns true for CLAUDE.md', () => {
-      expect(isAllowedPath('CLAUDE.md')).toBe(true);
-      expect(isAllowedPath('docs/CLAUDE.md')).toBe(true);
+    it('returns true for CODEBUDDY.md', () => {
+      expect(isAllowedPath('CODEBUDDY.md')).toBe(true);
+      expect(isAllowedPath('docs/CODEBUDDY.md')).toBe(true);
     });
 
     it('returns true for AGENTS.md', () => {

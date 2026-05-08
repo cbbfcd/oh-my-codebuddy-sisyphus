@@ -48,13 +48,13 @@ function loadAgentDefinitions(): Record<string, string> {
 }
 
 /**
- * Load CLAUDE.md content for testing
+ * Load CODEBUDDY.md content for testing
  */
 function loadClaudeMdContent(): string {
-  const claudeMdPath = join(getPackageDir(), 'docs', 'CLAUDE.md');
+  const claudeMdPath = join(getPackageDir(), 'docs', 'CODEBUDDY.md');
 
   if (!existsSync(claudeMdPath)) {
-    throw new Error(`CLAUDE.md not found: ${claudeMdPath}`);
+    throw new Error(`CODEBUDDY.md not found: ${claudeMdPath}`);
   }
 
   return readFileSync(claudeMdPath, 'utf-8');
@@ -247,7 +247,7 @@ describe('Installer Constants', () => {
     });
 
     it('should reference all core agents', () => {
-      // The new CLAUDE.md has agents in tables and examples
+      // The new CODEBUDDY.md has agents in tables and examples
       // We'll check for a subset of key agents to ensure the section exists
       const keyAgents = [
         'architect',
@@ -328,7 +328,7 @@ describe('Installer Constants', () => {
       expect(VERSION).toBe(getRuntimePackageVersion());
     });
 
-    it('should keep docs/CLAUDE.md version marker in sync with package version', () => {
+    it('should keep docs/CODEBUDDY.md version marker in sync with package version', () => {
       const versionMatch = CLAUDE_MD_CONTENT.match(/<!-- OMC:VERSION:([^\s]*?) -->/);
       expect(versionMatch?.[1]).toBe(VERSION);
     });
@@ -415,7 +415,7 @@ describe('Installer Constants', () => {
       expect(agentKeys.length).toBe(uniqueAgentKeys.size);
     });
 
-    it('should have agents referenced in CLAUDE.md exist in AGENT_DEFINITIONS', () => {
+    it('should have agents referenced in CODEBUDDY.md exist in AGENT_DEFINITIONS', () => {
       const agentMatches = CLAUDE_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(Opus|Sonnet|Haiku)/g);
 
       for (const match of agentMatches) {

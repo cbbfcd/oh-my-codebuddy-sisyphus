@@ -184,7 +184,7 @@ describe('buildWorkerStartCommand', () => {
       workerName: 'w',
       envVars: {
         ANTHROPIC_MODEL: 'us.anthropic.claude-sonnet-4-6-v1[1m]',
-        CLAUDE_CODE_USE_BEDROCK: '1',
+        CODEBUDDY_CODE_USE_BEDROCK: '1',
       },
       launchBinary: '/usr/local/bin/claude',
       launchArgs: ['--dangerously-skip-permissions'],
@@ -195,7 +195,7 @@ describe('buildWorkerStartCommand', () => {
     // Correct:   ANTHROPIC_MODEL='us.anthropic.claude-sonnet-4-6-v1[1m]'
     // Wrong:     'ANTHROPIC_MODEL='"'"'us.anthropic...'"'"''  (double-escaped)
     expect(cmd).toContain("ANTHROPIC_MODEL='us.anthropic.claude-sonnet-4-6-v1[1m]'");
-    expect(cmd).toContain("CLAUDE_CODE_USE_BEDROCK='1'");
+    expect(cmd).toContain("CODEBUDDY_CODE_USE_BEDROCK='1'");
 
     // The env keyword and other args should still be shell-escaped
     expect(cmd).toMatch(/^'env'/);

@@ -7,7 +7,7 @@
 
 import { execFileSync } from 'child_process';
 import { randomUUID } from 'crypto';
-import { isTmuxAvailable, isClaudeAvailable, tmuxExec } from './tmux-utils.js';
+import { isTmuxAvailable, isCodebuddyAvailable, tmuxExec } from './tmux-utils.js';
 import { initInteropSession } from '../interop/shared-state.js';
 
 export type InteropMode = 'off' | 'observe' | 'active';
@@ -75,7 +75,7 @@ export function launchInteropSession(cwd: string = process.cwd()): void {
   }
 
   const hasCodex = isCodexAvailable();
-  const hasClaude = isClaudeAvailable();
+  const hasClaude = isCodebuddyAvailable();
 
   if (!hasClaude) {
     console.error('Error: claude CLI is not available. Install Claude Code CLI first.');

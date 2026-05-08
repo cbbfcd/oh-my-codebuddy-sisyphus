@@ -81,7 +81,7 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --limit N         Limit to N instances (default: all)"
             echo "  --skip N          Skip first N instances (default: 0)"
-            echo "  --model MODEL     Claude model to use (default: claude-sonnet-4-6-20260217)"
+            echo "  --model MODEL     Model to use (default: claude-sonnet-4-6-20260217)"
             echo "  --timeout SECS    Timeout per instance (default: 300)"
             echo "  --skip-vanilla    Skip vanilla benchmark run"
             echo "  --skip-omc        Skip OMC benchmark run"
@@ -114,7 +114,7 @@ echo ""
 
 # Step 1: Run vanilla benchmark
 if [ "$SKIP_VANILLA" = false ]; then
-    log_step "Step 1/4: Running vanilla Claude Code benchmark..."
+    log_step "Step 1/4: Running vanilla CodeBuddy Code benchmark..."
     echo ""
     "$SCRIPT_DIR/run_vanilla.sh" $ARGS
     if [ $? -ne 0 ]; then
@@ -208,7 +208,7 @@ $([ -n "$SKIP" ] && echo "- Skip: $SKIP instances")
 
 ## Results
 
-### Vanilla Claude Code
+### Vanilla CodeBuddy Code
 Location: \`predictions/vanilla/\`
 Results: \`results/vanilla_results.json\`
 

@@ -258,7 +258,7 @@ describe('processHook - Environment Kill-Switches', () => {
 
   describe('Bedrock/Vertex model deny on Agent tool (issue #1415)', () => {
     it('should deny Agent calls with model param when forceInherit is enabled', async () => {
-      process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+      process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
 
       const input: HookInput = {
         sessionId: 'test-session',
@@ -282,7 +282,7 @@ describe('processHook - Environment Kill-Switches', () => {
     });
 
     it('should deny Task calls with model param when forceInherit is enabled', async () => {
-      process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+      process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
 
       const input: HookInput = {
         sessionId: 'test-session',
@@ -306,7 +306,7 @@ describe('processHook - Environment Kill-Switches', () => {
     });
 
     it('should allow Agent calls without model param on Bedrock', async () => {
-      process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+      process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
 
       const input: HookInput = {
         sessionId: 'test-session',
@@ -326,7 +326,7 @@ describe('processHook - Environment Kill-Switches', () => {
     });
 
     it('should deny lowercase agent calls with model param when forceInherit is enabled', async () => {
-      process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+      process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
 
       const input: HookInput = {
         sessionId: 'test-session',

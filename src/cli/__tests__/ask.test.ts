@@ -21,18 +21,18 @@ interface CliRunResult {
 }
 
 interface RunOptions {
-  preserveClaudeSessionEnv?: boolean;
+  preserveCodebuddySessionEnv?: boolean;
 }
 
 function buildChildEnv(
   envOverrides: Record<string, string> = {},
   options: RunOptions = {},
 ): NodeJS.ProcessEnv {
-  if (options.preserveClaudeSessionEnv) {
+  if (options.preserveCodebuddySessionEnv) {
     return { ...process.env, ...envOverrides };
   }
 
-  const { CLAUDECODE: _cc, ...cleanEnv } = process.env;
+  const { CODEBUDDYCODE: _cc, ...cleanEnv } = process.env;
   return { ...cleanEnv, ...envOverrides };
 }
 
@@ -120,7 +120,7 @@ function writeAdvisorStub(dir: string): string {
   return stubPath;
 }
 
-function writeFakeProviderBinary(dir: string, provider: 'claude' | 'gemini'): string {
+function writeFakeProviderBinary(dir: string, provider: 'codebuddy' | 'gemini'): string {
   const binDir = join(dir, 'bin');
   mkdirSync(binDir, { recursive: true });
   const binPath = join(binDir, provider);
@@ -156,10 +156,10 @@ function writeSpawnSyncCapturePrelude(dir: string): string {
       "      stdio: options.stdio ?? null,",
       "      input: options.input ?? null,",
       '      env: {',
-      "        CLAUDECODE: options.env?.CLAUDECODE ?? null,",
-      "        CLAUDE_SESSION_ID: options.env?.CLAUDE_SESSION_ID ?? null,",
-      "        CLAUDECODE_SESSION_ID: options.env?.CLAUDECODE_SESSION_ID ?? null,",
-      "        CLAUDE_CODE_ENTRYPOINT: options.env?.CLAUDE_CODE_ENTRYPOINT ?? null,",
+      "        CODEBUDDYCODE: options.env?.CODEBUDDYCODE ?? null,",
+      "        CODEBUDDY_SESSION_ID: options.env?.CODEBUDDY_SESSION_ID ?? null,",
+      "        CODEBUDDYCODE_SESSION_ID: options.env?.CODEBUDDYCODE_SESSION_ID ?? null,",
+      "        CODEBUDDY_CODE_ENTRYPOINT: options.env?.CODEBUDDY_CODE_ENTRYPOINT ?? null,",
       "        RUST_LOG: options.env?.RUST_LOG ?? null,",
       "        RUST_BACKTRACE: options.env?.RUST_BACKTRACE ?? null,",
       '      },',
@@ -267,16 +267,16 @@ exit 9
 
 describe('parseAskArgs', () => {
   it('supports positional and print/prompt flag forms', () => {
-    expect(parseAskArgs(['claude', 'review', 'this'])).toEqual({ provider: 'claude', prompt: 'review this' });
+    expect(parseAskArgs(['codebuddy', 'review', 'this'])).toEqual({ provider: 'codebuddy', prompt: 'review this' });
     expect(parseAskArgs(['gemini', '-p', 'brainstorm'])).toEqual({ provider: 'gemini', prompt: 'brainstorm' });
-    expect(parseAskArgs(['claude', '--print', 'draft', 'summary'])).toEqual({ provider: 'claude', prompt: 'draft summary' });
+    expect(parseAskArgs(['codebuddy', '--print', 'draft', 'summary'])).toEqual({ provider: 'codebuddy', prompt: 'draft summary' });
     expect(parseAskArgs(['gemini', '--prompt=ship safely'])).toEqual({ provider: 'gemini', prompt: 'ship safely' });
     expect(parseAskArgs(['codex', 'review', 'this'])).toEqual({ provider: 'codex', prompt: 'review this' });
   });
 
   it('supports --agent-prompt flag and equals syntax', () => {
-    expect(parseAskArgs(['claude', '--agent-prompt', 'executor', 'do', 'it'])).toEqual({
-      provider: 'claude',
+    expect(parseAskArgs(['codebuddy', '--agent-prompt', 'executor', 'do', 'it'])).toEqual({
+      provider: 'codebuddy',
       prompt: 'do it',
       agentPromptRole: 'executor',
     });
@@ -299,7 +299,7 @@ describe('omc ask command', () => {
     try {
       const stubPath = writeAdvisorStub(wd);
       const result = runCli(
-        ['ask', 'claude', '--print', 'hello world'],
+        ['ask', 'codebuddy', '--print', 'hello world'],
         wd,
         { OMC_ASK_ADVISOR_SCRIPT: stubPath },
       );
@@ -310,7 +310,7 @@ describe('omc ask command', () => {
 
       const payload = JSON.parse(result.stdout);
       expect(payload).toEqual({
-        provider: 'claude',
+        provider: 'codebuddy',
         prompt: 'hello world',
         originalTask: 'hello world',
         passthrough: null,
@@ -353,9 +353,9 @@ describe('omc ask command', () => {
         wd,
         {
           OMC_ASK_ADVISOR_SCRIPT: stubPath,
-          CLAUDECODE: '1',
+          CODEBUDDYCODE: '1',
         },
-        { preserveClaudeSessionEnv: true },
+        { preserveCodebuddySessionEnv: true },
       );
 
       expect(result.error).toBeUndefined();
@@ -383,9 +383,9 @@ describe('omc ask command', () => {
         wd,
         {
           OMC_ASK_ADVISOR_SCRIPT: stubPath,
-          CLAUDECODE: '1',
+          CODEBUDDYCODE: '1',
         },
-        { preserveClaudeSessionEnv: true },
+        { preserveCodebuddySessionEnv: true },
       );
 
       expect(result.error).toBeUndefined();
@@ -412,7 +412,7 @@ describe('omc ask command', () => {
       writeFileSync(join(wd, '.codex', 'prompts', 'executor.md'), 'ROLE HEADER\nFollow checks.', 'utf8');
 
       const result = runCli(
-        ['ask', 'claude', '--agent-prompt=executor', '--prompt', 'ship feature'],
+        ['ask', 'codebuddy', '--agent-prompt=executor', '--prompt', 'ship feature'],
         wd,
         { OMC_ASK_ADVISOR_SCRIPT: stubPath },
       );
@@ -434,9 +434,9 @@ describe('run-provider-advisor script contract', () => {
   it('writes artifact to .omc/artifacts/ask/{provider}-{slug}-{timestamp}.md', () => {
     const wd = mkdtempSync(join(tmpdir(), 'omc-ask-artifact-'));
     try {
-      const binDir = writeFakeProviderBinary(wd, 'claude');
+      const binDir = writeFakeProviderBinary(wd, 'codebuddy');
       const result = runAdvisorScript(
-        ['claude', '--print', 'artifact path contract'],
+        ['codebuddy', '--print', 'artifact path contract'],
         wd,
         { PATH: `${binDir}:${process.env.PATH || ''}` },
       );
@@ -445,7 +445,7 @@ describe('run-provider-advisor script contract', () => {
       expect(result.status).toBe(0);
 
       const artifactPath = result.stdout.trim();
-      expect(artifactPath).toContain(join('.omc', 'artifacts', 'ask', 'claude-artifact-path-contract-'));
+      expect(artifactPath).toContain(join('.omc', 'artifacts', 'ask', 'codebuddy-artifact-path-contract-'));
       expect(existsSync(artifactPath)).toBe(true);
 
       const artifact = readFileSync(artifactPath, 'utf8');
@@ -482,10 +482,10 @@ describe('run-provider-advisor script contract', () => {
   });
 
   it.each([
-    ['claude', ['claude', '--prompt', 'nested claude prompt']],
+    ['codebuddy', ['codebuddy', '--prompt', 'nested claude prompt']],
     ['codex', ['codex', '--prompt', 'nested codex prompt']],
     ['gemini', ['gemini', '--prompt', 'nested gemini prompt']],
-  ] as const)('strips Claude session env vars for %s advisor spawns', (provider, args) => {
+  ] as const)('strips Codebuddy session env vars for %s advisor spawns', (provider, args) => {
     const wd = mkdtempSync(join(tmpdir(), `omc-ask-${provider}-advisor-env-`));
     try {
       const capturePath = join(wd, 'spawn-sync-calls.json');
@@ -496,12 +496,12 @@ describe('run-provider-advisor script contract', () => {
         wd,
         {
           SPAWN_CAPTURE_PATH: capturePath,
-          CLAUDECODE: '1',
-          CLAUDE_SESSION_ID: 'session-123',
-          CLAUDECODE_SESSION_ID: 'session-legacy',
-          CLAUDE_CODE_ENTRYPOINT: 'plugin',
+          CODEBUDDYCODE: '1',
+          CODEBUDDY_SESSION_ID: 'session-123',
+          CODEBUDDYCODE_SESSION_ID: 'session-legacy',
+          CODEBUDDY_CODE_ENTRYPOINT: 'plugin',
         },
-        { preserveClaudeSessionEnv: true },
+        { preserveCodebuddySessionEnv: true },
       );
 
       expect(result.error).toBeUndefined();
@@ -522,10 +522,10 @@ describe('run-provider-advisor script contract', () => {
       expect(calls).toHaveLength(2);
       for (const call of calls) {
         expect(call.options.env).toMatchObject({
-          CLAUDECODE: null,
-          CLAUDE_SESSION_ID: null,
-          CLAUDECODE_SESSION_ID: null,
-          CLAUDE_CODE_ENTRYPOINT: null,
+          CODEBUDDYCODE: null,
+          CODEBUDDY_SESSION_ID: null,
+          CODEBUDDYCODE_SESSION_ID: null,
+          CODEBUDDY_CODE_ENTRYPOINT: null,
         });
       }
     } finally {
@@ -746,7 +746,7 @@ describe('run-provider-advisor script contract', () => {
   it.each([
     ['codex', ['codex', '--prompt', 'short prompt']],
     ['gemini', ['gemini', '--prompt', 'short prompt']],
-    ['claude', ['claude', '--prompt', 'short prompt']],
+    ['codebuddy', ['codebuddy', '--prompt', 'short prompt']],
   ] as const)('closes stdin for %s on non-Windows to prevent hang in piped environments', (provider, args) => {
     const wd = mkdtempSync(join(tmpdir(), `omc-ask-${provider}-stdin-close-`));
     try {

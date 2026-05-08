@@ -100,7 +100,7 @@ export function prepareOmcLaunchConfigDir(baseConfigDir = getCodebuddyConfigDir(
   if (preservedClaudeJson) {
     writeFileSync(runtimeClaudeJsonPath, preservedClaudeJson);
   }
-  copyFileSync(companionPath, join(runtimeConfigDir, 'CLAUDE.md'));
+  copyFileSync(companionPath, join(runtimeConfigDir, 'CODEBUDDY.md'));
 
   for (const entry of [
     'agents',
@@ -143,7 +143,7 @@ export function prepareOmcLaunchConfigDir(baseConfigDir = getCodebuddyConfigDir(
   return runtimeConfigDir;
 }
 
-function isDefaultClaudeConfigDirPath(configDir: string): boolean {
+function isDefaultCodebuddyConfigDirPath(configDir: string): boolean {
   return configDir === join(homedir(), '.codebuddy');
 }
 
@@ -327,7 +327,7 @@ export function extractWebhookFlag(args: string[]): { webhookEnabled: boolean | 
  * Maps --madmax/--yolo to --dangerously-skip-permissions
  * All other flags pass through unchanged
  */
-export function normalizeClaudeLaunchArgs(args: string[]): string[] {
+export function normalizeCodebuddyLaunchArgs(args: string[]): string[] {
   const normalized: string[] = [];
   let wantsBypass = false;
   let hasBypass = false;
@@ -380,7 +380,7 @@ export function isPrintMode(args: string[]): boolean {
 
 /**
  * Detect raw --madmax / --yolo tokens in launch args. Used before
- * normalizeClaudeLaunchArgs strips them so we can apply OMC-specific
+ * normalizeCodebuddyLaunchArgs strips them so we can apply OMC-specific
  * launch contracts (e.g. tmux-mandatory on macOS).
  */
 export function hasMadmaxFlag(args: string[]): boolean {
@@ -409,7 +409,7 @@ function abortMadmaxRequiresTmux(reason: 'missing' | 'launch-failed'): never {
 }
 
 /**
- * runClaude: Launch Claude CLI (blocks until exit)
+ * runCodebuddy: Launch Claude CLI (blocks until exit)
  * Handles 3 scenarios:
  * 1. inside-tmux: Launch claude in current pane
  * 2. outside-tmux: Create new tmux session with claude
@@ -423,10 +423,10 @@ function abortMadmaxRequiresTmux(reason: 'missing' | 'launch-failed'): never {
  * tmux is installed but new-session/attach-session fails, we surface the
  * error instead of silently demoting to direct mode.
  */
-export function runClaude(cwd: string, args: string[], sessionId: string): void {
+export function runCodebuddy(cwd: string, args: string[], sessionId: string): void {
   // Print mode must bypass tmux so stdout flows to the parent process (issue #1665)
   if (isPrintMode(args)) {
-    runClaudeDirect(cwd, args);
+    runCodebuddyDirect(cwd, args);
     return;
   }
 
@@ -440,22 +440,22 @@ export function runClaude(cwd: string, args: string[], sessionId: string): void 
 
     switch (policy) {
       case 'inside-tmux':
-        runClaudeInsideTmux(cwd, args);
+        runCodebuddyInsideTmux(cwd, args);
         break;
       case 'outside-tmux':
-        runClaudeOutsideTmux(cwd, args, sessionId, { requireTmux });
+        runCodebuddyOutsideTmux(cwd, args, sessionId, { requireTmux });
         break;
       case 'direct':
         if (requireTmux) {
           abortMadmaxRequiresTmux('missing');
         }
-        runClaudeDirect(cwd, args);
+        runCodebuddyDirect(cwd, args);
         break;
     }
   } catch (err) {
     if (err instanceof MadmaxTmuxRequiredError) {
       // Already reported via stderr + process.exit(1); swallow so test harnesses
-      // that mock process.exit do not see the synthetic throw escape runClaude.
+      // that mock process.exit do not see the synthetic throw escape runCodebuddy.
       return;
     }
     throw err;
@@ -466,7 +466,7 @@ export function runClaude(cwd: string, args: string[], sessionId: string): void 
  * Run Claude inside existing tmux session
  * Launches Claude in current pane
  */
-function runClaudeInsideTmux(cwd: string, args: string[]): void {
+function runCodebuddyInsideTmux(cwd: string, args: string[]): void {
   // Enable mouse scrolling in the current tmux session (non-fatal if it fails)
   try {
     tmuxExec(['set-option', 'mouse', 'on'], { stdio: 'ignore' });
@@ -526,7 +526,7 @@ export function buildEnvExportPrefix(vars: string[]): string {
  * `requireTmux=true` (set by --madmax on macOS) turns the tmux launch
  * failures from silent demotions into hard errors with a remediation hint.
  */
-function runClaudeOutsideTmux(
+function runCodebuddyOutsideTmux(
   cwd: string,
   args: string[],
   _sessionId: string,
@@ -561,7 +561,7 @@ function runClaudeOutsideTmux(
     if (options.requireTmux) {
       abortMadmaxRequiresTmux('launch-failed');
     }
-    runClaudeDirect(cwd, args);
+    runCodebuddyDirect(cwd, args);
     return;
   }
 
@@ -584,7 +584,7 @@ function runClaudeOutsideTmux(
       tmuxExec(['has-session', '-t', sessionName], { stripTmux: true, stdio: 'ignore' });
       return;
     } catch {
-      runClaudeDirect(cwd, args);
+      runCodebuddyDirect(cwd, args);
     }
   }
 }
@@ -593,7 +593,7 @@ function runClaudeOutsideTmux(
  * Run Claude directly (no tmux)
  * Fallback when tmux is not available
  */
-function runClaudeDirect(cwd: string, args: string[]): void {
+function runCodebuddyDirect(cwd: string, args: string[]): void {
   try {
     execFileSync('codebuddy', args, {
       cwd,
@@ -722,13 +722,13 @@ export async function launchCommand(args: string[]): Promise<void> {
   }
 
   const launchConfigDir = prepareOmcLaunchConfigDir();
-  if (isDefaultClaudeConfigDirPath(launchConfigDir)) {
+  if (isDefaultCodebuddyConfigDirPath(launchConfigDir)) {
     delete process.env.CODEBUDDY_CONFIG_DIR;
   } else {
     process.env.CODEBUDDY_CONFIG_DIR = launchConfigDir;
   }
 
-  const normalizedArgs = normalizeClaudeLaunchArgs(argsAfterWebhook);
+  const normalizedArgs = normalizeCodebuddyLaunchArgs(argsAfterWebhook);
   const sessionId = `omcb-${Date.now()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 8)}`;
 
   // Phase 1: preLaunch
@@ -741,7 +741,7 @@ export async function launchCommand(args: string[]): Promise<void> {
 
   // Phase 2: run
   try {
-    runClaude(cwd, normalizedArgs, sessionId);
+    runCodebuddy(cwd, normalizedArgs, sessionId);
   } finally {
     // Phase 3: postLaunch
     await postLaunch(cwd, sessionId);

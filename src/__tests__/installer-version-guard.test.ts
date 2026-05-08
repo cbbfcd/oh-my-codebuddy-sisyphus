@@ -24,8 +24,8 @@ function withUnixPaths(pathLike: Parameters<typeof existsSync>[0] | Parameters<t
 }
 
 describe('install downgrade protection (issue #1382)', () => {
-  const claudeMdPath = join(CODEBUDDY_CONFIG_DIR, 'CLAUDE.md');
-  const homeClaudeMdPath = join(homedir(), 'CLAUDE.md');
+  const claudeMdPath = join(CODEBUDDY_CONFIG_DIR, 'CODEBUDDY.md');
+  const homeClaudeMdPath = join(homedir(), 'CODEBUDDY.md');
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -60,7 +60,7 @@ describe('install downgrade protection (issue #1382)', () => {
     expect(mockedWriteFileSync).not.toHaveBeenCalled();
   });
 
-  it('falls back to the existing CLAUDE.md version marker when metadata is missing', () => {
+  it('falls back to the existing CODEBUDDY.md version marker when metadata is missing', () => {
     mockedExistsSync.mockImplementation((pathLike) => {
       const path = withUnixPaths(pathLike);
       return path === withUnixPaths(homeClaudeMdPath);

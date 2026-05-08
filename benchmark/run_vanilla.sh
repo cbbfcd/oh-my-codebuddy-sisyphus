@@ -65,7 +65,7 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --limit N       Limit to N instances (default: all)"
             echo "  --skip N        Skip first N instances (default: 0)"
-            echo "  --model MODEL   Claude model to use (default: claude-sonnet-4-6-20260217)"
+            echo "  --model MODEL   Model to use (default: claude-sonnet-4-6-20260217)"
             echo "  --timeout SECS  Timeout per instance (default: 300)"
             echo "  -h, --help      Show this help message"
             exit 0
@@ -84,7 +84,7 @@ if [ -z "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
 fi
 
 log_info "=========================================="
-log_info "Running VANILLA Claude Code Benchmark"
+log_info "Running VANILLA CodeBuddy Code Benchmark"
 log_info "=========================================="
 log_info "Mode: $RUN_MODE"
 log_info "Model: $MODEL"

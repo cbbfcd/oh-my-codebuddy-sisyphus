@@ -136,7 +136,7 @@ The `lsp_diagnostics_directory` tool supports two strategies:
 3. Update `src/mcp/omc-tools-server.ts` if exposed via MCP
 4. Update `docs/REFERENCE.md` (MCP Tools section)
 5. Update agent tool assignments in `src/agents/definitions.ts` if needed
-6. Update `docs/CLAUDE.md` (Agent Tool Matrix) if assigned to agents
+6. Update `docs/CODEBUDDY.md` (Agent Tool Matrix) if assigned to agents
 
 ### Testing Requirements
 

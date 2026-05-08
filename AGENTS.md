@@ -273,7 +273,7 @@ Team/Swarm worker startup currently uses one shared `agentType` and one shared l
 For Claude worker model selection, apply this precedence (highest to lowest):
 1. Explicit `--model` already present in worker launch args
 2. Direct provider model env (`ANTHROPIC_MODEL` / `CLAUDE_MODEL`)
-3. Provider tier envs (`CLAUDE_CODE_BEDROCK_SONNET_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL`)
+3. Provider tier envs (`CODEBUDDY_CODE_BEDROCK_SONNET_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL`)
 4. OMC tier env (`OMC_MODEL_MEDIUM`)
 5. Otherwise let CodeBuddy Code use its default model
 

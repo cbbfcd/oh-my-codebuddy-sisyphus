@@ -226,7 +226,7 @@ describe('spawnWorkerForTask – prompt mode and interactive worker launch', () 
   });
 
   it('non-prompt worker waits for pane readiness before sending inbox instruction', async () => {
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
 
     await spawnWorkerForTask(runtime, 'worker-1', 0);
 
@@ -243,7 +243,7 @@ describe('spawnWorkerForTask – prompt mode and interactive worker launch', () 
   });
 
   it('non-prompt worker throws when pane never becomes ready and resets task to pending', async () => {
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
     tmuxCalls.capturePaneText = 'still booting\n';
     process.env.OMC_SHELL_READY_TIMEOUT_MS = '40';
 
@@ -297,11 +297,11 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     delete process.env.ANTHROPIC_MODEL;
     delete process.env.CLAUDE_MODEL;
     delete process.env.ANTHROPIC_BASE_URL;
-    delete process.env.CLAUDE_CODE_USE_BEDROCK;
-    delete process.env.CLAUDE_CODE_USE_VERTEX;
-    delete process.env.CLAUDE_CODE_BEDROCK_OPUS_MODEL;
-    delete process.env.CLAUDE_CODE_BEDROCK_SONNET_MODEL;
-    delete process.env.CLAUDE_CODE_BEDROCK_HAIKU_MODEL;
+    delete process.env.CODEBUDDY_CODE_USE_BEDROCK;
+    delete process.env.CODEBUDDY_CODE_USE_VERTEX;
+    delete process.env.CODEBUDDY_CODE_BEDROCK_OPUS_MODEL;
+    delete process.env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL;
+    delete process.env.CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL;
     delete process.env.ANTHROPIC_DEFAULT_OPUS_MODEL;
     delete process.env.ANTHROPIC_DEFAULT_SONNET_MODEL;
     delete process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL;
@@ -414,9 +414,9 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     expect(launchCmd).toContain("'--model' 'gemini-2.0-flash'");
   });
 
-  it('claude worker does not pass model flag (not supported)', async () => {
+  it('codebuddy worker does not pass model flag (not supported)', async () => {
     process.env.OMC_EXTERNAL_MODELS_DEFAULT_CODEX_MODEL = 'gpt-4o';
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
 
     await spawnWorkerForTask(runtime, 'worker-1', 0);
 
@@ -430,9 +430,9 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     expect(launchCmd).not.toContain("'--model'");
   });
 
-  it('claude worker propagates ANTHROPIC_MODEL into the pane startup env', async () => {
+    it('codebuddy worker propagates ANTHROPIC_MODEL into the pane startup env', async () => {
     process.env.ANTHROPIC_MODEL = 'claude-opus-4-1';
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
 
     await spawnWorkerForTask(runtime, 'worker-1', 0);
 
@@ -447,10 +447,10 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     expect(launchCmd).not.toContain("'--model'");
   });
 
-  it('claude worker propagates custom provider env needed for inherited model selection', async () => {
+    it('codebuddy worker propagates custom provider env needed for inherited model selection', async () => {
     process.env.CLAUDE_MODEL = 'vertex_ai/claude-3-5-sonnet';
     process.env.ANTHROPIC_BASE_URL = 'https://gateway.example.invalid';
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
 
     await spawnWorkerForTask(runtime, 'worker-1', 0);
 
@@ -466,18 +466,18 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     expect(launchCmd).toContain('https://gateway.example.invalid');
   });
 
-  it('claude worker propagates tiered Bedrock/env model selection variables', async () => {
-    process.env.CLAUDE_CODE_USE_BEDROCK = '1';
-    process.env.CLAUDE_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
-    process.env.CLAUDE_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
-    process.env.CLAUDE_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
+    it('codebuddy worker propagates tiered Bedrock/env model selection variables', async () => {
+    process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
+    process.env.CODEBUDDY_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
+    process.env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
+    process.env.CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
     process.env.ANTHROPIC_DEFAULT_OPUS_MODEL = 'claude-opus-4-6-custom';
     process.env.ANTHROPIC_DEFAULT_SONNET_MODEL = 'claude-sonnet-4-6-custom';
     process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL = 'claude-haiku-4-5-custom';
     process.env.OMC_MODEL_HIGH = 'claude-opus-4-6-override';
     process.env.OMC_MODEL_MEDIUM = 'claude-sonnet-4-6-override';
     process.env.OMC_MODEL_LOW = 'claude-haiku-4-5-override';
-    const runtime = makeRuntime(cwd, 'claude');
+    const runtime = makeRuntime(cwd, 'codebuddy');
 
     await spawnWorkerForTask(runtime, 'worker-1', 0);
 
@@ -487,12 +487,12 @@ describe('spawnWorkerForTask – model passthrough from environment variables', 
     expect(launchCall).toBeDefined();
     const launchCmd = launchCall![launchCall!.length - 1];
 
-    expect(launchCmd).toContain('CLAUDE_CODE_USE_BEDROCK=');
-    expect(launchCmd).toContain('CLAUDE_CODE_BEDROCK_OPUS_MODEL=');
+    expect(launchCmd).toContain('CODEBUDDY_CODE_USE_BEDROCK=');
+    expect(launchCmd).toContain('CODEBUDDY_CODE_BEDROCK_OPUS_MODEL=');
     expect(launchCmd).toContain('us.anthropic.claude-opus-4-6-v1:0');
-    expect(launchCmd).toContain('CLAUDE_CODE_BEDROCK_SONNET_MODEL=');
+    expect(launchCmd).toContain('CODEBUDDY_CODE_BEDROCK_SONNET_MODEL=');
     expect(launchCmd).toContain('us.anthropic.claude-sonnet-4-6-v1:0');
-    expect(launchCmd).toContain('CLAUDE_CODE_BEDROCK_HAIKU_MODEL=');
+    expect(launchCmd).toContain('CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL=');
     expect(launchCmd).toContain('us.anthropic.claude-haiku-4-5-v1:0');
     expect(launchCmd).toContain('ANTHROPIC_DEFAULT_OPUS_MODEL=');
     expect(launchCmd).toContain('claude-opus-4-6-custom');

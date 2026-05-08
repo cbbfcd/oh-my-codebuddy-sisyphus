@@ -88,7 +88,7 @@ function normalizePath(value: string): string {
   return value.replace(/\\/g, '/').replace(/\/+$/, '');
 }
 
-function isDefaultClaudeConfigDir(): boolean {
+function isDefaultCodebuddyConfigDir(): boolean {
   return normalizePath(getCodebuddyConfigDir()) === normalizePath(join(homedir(), '.codebuddy'));
 }
 
@@ -98,14 +98,14 @@ function quoteCommandPath(path: string): string {
 
 function buildHookCommand(filename: string): string {
   if (isWindows()) {
-    if (isDefaultClaudeConfigDir()) {
+    if (isDefaultCodebuddyConfigDir()) {
       return `node "\${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hooks/${filename}"`;
     }
 
     return `node ${quoteCommandPath(join(getCodebuddyConfigDir(), 'hooks', filename).replace(/\\/g, '/'))}`;
   }
 
-  if (isDefaultClaudeConfigDir()) {
+  if (isDefaultCodebuddyConfigDir()) {
     return `node "\${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hooks/${filename}"`;
   }
 

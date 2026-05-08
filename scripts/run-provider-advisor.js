@@ -5,7 +5,7 @@ import { join } from 'path';
 import process from 'process';
 
 const PROVIDER_BINARIES = {
-  claude: 'claude',
+  codebuddy: 'codebuddy',
   codex: 'codex',
   gemini: 'gemini',
 };
@@ -13,7 +13,7 @@ const SHOULD_USE_WINDOWS_SHELL = process.platform === 'win32';
 
 /**
  * Build CLI args for a given provider.
- * - claude: `claude -p <prompt>`
+ * - codebuddy: `codebuddy -p <prompt>`
  * - codex: `codex exec --dangerously-bypass-approvals-and-sandbox <prompt>`
  * - gemini: `gemini -p <prompt> --yolo`
  */
@@ -43,9 +43,9 @@ const ASK_ORIGINAL_TASK_ENV = 'OMC_ASK_ORIGINAL_TASK';
 const ASK_ORIGINAL_TASK_ENV_ALIAS = 'OMX_ASK_ORIGINAL_TASK';
 
 function usage() {
-  console.error('Usage: omc ask <claude|codex|gemini> "<prompt>"');
-  console.error('Legacy direct usage: node scripts/run-provider-advisor.js <claude|codex|gemini> <prompt...>');
-  console.error('                 or: node scripts/run-provider-advisor.js claude --print "<prompt>"');
+  console.error('Usage: omc ask <codebuddy|codex|gemini> "<prompt>"');
+  console.error('Legacy direct usage: node scripts/run-provider-advisor.js <codebuddy|codex|gemini> <prompt...>');
+  console.error('                 or: node scripts/run-provider-advisor.js codebuddy --print "<prompt>"');
   console.error('                 or: node scripts/run-provider-advisor.js gemini --prompt "<prompt>"');
 }
 
@@ -87,19 +87,19 @@ function parseArgs(argv) {
   return { provider, prompt: rest.join(' ').trim() };
 }
 
-// Strip Claude session markers so provider advisors do not detect or inherit the active Claude Code session.
-const CLAUDE_SESSION_STRIPPED_ENV_VARS = new Set([
-  'CLAUDECODE',
-  'CLAUDE_SESSION_ID',
-  'CLAUDECODE_SESSION_ID',
-  'CLAUDE_CODE_ENTRYPOINT',
+// Strip Codebuddy session markers so provider advisors do not detect or inherit the active Codebuddy Code session.
+const CODEBUDDY_SESSION_STRIPPED_ENV_VARS = new Set([
+  'CODEBUDDYCODE',
+  'CODEBUDDY_SESSION_ID',
+  'CODEBUDDYCODE_SESSION_ID',
+  'CODEBUDDY_CODE_ENTRYPOINT',
 ]);
 const CODEX_STRIPPED_ENV_VARS = new Set(['RUST_LOG', 'RUST_BACKTRACE', 'RUST_LIB_BACKTRACE']);
 
 function buildProviderEnv(provider, env = process.env) {
   const strippedEnvVars = provider === 'codex'
-    ? new Set([...CLAUDE_SESSION_STRIPPED_ENV_VARS, ...CODEX_STRIPPED_ENV_VARS])
-    : CLAUDE_SESSION_STRIPPED_ENV_VARS;
+    ? new Set([...CODEBUDDY_SESSION_STRIPPED_ENV_VARS, ...CODEX_STRIPPED_ENV_VARS])
+    : CODEBUDDY_SESSION_STRIPPED_ENV_VARS;
 
   return Object.fromEntries(
     Object.entries(env).filter(([key]) => !strippedEnvVars.has(key)),

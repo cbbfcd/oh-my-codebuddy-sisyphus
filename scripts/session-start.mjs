@@ -347,7 +347,7 @@ function getSessionModelId() {
 }
 
 function isBedrockSession() {
-  if (isTruthyProviderFlag(process.env.CLAUDE_CODE_USE_BEDROCK)) return true;
+  if (isTruthyProviderFlag(process.env.CODEBUDDY_CODE_USE_BEDROCK)) return true;
   const modelId = getSessionModelId();
   return Boolean(
     modelId && (
@@ -362,7 +362,7 @@ function isBedrockSession() {
 }
 
 function isVertexSession() {
-  if (isTruthyProviderFlag(process.env.CLAUDE_CODE_USE_VERTEX)) return true;
+  if (isTruthyProviderFlag(process.env.CODEBUDDY_CODE_USE_VERTEX)) return true;
   const modelId = getSessionModelId();
   return Boolean(modelId && modelId.toLowerCase().startsWith('vertex_ai/'));
 }
@@ -450,7 +450,7 @@ function buildSessionStartAdditionalContext(messages) {
   return selected.join('\n');
 }
 
-// Extract OMC version from CLAUDE.md content
+// Extract OMC version from CODEBUDDY.md content
 function extractOmcVersion(content) {
   const match = content.match(/<!-- OMC:VERSION:(\d+\.\d+\.\d+[^\s]*?) -->/);
   return match ? match[1] : null;
@@ -475,10 +475,10 @@ function getNpmVersion() {
   } catch { return null; }
 }
 
-// Get CLAUDE.md version
+// Get CODEBUDDY.md version
 function getClaudeMdVersion() {
   try {
-    const claudeMdPath = join(configDir, 'CLAUDE.md');
+    const claudeMdPath = join(configDir, 'CODEBUDDY.md');
     if (!existsSync(claudeMdPath)) return null;  // File doesn't exist
     const content = readFileSync(claudeMdPath, 'utf-8');
     const version = extractOmcVersion(content);
@@ -503,13 +503,13 @@ function detectVersionDrift() {
 
   if (claudeMdVersion === 'unknown') {
     drift.push({
-      component: 'CLAUDE.md instructions',
+      component: 'CODEBUDDY.md instructions',
       current: 'unknown (needs migration)',
       expected: pluginVersion
     });
   } else if (claudeMdVersion && claudeMdVersion !== pluginVersion) {
     drift.push({
-      component: 'CLAUDE.md instructions',
+      component: 'CODEBUDDY.md instructions',
       current: claudeMdVersion,
       expected: pluginVersion
     });
@@ -567,7 +567,7 @@ async function checkNpmUpdate(currentVersion) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
   try {
-    const response = await fetch('https://registry.npmjs.org/oh-my-claude-sisyphus/latest', {
+    const response = await fetch('https://registry.npmjs.org/oh-my-codebuddy-sisyphus/latest', {
       signal: controller.signal
     });
     if (!response.ok) return null;
@@ -705,7 +705,7 @@ async function main() {
       if (pluginVersion) {
         const updateInfo = await checkNpmUpdate(pluginVersion);
         if (updateInfo) {
-          messages.push(`<session-restore>\n\n[OMC UPDATE AVAILABLE]\n\nA new version of oh-my-codebuddy is available: v${updateInfo.latestVersion} (current: v${updateInfo.currentVersion})\n\nTo update, run: omc update\n(This syncs plugin, npm package, and CLAUDE.md together)\n\n</session-restore>\n\n---\n`);
+          messages.push(`<session-restore>\n\n[OMC UPDATE AVAILABLE]\n\nA new version of oh-my-codebuddy is available: v${updateInfo.latestVersion} (current: v${updateInfo.currentVersion})\n\nTo update, run: omc update\n(This syncs plugin, npm package, and CODEBUDDY.md together)\n\n</session-restore>\n\n---\n`);
         }
       }
     } catch {}

@@ -2,7 +2,7 @@
 """
 SWE-bench Results Comparison Tool
 
-Compare evaluation results between vanilla Claude Code and OMC-enhanced runs.
+Compare evaluation results between vanilla CodeBuddy Code and OMC-enhanced runs.
 Generates detailed comparison reports in multiple formats.
 
 Usage:
@@ -431,7 +431,7 @@ Examples:
         "--vanilla",
         type=Path,
         required=True,
-        help="Path to vanilla Claude Code results directory"
+        help="Path to vanilla CodeBuddy Code results directory"
     )
 
     parser.add_argument(

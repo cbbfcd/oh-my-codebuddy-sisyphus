@@ -31,7 +31,7 @@ SCRIPT_DIR="$(cd "$SCRIPT_DIR" && pwd)"
 # ---------------------------------------------------------------------------
 # 1. Read stored node path from OMC config
 # ---------------------------------------------------------------------------
-CLAUDE_DIR="$(resolve_claude_config_dir)"
+CLAUDE_DIR="$(resolve_codebuddy_config_dir)"
 CONFIG_FILE="$CLAUDE_DIR/.omc-config.json"
 if [ -f "$CONFIG_FILE" ]; then
   # POSIX-safe extraction without requiring jq

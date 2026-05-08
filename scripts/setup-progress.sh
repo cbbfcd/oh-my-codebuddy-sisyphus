@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/lib/config-dir.sh"
 
 STATE_FILE=".omc/state/setup-state.json"
-CONFIG_DIR="$(resolve_claude_config_dir)"
+CONFIG_DIR="$(resolve_codebuddy_config_dir)"
 CONFIG_FILE="$CONFIG_DIR/.omc-config.json"
 
 # Cross-platform ISO date to epoch conversion
@@ -94,7 +94,7 @@ cmd_complete() {
   # Clear skill-active-state left over from nested skill invocations (e.g. mcp-setup
   # invoked inside omc-setup). Without this, the stop hook blocks with "skill still
   # executing" even though setup has finished.
-  local sid="${CLAUDE_SESSION_ID:-${CLAUDECODE_SESSION_ID:-}}"
+  local sid="${CODEBUDDY_SESSION_ID:-${CODEBUDDYCODE_SESSION_ID:-}}"
   if [ -n "$sid" ]; then
     # Validate session ID: alphanumeric, hyphens, underscores only (matches TS SESSION_ID_REGEX)
     if [[ "$sid" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]{0,255}$ ]]; then
@@ -117,7 +117,7 @@ cmd_complete() {
     '. + {setupCompleted: $ts, setupVersion: $ver}' > "$CONFIG_FILE"
 
   echo "Setup completed successfully!"
-  echo "Note: Future updates will only refresh CLAUDE.md, not the full setup wizard."
+  echo "Note: Future updates will only refresh CODEBUDDY.md, not the full setup wizard."
 }
 
 # Main dispatch

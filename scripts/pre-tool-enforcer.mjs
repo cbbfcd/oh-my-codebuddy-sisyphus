@@ -30,7 +30,7 @@ function isSubagentSafeModelId(modelId) {
   return isProviderSpecificModelId(modelId) && !hasExtendedContextSuffix(modelId);
 }
 function isBedrockProviderEnv() {
-  if (process.env.CLAUDE_CODE_USE_BEDROCK === '1') return true;
+  if (process.env.CODEBUDDY_CODE_USE_BEDROCK === '1') return true;
   const modelId = process.env.CLAUDE_MODEL || process.env.ANTHROPIC_MODEL || '';
   if (/^((us|eu|ap|global)\.anthropic\.|anthropic\.claude)/i.test(modelId)) return true;
   if (
@@ -43,7 +43,7 @@ function isBedrockProviderEnv() {
   return false;
 }
 function isVertexProviderEnv() {
-  if (process.env.CLAUDE_CODE_USE_VERTEX === '1') return true;
+  if (process.env.CODEBUDDY_CODE_USE_VERTEX === '1') return true;
   const modelId = process.env.CLAUDE_MODEL || process.env.ANTHROPIC_MODEL || '';
   return !!modelId && modelId.toLowerCase().startsWith('vertex_ai/');
 }
@@ -89,21 +89,21 @@ function isTierAlias(modelId) {
 // (sonnet/haiku/opus). Allowing OMC_MODEL_* as proof would let the hook pass while CC
 // still fails to route the alias, reintroducing the downstream deadlock this gate prevents.
 const TIER_TO_DEFAULT_ENV_KEYS = {
-  haiku:  ['OMC_SUBAGENT_MODEL', 'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',  'ANTHROPIC_DEFAULT_HAIKU_MODEL'],
-  sonnet: ['OMC_SUBAGENT_MODEL', 'CLAUDE_CODE_BEDROCK_SONNET_MODEL', 'ANTHROPIC_DEFAULT_SONNET_MODEL'],
-  opus:   ['OMC_SUBAGENT_MODEL', 'CLAUDE_CODE_BEDROCK_OPUS_MODEL',   'ANTHROPIC_DEFAULT_OPUS_MODEL'],
+  haiku:  ['OMC_SUBAGENT_MODEL', 'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',  'ANTHROPIC_DEFAULT_HAIKU_MODEL'],
+  sonnet: ['OMC_SUBAGENT_MODEL', 'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL', 'ANTHROPIC_DEFAULT_SONNET_MODEL'],
+  opus:   ['OMC_SUBAGENT_MODEL', 'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',   'ANTHROPIC_DEFAULT_OPUS_MODEL'],
 };
 function resolveTierAliasToSafeModel(tierAlias) {
   const keys = TIER_TO_DEFAULT_ENV_KEYS[(tierAlias || '').toLowerCase()];
   if (!keys) return '';
   for (const key of keys) {
     const value = (process.env[key] || '').trim();
-    // CC-native vars (ANTHROPIC_DEFAULT_* and CLAUDE_CODE_BEDROCK_*) are read by CC's own
+    // CC-native vars (ANTHROPIC_DEFAULT_* and CODEBUDDY_CODE_BEDROCK_*) are read by CC's own
     // model resolution, which handles [1m] suffixes correctly for explicit model= calls.
     // OMC-internal vars (OMC_SUBAGENT_MODEL, OMC_MODEL_*) are not read by CC, so a [1m]
     // value there is not a valid routing proof — keep the stricter isSubagentSafeModelId check.
     const isAnthropicDefaultTierVar = key.startsWith('ANTHROPIC_DEFAULT_');
-    const isNativeCcVar = isAnthropicDefaultTierVar || key.startsWith('CLAUDE_CODE_BEDROCK_');
+    const isNativeCcVar = isAnthropicDefaultTierVar || key.startsWith('CODEBUDDY_CODE_BEDROCK_');
     const validator = isNativeCcVar ? isProviderSpecificModelId : isSubagentSafeModelId;
     if (value && (validator(value) || acceptsProxyAnthropicDefaultTierValue(key, value))) return value;
   }
@@ -851,7 +851,7 @@ async function main() {
         if (toolModel) {
           // Allow tier aliases (sonnet/opus/haiku) when a subagent-safe model can be
           // resolved for that tier. Resolution chain: OMC_SUBAGENT_MODEL (global override)
-          // → CLAUDE_CODE_BEDROCK_*_MODEL → ANTHROPIC_DEFAULT_*_MODEL.
+          // → CODEBUDDY_CODE_BEDROCK_*_MODEL → ANTHROPIC_DEFAULT_*_MODEL.
           if (isTierAlias(toolModel) && resolveTierAliasToSafeModel(toolModel)) {
             // fall through to continue — tier alias resolves to a safe provider-specific ID
           } else if (!isSubagentSafeModelId(toolModel)) {

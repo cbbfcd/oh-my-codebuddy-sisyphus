@@ -364,7 +364,7 @@ describe('doctor-conflicts: hook ownership classification', () => {
   });
 });
 
-describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', () => {
+describe('doctor-conflicts: CODEBUDDY.md companion file detection (issue #1101)', () => {
   let cwdSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
@@ -393,16 +393,16 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
     }
   });
 
-  it('detects OMC markers in main CLAUDE.md', () => {
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '<!-- OMC:START -->\n# OMC Config\n<!-- OMC:END -->\n');
+  it('detects OMC markers in main CODEBUDDY.md', () => {
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '<!-- OMC:START -->\n# OMC Config\n<!-- OMC:END -->\n');
     const status = checkClaudeMdStatus();
     expect(status).not.toBeNull();
     expect(status!.hasMarkers).toBe(true);
     expect(status!.companionFile).toBeUndefined();
   });
 
-  it('detects OMC markers in companion file when main CLAUDE.md lacks them', () => {
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '# My custom config\n');
+  it('detects OMC markers in companion file when main CODEBUDDY.md lacks them', () => {
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '# My custom config\n');
     writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC Config\n<!-- OMC:END -->\n');
     const status = checkClaudeMdStatus();
     expect(status).not.toBeNull();
@@ -411,7 +411,7 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
   });
 
   it('does not false-positive when companion file has no markers', () => {
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '# My config\n');
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '# My config\n');
     writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE-custom.md'), '# Custom stuff\n');
     const status = checkClaudeMdStatus();
     expect(status).not.toBeNull();
@@ -419,8 +419,8 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
     expect(status!.companionFile).toBeUndefined();
   });
 
-  it('detects companion file reference in CLAUDE.md', () => {
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '# Config\nSee CLAUDE-omc.md for OMC settings\n');
+  it('detects companion file reference in CODEBUDDY.md', () => {
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '# Config\nSee CLAUDE-omc.md for OMC settings\n');
     const status = checkClaudeMdStatus();
     expect(status).not.toBeNull();
     expect(status!.hasMarkers).toBe(false);
@@ -428,7 +428,7 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
   });
 
   it('prefers main file markers over companion file', () => {
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
     writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# Also OMC\n<!-- OMC:END -->\n');
     const status = checkClaudeMdStatus();
     expect(status).not.toBeNull();
@@ -436,7 +436,7 @@ describe('doctor-conflicts: CLAUDE.md companion file detection (issue #1101)', (
     expect(status!.companionFile).toBeUndefined();
   });
 
-  it('returns null when no CLAUDE.md exists', () => {
+  it('returns null when no CODEBUDDY.md exists', () => {
     const status = checkClaudeMdStatus();
     expect(status).toBeNull();
   });
@@ -517,8 +517,8 @@ describe('doctor-conflicts: legacy skills collision check (issue #1101)', () => 
     const skillsDir = join(TEST_CLAUDE_DIR, 'skills');
     mkdirSync(skillsDir, { recursive: true });
     writeFileSync(join(skillsDir, 'cancel.md'), '# Legacy cancel');
-    // Need a CLAUDE.md for the report to work
-    writeFileSync(join(TEST_CLAUDE_DIR, 'CLAUDE.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
+    // Need a CODEBUDDY.md for the report to work
+    writeFileSync(join(TEST_CLAUDE_DIR, 'CODEBUDDY.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
 
     const report = runConflictCheck();
     expect(report.legacySkills).toHaveLength(1);

@@ -72,7 +72,7 @@ describe('release generation', () => {
       { number: '2127', title: 'fix(hud): show worktree name instead of volatile main repo HEAD', author: 'blue-int', headRefName: 'fix/hud-worktree-name' },
       { number: '2129', title: 'fix(hud): replace misleading CLI error with installation diagnostic', author: 'DdangJin', headRefName: 'fix/hud-cli-diagnostic' },
       { number: '2137', title: 'Fix team tmux pane geometry collapse and bundled agent path resolution', author: 'anthropic-ai', headRefName: 'fix-issue-2135-pane-geometry' },
-      { number: '2144', title: 'fix: preserve existing global CLAUDE.md during setup', author: 'anthropic-ai', headRefName: 'issue-2143-safe-setup-config' },
+      { number: '2144', title: 'fix: preserve existing global CODEBUDDY.md during setup', author: 'anthropic-ai', headRefName: 'issue-2143-safe-setup-config' },
       { number: '2146', title: 'fix: follow up #2143 with explicit overwrite choice + omc launch profile', author: 'anthropic-ai', headRefName: 'issue-2143-omc-launch-followup' },
       { number: '2149', title: 'fix: resolve global HUD npm package lookup outside Node projects', author: 'anthropic-ai', headRefName: 'fix/issue-2148-hud-global-npm' },
       { number: '2151', title: 'feat(hud): make call-count icon rendering configurable', author: 'anthropic-ai', headRefName: 'issue-2150-hud-call-count-icons' },
@@ -123,7 +123,7 @@ describe('release generation', () => {
       'v4.10.1',
     );
 
-    expect(body).toContain('npm install -g oh-my-claude-sisyphus@4.10.2');
+    expect(body).toContain('npm install -g oh-my-codebuddy-sisyphus@4.10.2');
     expect(body).toContain('https://github.com/cbbfcd/oh-my-codebuddy/compare/v4.10.1...v4.10.2');
     expect(body).toContain('@blue-int @DdangJin @anthropic-ai');
     expect(body.match(/## Contributors/g)).toHaveLength(1);

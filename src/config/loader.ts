@@ -618,8 +618,8 @@ export function loadConfig(): PluginConfig {
   // Auto-enable forceInherit for non-standard providers (issues #1201, #1025)
   // Only auto-enable if user hasn't explicitly set it via config or env var.
   // Triggers for: CC Switch / LiteLLM (non-Claude model IDs), custom
-  // ANTHROPIC_BASE_URL, AWS Bedrock (CLAUDE_CODE_USE_BEDROCK=1), and
-  // Google Vertex AI (CLAUDE_CODE_USE_VERTEX=1). Passing Claude-specific
+  // ANTHROPIC_BASE_URL, AWS Bedrock (CODEBUDDY_CODE_USE_BEDROCK=1), and
+  // Google Vertex AI (CODEBUDDY_CODE_USE_VERTEX=1). Passing Claude-specific
   // tier names (sonnet/opus/haiku) causes 400 errors on these platforms.
   if (
     config.routing?.forceInherit !== true &&
@@ -660,7 +660,7 @@ function compactBudgetedText(text: string, maxChars: number): string {
 function looksLikeOmcGuidance(content: string): boolean {
   return (
     content.includes("<guidance_schema_contract>") &&
-    /oh-my-(claudecode|codex)/i.test(content) &&
+    /oh-my-(claudecode|codex|codebuddy)/i.test(content) &&
     OMC_STARTUP_COMPACTABLE_SECTIONS.some(
       (section) =>
         content.includes(`<${section}>`) && content.includes(`</${section}>`),
@@ -700,7 +700,7 @@ export function compactOmcStartupGuidance(content: string): string {
 }
 
 /**
- * Find and load AGENTS.md or CLAUDE.md files for context injection
+ * Find and load AGENTS.md or CODEBUDDY.md files for context injection
  */
 export function findContextFiles(startDir?: string): string[] {
   const files: string[] = [];
@@ -709,8 +709,8 @@ export function findContextFiles(startDir?: string): string[] {
   // Files to look for
   const contextFileNames = [
     "AGENTS.md",
-    "CLAUDE.md",
-    ".codebuddy/CLAUDE.md",
+    "CODEBUDDY.md",
+    ".codebuddy/CODEBUDDY.md",
     ".codebuddy/AGENTS.md",
   ];
 
@@ -737,7 +737,7 @@ export function findContextFiles(startDir?: string): string[] {
 }
 
 /**
- * Load context from AGENTS.md/CLAUDE.md files
+ * Load context from AGENTS.md/CODEBUDDY.md files
  */
 export function loadContextFromFiles(files: string[]): string {
   const contexts: string[] = [];
@@ -773,7 +773,7 @@ export function loadContextFromFiles(files: string[]): string {
 export function generateConfigSchema(): object {
   return {
     $schema: "http://json-schema.org/draft-07/schema#",
-    title: "Oh-My-ClaudeCode Configuration",
+    title: "Oh-My-Codebuddy Configuration",
     type: "object",
     properties: {
       agents: {

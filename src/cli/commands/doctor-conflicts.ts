@@ -125,7 +125,7 @@ function checkFileForOmcMarkers(filePath: string): { hasMarkers: boolean; hasUse
 /**
  * Find companion CLAUDE-*.md files in the config directory.
  * These are files like CLAUDE-omc.md that users create as part of a
- * file-split pattern to keep OMC config separate from their own CLAUDE.md.
+ * file-split pattern to keep OMC config separate from their own CODEBUDDY.md.
  */
 function findCompanionClaudeMdFiles(configDir: string): string[] {
   try {
@@ -138,20 +138,20 @@ function findCompanionClaudeMdFiles(configDir: string): string[] {
 }
 
 /**
- * Check CLAUDE.md for OMC markers and user content.
+ * Check CODEBUDDY.md for OMC markers and user content.
  * Also checks companion files (CLAUDE-omc.md, etc.) for the file-split pattern
  * where users keep OMC config in a separate file.
  */
 export function checkClaudeMdStatus(): ConflictReport['claudeMdStatus'] {
   const configDir = getCodebuddyConfigDir();
-  const claudeMdPath = join(configDir, 'CLAUDE.md');
+  const claudeMdPath = join(configDir, 'CODEBUDDY.md');
 
   if (!existsSync(claudeMdPath)) {
     return null;
   }
 
   try {
-    // Check the main CLAUDE.md first
+    // Check the main CODEBUDDY.md first
     const mainResult = checkFileForOmcMarkers(claudeMdPath);
     if (!mainResult) return null;
 
@@ -177,12 +177,12 @@ export function checkClaudeMdStatus(): ConflictReport['claudeMdStatus'] {
       }
     }
 
-    // No markers in main or companions - check if CLAUDE.md references a companion
+    // No markers in main or companions - check if CODEBUDDY.md references a companion
     const content = readFileSync(claudeMdPath, 'utf-8');
     const companionRefPattern = /CLAUDE-[^\s)]+\.md/i;
     const refMatch = content.match(companionRefPattern);
     if (refMatch) {
-      // CLAUDE.md references a companion file but it doesn't have markers yet
+      // CODEBUDDY.md references a companion file but it doesn't have markers yet
       return {
         hasMarkers: false,
         hasUserContent: mainResult.hasUserContent,
@@ -355,7 +355,7 @@ export function formatReport(report: ConflictReport, json: boolean): string {
   const lines: string[] = [];
 
   lines.push('');
-  lines.push(colors.bold('🔍 Oh-My-ClaudeCode Conflict Diagnostic'));
+  lines.push(colors.bold('🔍 Oh-My-Codebuddy Conflict Diagnostic'));
   lines.push(colors.gray('━'.repeat(60)));
   lines.push('');
 
@@ -375,9 +375,9 @@ export function formatReport(report: ConflictReport, json: boolean): string {
     lines.push('');
   }
 
-  // CLAUDE.md status
+  // CODEBUDDY.md status
   if (report.claudeMdStatus) {
-    lines.push(colors.bold('📄 CLAUDE.md Status'));
+    lines.push(colors.bold('📄 CODEBUDDY.md Status'));
     lines.push('');
 
     if (report.claudeMdStatus.hasMarkers) {
@@ -400,8 +400,8 @@ export function formatReport(report: ConflictReport, json: boolean): string {
     lines.push(`  ${colors.gray(`Path: ${report.claudeMdStatus.path}`)}`);
     lines.push('');
   } else {
-    lines.push(colors.bold('📄 CLAUDE.md Status'));
-    lines.push(`  ${colors.gray('No CLAUDE.md found')}`);
+    lines.push(colors.bold('📄 CODEBUDDY.md Status'));
+    lines.push(`  ${colors.gray('No CODEBUDDY.md found')}`);
     lines.push('');
   }
 

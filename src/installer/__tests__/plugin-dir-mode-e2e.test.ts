@@ -63,7 +63,7 @@ afterEach(() => {
 });
 
 describe('install() — plugin-dir-mode end-to-end filesystem shape', () => {
-  it('case 1: pluginDirMode=true → installs HUD/CLAUDE.md/settings/.omc-config but NOT agents/skills', async () => {
+  it('case 1: pluginDirMode=true → installs HUD/CODEBUDDY.md/settings/.omc-config but NOT agents/skills', async () => {
     const { install } = await freshInstaller();
     install({ verbose: false, skipClaudeCheck: true, pluginDirMode: true });
 
@@ -72,8 +72,8 @@ describe('install() — plugin-dir-mode end-to-end filesystem shape', () => {
     expect(existsSync(hudPath)).toBe(true);
     expect(statSync(hudPath).size).toBeGreaterThan(0);
 
-    // CLAUDE.md present with merge markers
-    const claudeMdPath = join(testDir, 'CLAUDE.md');
+    // CODEBUDDY.md present with merge markers
+    const claudeMdPath = join(testDir, 'CODEBUDDY.md');
     expect(existsSync(claudeMdPath)).toBe(true);
     const claudeMdContent = readFileSync(claudeMdPath, 'utf8');
     expect(claudeMdContent).toContain('<!-- OMC:START -->');
@@ -109,7 +109,7 @@ describe('install() — plugin-dir-mode end-to-end filesystem shape', () => {
     install({ verbose: false, skipClaudeCheck: true, pluginDirMode: true });
 
     expect(existsSync(join(testDir, 'hud', 'omc-hud.mjs'))).toBe(true);
-    expect(existsSync(join(testDir, 'CLAUDE.md'))).toBe(true);
+    expect(existsSync(join(testDir, 'CODEBUDDY.md'))).toBe(true);
     expect(existsSync(join(testDir, 'settings.json'))).toBe(true);
     expect(existsSync(join(testDir, '.omc-config.json'))).toBe(true);
     expect(existsSync(join(testDir, 'agents'))).toBe(false);

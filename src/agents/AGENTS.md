@@ -169,7 +169,7 @@ export const newAgentHigh: AgentConfig = {
 3. Add to `definitions.ts` (import + registry)
 4. Export from `index.ts`
 5. Update `docs/REFERENCE.md` (Agents section, count)
-6. Update `docs/CLAUDE.md` (Agent Selection Guide)
+6. Update `docs/CODEBUDDY.md` (Agent Selection Guide)
 7. Update root `/AGENTS.md` (Agent Summary if applicable)
 
 #### When Modifying an Agent
@@ -178,7 +178,7 @@ export const newAgentHigh: AgentConfig = {
 2. Update prompt template (`agents/*.md`) if changing behavior
 3. Update tiered variants (`-low`, `-medium`, `-high`) if applicable
 4. Update `docs/REFERENCE.md` if changing agent description/capabilities
-5. Update `docs/CLAUDE.md` (Agent Tool Matrix) if changing tool assignments
+5. Update `docs/CODEBUDDY.md` (Agent Tool Matrix) if changing tool assignments
 
 #### When Removing an Agent
 

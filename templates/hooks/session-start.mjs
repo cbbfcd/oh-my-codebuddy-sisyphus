@@ -94,7 +94,7 @@ async function checkForUpdates(currentVersion) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
   try {
-    const response = await fetch('https://registry.npmjs.org/oh-my-claude-sisyphus/latest', {
+    const response = await fetch('https://registry.npmjs.org/oh-my-codebuddy-sisyphus/latest', {
       signal: controller.signal
     });
 
@@ -154,7 +154,7 @@ function getSessionModelId() {
 }
 
 function isBedrockSession() {
-  if (isTruthyProviderFlag(process.env.CLAUDE_CODE_USE_BEDROCK)) return true;
+  if (isTruthyProviderFlag(process.env.CODEBUDDY_CODE_USE_BEDROCK)) return true;
   const modelId = getSessionModelId();
   return Boolean(
     modelId && (
@@ -169,7 +169,7 @@ function isBedrockSession() {
 }
 
 function isVertexSession() {
-  if (isTruthyProviderFlag(process.env.CLAUDE_CODE_USE_VERTEX)) return true;
+  if (isTruthyProviderFlag(process.env.CODEBUDDY_CODE_USE_VERTEX)) return true;
   const modelId = getSessionModelId();
   return Boolean(modelId && modelId.toLowerCase().startsWith('vertex_ai/'));
 }
@@ -216,7 +216,7 @@ function looksLikeOmcGuidance(content) {
   return (
     typeof content === 'string' &&
     content.includes('<guidance_schema_contract>') &&
-    /oh-my-(claudecode|codex)/i.test(content) &&
+    /oh-my-(claudecode|codex|codebuddy)/i.test(content) &&
     OMC_STARTUP_COMPACTABLE_SECTIONS.some(
       section => content.includes(`<${section}>`) && content.includes(`</${section}>`),
     )
@@ -471,7 +471,7 @@ async function main() {
     for (let i = 1; i <= 4; i++) {
       const candidate = join(__dirname, ...Array(i).fill('..'), 'package.json');
       const pkg = readJsonFile(candidate);
-      if ((pkg?.name === 'oh-my-claude-sisyphus' || pkg?.name === 'oh-my-codebuddy') && pkg?.version) {
+      if ((pkg?.name === 'oh-my-codebuddy-sisyphus' || pkg?.name === 'oh-my-codebuddy') && pkg?.version) {
         currentVersion = pkg.version;
         break;
       }
@@ -492,7 +492,7 @@ async function main() {
 oh-my-codebuddy v${updateInfo.latestVersion} is available (current: v${updateInfo.currentVersion}).
 
 ACTION: Use AskUserQuestion to ask the user if they want to upgrade now. Offer these options:
-- "Upgrade now" (Recommended): Run \`npm install -g oh-my-claude-sisyphus@latest\` via Bash, then run \`omc install --force --skip-claude-check --refresh-hooks\` to reconcile hooks and CLAUDE.md
+- "Upgrade now" (Recommended): Run \`npm install -g oh-my-codebuddy-sisyphus@latest\` via Bash, then run \`omc install --force --skip-claude-check --refresh-hooks\` to reconcile hooks and CODEBUDDY.md
 - "Skip this time": Continue the session without upgrading
 - "Don't ask again": Tell the user to set "autoUpgradePrompt": false in [$CLAUDE_CONFIG_DIR|~/.claude]/.omc-config.json to disable future prompts
 

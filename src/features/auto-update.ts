@@ -173,7 +173,7 @@ export function syncPluginCache(verbose: boolean = false): { synced: boolean; sk
       throw new Error('npm root -g returned an empty path');
     }
 
-    const sourceRoot = join(npmRoot, 'oh-my-claude-sisyphus');
+    const sourceRoot = join(npmRoot, 'oh-my-codebuddy-sisyphus');
     const packageJsonPath = join(sourceRoot, 'package.json');
     const packageJsonRaw = String(readFileSync(packageJsonPath, 'utf-8') ?? '');
     const packageMetadata = JSON.parse(packageJsonRaw) as { version?: unknown };
@@ -445,15 +445,15 @@ export function getInstalledVersion(): VersionMetadata | null {
     // Try to detect version from package.json if installed via npm
     try {
       // Check if we can find the package in node_modules
-      const result = execSync('npm list -g oh-my-claude-sisyphus --json', {
+      const result = execSync('npm list -g oh-my-codebuddy-sisyphus --json', {
         encoding: 'utf-8',
         timeout: 5000,
         stdio: 'pipe'
       });
       const data = JSON.parse(result);
-      if (data.dependencies?.['oh-my-claude-sisyphus']?.version) {
+      if (data.dependencies?.['oh-my-codebuddy-sisyphus']?.version) {
         return {
-          version: data.dependencies['oh-my-claude-sisyphus'].version,
+          version: data.dependencies['oh-my-codebuddy-sisyphus'].version,
           installedAt: new Date().toISOString(),
           installMethod: 'npm'
         };
@@ -600,7 +600,7 @@ export function reconcileUpdateRuntime(options?: { verbose?: boolean; skipGraceP
   // the standalone settings.json hook merge during `omc update` re-injects the
   // legacy ~/.codebuddy/hooks/* entries and causes duplicate hook execution.
   //
-  // Reconciliation should still refresh shared installer artifacts (CLAUDE.md,
+  // Reconciliation should still refresh shared installer artifacts (CODEBUDDY.md,
   // HUD, MCP registry, statusLine, etc.), but it must leave settings.json hook
   // ownership alone for plugin installs so the plugin hook manifest remains the
   // single source of truth.
@@ -737,7 +737,7 @@ export async function performUpdate(options?: {
 
     // Use npm for updates on all platforms (install.sh was removed)
     try {
-      execSync('npm install -g oh-my-claude-sisyphus@latest', {
+      execSync('npm install -g oh-my-codebuddy-sisyphus@latest', {
         encoding: 'utf-8',
         stdio: options?.verbose ? 'inherit' : 'pipe',
         timeout: 120000, // 2 minute timeout for npm
@@ -817,7 +817,7 @@ export async function performUpdate(options?: {
     } catch (npmError) {
       throw new Error(
         'Auto-update via npm failed. Please run manually:\n' +
-        '  npm install -g oh-my-claude-sisyphus@latest\n' +
+        '  npm install -g oh-my-codebuddy-sisyphus@latest\n' +
         'Or use: /plugin install oh-my-codebuddy\n' +
         `Error: ${npmError instanceof Error ? npmError.message : npmError}`
       );

@@ -20,7 +20,7 @@ describe('install() standalone hook reconciliation', () => {
     testClaudeDir = mkdtempSync(join(tmpdir(), 'omc-standalone-hooks-'));
     testHomeDir = mkdtempSync(join(tmpdir(), 'omc-home-'));
     mkdirSync(testHomeDir, { recursive: true });
-    writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# test home claude');
+    writeFileSync(join(testHomeDir, 'CODEBUDDY.md'), '# test home claude');
     process.env.CODEBUDDY_CONFIG_DIR = testClaudeDir;
     process.env.HOME = testHomeDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;
@@ -194,7 +194,7 @@ describe('install() plugin-provided hook deduplication (#2252)', () => {
     testClaudeDir = mkdtempSync(join(tmpdir(), 'omc-hook-dedup-'));
     testHomeDir = mkdtempSync(join(tmpdir(), 'omc-home-dedup-'));
     mkdirSync(testHomeDir, { recursive: true });
-    writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# test home claude');
+    writeFileSync(join(testHomeDir, 'CODEBUDDY.md'), '# test home claude');
     process.env.CODEBUDDY_CONFIG_DIR = testClaudeDir;
     process.env.HOME = testHomeDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;

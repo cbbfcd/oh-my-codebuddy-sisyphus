@@ -339,8 +339,8 @@ function paneLooksReady(captured: string): boolean {
   const lastLine = lines.length > 0 ? lines[lines.length - 1]! : '';
   if (/^\s*[›>❯]\s*/u.test(lastLine)) return true;
   const hasCodexPromptLine = lines.some((line) => /^\s*›\s*/u.test(line));
-  const hasClaudePromptLine = lines.some((line) => /^\s*❯\s*/u.test(line));
-  if (hasCodexPromptLine || hasClaudePromptLine) return true;
+  const hasCodebuddyPromptLine = lines.some((line) => /^\s*❯\s*/u.test(line));
+  if (hasCodexPromptLine || hasCodebuddyPromptLine) return true;
   return false;
 }
 
@@ -350,7 +350,7 @@ function resolveWorkerCliForRequest(request: DispatchRequest, config: TeamConfig
   if (idx !== null) {
     const worker = workers.find((c) => Number(c.index) === idx);
     const workerCli = safeString(worker?.worker_cli).trim().toLowerCase();
-    if (workerCli === 'claude') return 'claude';
+    if (workerCli === 'codebuddy') return 'codebuddy';
   }
   return 'codex';
 }
@@ -367,7 +367,7 @@ async function defaultInjector(request: DispatchRequest, config: TeamConfig, _cw
     }
   } catch { /* best effort */ }
 
-  const submitKeyPresses = resolveWorkerCliForRequest(request, config) === 'claude' ? 1 : 2;
+  const submitKeyPresses = resolveWorkerCliForRequest(request, config) === 'codebuddy' ? 1 : 2;
   const attemptCountAtStart = Number.isFinite(request.attempt_count) ? Math.max(0, Math.floor(request.attempt_count)) : 0;
 
   let preCaptureHasTrigger = false;

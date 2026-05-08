@@ -1,5 +1,5 @@
 /**
- * Oh-My-ClaudeCode
+ * Oh-My-Codebuddy
  *
  * A multi-agent orchestration system for the Claude Agent SDK.
  * Inspired by oh-my-opencode, reimagined for Claude Code.
@@ -8,7 +8,7 @@
  * - OMC: Primary orchestrator that delegates to specialized subagents
  * - Parallel execution: Background agents run concurrently
  * - LSP/AST tools: IDE-like capabilities for agents
- * - Context management: Auto-injection from AGENTS.md/CLAUDE.md
+ * - Context management: Auto-injection from AGENTS.md/CODEBUDDY.md
  * - Continuation enforcement: Ensures tasks complete before stopping
  * - Magic keywords: Special triggers for enhanced behaviors
  */

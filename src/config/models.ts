@@ -1,26 +1,26 @@
 import { validateAnthropicBaseUrl } from '../utils/ssrf-guard.js';
 
 export type ModelTier = 'LOW' | 'MEDIUM' | 'HIGH';
-export type ClaudeModelFamily = 'HAIKU' | 'SONNET' | 'OPUS';
+export type CodebuddyModelFamily = 'HAIKU' | 'SONNET' | 'OPUS';
 
 const DIRECT_MODEL_ENV_KEYS = ['CLAUDE_MODEL', 'ANTHROPIC_MODEL'] as const;
 const INHERIT_TIER_PRIORITY: readonly ModelTier[] = ['MEDIUM', 'HIGH', 'LOW'];
-const CLAUDE_TIER_ALIASES = new Set(['sonnet', 'opus', 'haiku']);
+const CODEBUDDY_TIER_ALIASES = new Set(['sonnet', 'opus', 'haiku']);
 
 const TIER_ENV_KEYS: Record<ModelTier, readonly string[]> = {
   LOW: [
     'OMC_MODEL_LOW',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
   ],
   MEDIUM: [
     'OMC_MODEL_MEDIUM',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
   ],
   HIGH: [
     'OMC_MODEL_HIGH',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
   ],
 };
@@ -29,7 +29,7 @@ const TIER_ENV_KEYS: Record<ModelTier, readonly string[]> = {
  * Canonical Claude family defaults.
  * Keep these date-less so version bumps are a one-line edit per family.
  */
-export const CLAUDE_FAMILY_DEFAULTS: Record<ClaudeModelFamily, string> = {
+export const CODEBUDDY_FAMILY_DEFAULTS: Record<CodebuddyModelFamily, string> = {
   HAIKU: 'claude-haiku-4-5',
   SONNET: 'claude-sonnet-4-6',
   OPUS: 'claude-opus-4-7',
@@ -37,16 +37,16 @@ export const CLAUDE_FAMILY_DEFAULTS: Record<ClaudeModelFamily, string> = {
 
 /** Canonical tier->model mapping used as built-in defaults */
 export const BUILTIN_TIER_MODEL_DEFAULTS: Record<ModelTier, string> = {
-  LOW: CLAUDE_FAMILY_DEFAULTS.HAIKU,
-  MEDIUM: CLAUDE_FAMILY_DEFAULTS.SONNET,
-  HIGH: CLAUDE_FAMILY_DEFAULTS.OPUS,
+  LOW: CODEBUDDY_FAMILY_DEFAULTS.HAIKU,
+  MEDIUM: CODEBUDDY_FAMILY_DEFAULTS.SONNET,
+  HIGH: CODEBUDDY_FAMILY_DEFAULTS.OPUS,
 };
 
 /** Canonical Claude high-reasoning variants by family */
-export const CLAUDE_FAMILY_HIGH_VARIANTS: Record<ClaudeModelFamily, string> = {
-  HAIKU: `${CLAUDE_FAMILY_DEFAULTS.HAIKU}-high`,
-  SONNET: `${CLAUDE_FAMILY_DEFAULTS.SONNET}-high`,
-  OPUS: `${CLAUDE_FAMILY_DEFAULTS.OPUS}-high`,
+export const CODEBUDDY_FAMILY_HIGH_VARIANTS: Record<CodebuddyModelFamily, string> = {
+  HAIKU: `${CODEBUDDY_FAMILY_DEFAULTS.HAIKU}-high`,
+  SONNET: `${CODEBUDDY_FAMILY_DEFAULTS.SONNET}-high`,
+  OPUS: `${CODEBUDDY_FAMILY_DEFAULTS.OPUS}-high`,
 };
 
 /** Built-in defaults for external provider models */
@@ -183,7 +183,7 @@ export function getDefaultTierModels(): Record<ModelTier, string> {
  * Resolve a Claude family from an arbitrary model ID.
  * Supports Anthropic IDs and provider-prefixed forms (e.g. vertex_ai/...).
  */
-export function resolveClaudeFamily(modelId: string): ClaudeModelFamily | null {
+export function resolveCodebuddyFamily(modelId: string): CodebuddyModelFamily | null {
   const lower = modelId.toLowerCase();
   if (!lower.includes('claude')) return null;
 
@@ -198,9 +198,9 @@ export function resolveClaudeFamily(modelId: string): ClaudeModelFamily | null {
  * Resolve a canonical Claude high variant from a Claude model ID.
  * Returns null for non-Claude model IDs.
  */
-export function getClaudeHighVariantFromModel(modelId: string): string | null {
-  const family = resolveClaudeFamily(modelId);
-  return family ? CLAUDE_FAMILY_HIGH_VARIANTS[family] : null;
+export function getCodebuddyHighVariantFromModel(modelId: string): string | null {
+  const family = resolveCodebuddyFamily(modelId);
+  return family ? CODEBUDDY_FAMILY_HIGH_VARIANTS[family] : null;
 }
 
 /** Get built-in default model for an external provider */
@@ -231,7 +231,7 @@ function hasBedrockModelId(modelIds: readonly string[]): boolean {
 /**
  * Detect whether Claude Code is running on AWS Bedrock.
  *
- * Claude Code sets CLAUDE_CODE_USE_BEDROCK=1 when configured for Bedrock.
+ * Claude Code sets CODEBUDDY_CODE_USE_BEDROCK=1 when configured for Bedrock.
  * As a fallback, Bedrock model IDs use prefixed formats like:
  *   - us.anthropic.claude-sonnet-4-6-v1:0
  *   - global.anthropic.claude-sonnet-4-6-v1:0
@@ -243,7 +243,7 @@ function hasBedrockModelId(modelIds: readonly string[]): boolean {
  */
 export function isBedrock(): boolean {
   // Primary signal: Claude Code's own env var
-  if (process.env.CLAUDE_CODE_USE_BEDROCK === '1') {
+  if (process.env.CODEBUDDY_CODE_USE_BEDROCK === '1') {
     return true;
   }
 
@@ -311,14 +311,14 @@ export function isSubagentSafeModelId(modelId: string): boolean {
 /**
  * Detect whether Claude Code is running on Google Vertex AI.
  *
- * Claude Code sets CLAUDE_CODE_USE_VERTEX=1 when configured for Vertex AI.
+ * Claude Code sets CODEBUDDY_CODE_USE_VERTEX=1 when configured for Vertex AI.
  * Vertex model IDs typically use a "vertex_ai/" prefix.
  *
  * On Vertex, passing bare tier names causes errors because the provider
  * expects full Vertex model paths.
  */
 export function isVertexAI(): boolean {
-  if (process.env.CLAUDE_CODE_USE_VERTEX === '1') {
+  if (process.env.CODEBUDDY_CODE_USE_VERTEX === '1') {
     return true;
   }
 
@@ -333,7 +333,7 @@ function hasVertexModelId(modelIds: readonly string[]): boolean {
 function hasNonClaudeModelId(modelIds: readonly string[]): boolean {
   for (const modelId of modelIds) {
     const lower = modelId.toLowerCase();
-    if (!lower.includes('claude') && !CLAUDE_TIER_ALIASES.has(lower)) {
+    if (!lower.includes('claude') && !CODEBUDDY_TIER_ALIASES.has(lower)) {
       return true;
     }
   }
@@ -406,11 +406,11 @@ export function shouldAutoForceInherit(): boolean {
     return true;
   }
 
-  if (process.env.CLAUDE_CODE_USE_BEDROCK === '1') {
+  if (process.env.CODEBUDDY_CODE_USE_BEDROCK === '1') {
     return true;
   }
 
-  if (process.env.CLAUDE_CODE_USE_VERTEX === '1') {
+  if (process.env.CODEBUDDY_CODE_USE_VERTEX === '1') {
     return true;
   }
 

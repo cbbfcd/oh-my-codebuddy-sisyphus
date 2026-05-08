@@ -74,7 +74,7 @@ const SKININTHEGAMEBROS_ONLY_SKILLS = new Set([
 
 /**
  * Detects the newest installed OMC version from persistent metadata or
- * existing CLAUDE.md markers so an older CLI package cannot overwrite a
+ * existing CODEBUDDY.md markers so an older CLI package cannot overwrite a
  * newer installation during `omc setup`.
  */
 function isComparableVersion(version: string | null | undefined): version is string {
@@ -111,13 +111,13 @@ function getNewestInstalledVersionHint(): string | null {
         candidates.push(metadata.version);
       }
     } catch {
-      // Ignore unreadable metadata and fall back to CLAUDE.md markers.
+      // Ignore unreadable metadata and fall back to CODEBUDDY.md markers.
     }
   }
 
   const claudeCandidates = [
-    join(CODEBUDDY_CONFIG_DIR, 'CLAUDE.md'),
-    join(homedir(), 'CLAUDE.md'),
+    join(CODEBUDDY_CONFIG_DIR, 'CODEBUDDY.md'),
+    join(homedir(), 'CODEBUDDY.md'),
   ];
 
   for (const candidatePath of claudeCandidates) {
@@ -128,7 +128,7 @@ function getNewestInstalledVersionHint(): string | null {
         candidates.push(detectedVersion);
       }
     } catch {
-      // Ignore unreadable CLAUDE.md candidates.
+      // Ignore unreadable CODEBUDDY.md candidates.
     }
   }
 
@@ -185,7 +185,7 @@ function canonicalizeExistingPath(value: string): string {
   }
 }
 
-function isDefaultClaudeConfigDirPath(configDir: string): boolean {
+function isDefaultCodebuddyConfigDirPath(configDir: string): boolean {
   return normalizePath(configDir) === normalizePath(join(homedir(), '.codebuddy'));
 }
 
@@ -206,14 +206,14 @@ function buildStatusLineCommand(
   const normalizedHudScriptPath = hudScriptPath.replace(/\\/g, '/');
 
   if (cacheWrapperPath) {
-    if (isDefaultClaudeConfigDirPath(CODEBUDDY_CONFIG_DIR)) {
+    if (isDefaultCodebuddyConfigDirPath(CODEBUDDY_CONFIG_DIR)) {
       return 'sh ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hud/omc-hud-cache.sh ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hud/omc-hud.mjs';
     }
 
     return `sh ${quoteShellArg(cacheWrapperPath.replace(/\\/g, '/'))} ${quoteShellArg(normalizedHudScriptPath)}`;
   }
 
-  if (isDefaultClaudeConfigDirPath(CODEBUDDY_CONFIG_DIR)) {
+  if (isDefaultCodebuddyConfigDirPath(CODEBUDDY_CONFIG_DIR)) {
     if (findNodePath) {
       return 'sh ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hud/find-node.sh ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hud/omc-hud.mjs';
     }
@@ -276,7 +276,7 @@ export interface InstallOptions {
    * Dev plugin-dir mode: skip copying agents and bundled skills into
    * `<configDir>` because the user is launching OMC via
    * `claude --plugin-dir <path>` (or `omc --plugin-dir <path>`) and the
-   * plugin already provides them at runtime. HUD, hooks, CLAUDE.md, and
+   * plugin already provides them at runtime. HUD, hooks, CODEBUDDY.md, and
    * `.omc-config.json` are still installed. Mutually exclusive with
    * `noPlugin` (the CLI gives `noPlugin` precedence).
    */
@@ -1052,7 +1052,7 @@ function getGlobalInstalledPackageRoot(): string | null {
       return null;
     }
 
-    const globalPackageRoot = join(npmRoot, 'oh-my-claude-sisyphus');
+    const globalPackageRoot = join(npmRoot, 'oh-my-codebuddy-sisyphus');
     return existsSync(globalPackageRoot) ? globalPackageRoot : null;
   } catch {
     return null;
@@ -1416,10 +1416,10 @@ function syncUserSkillCompatShims(log: (msg: string) => void): string[] {
 }
 
 function loadClaudeMdContent(): string {
-  const claudeMdPath = join(getPackageDir(), 'docs', 'CLAUDE.md');
+  const claudeMdPath = join(getPackageDir(), 'docs', 'CODEBUDDY.md');
 
   if (!existsSync(claudeMdPath)) {
-    console.error(`FATAL: CLAUDE.md not found: ${claudeMdPath}`);
+    console.error(`FATAL: CODEBUDDY.md not found: ${claudeMdPath}`);
     process.exit(1);
   }
 
@@ -1427,7 +1427,7 @@ function loadClaudeMdContent(): string {
 }
 
 /**
- * Extract the embedded OMC version from a CLAUDE.md file.
+ * Extract the embedded OMC version from a CODEBUDDY.md file.
  *
  * Primary source of truth is the injected `<!-- OMC:VERSION:x.y.z -->` marker.
  * Falls back to legacy headings that may include a version string inline.
@@ -1479,7 +1479,7 @@ export function syncPersistedSetupVersion(options?: {
 
   let detectedVersion = options?.version?.trim();
   if (!detectedVersion) {
-    const claudeMdPath = options?.claudeMdPath ?? join(CODEBUDDY_CONFIG_DIR, 'CLAUDE.md');
+    const claudeMdPath = options?.claudeMdPath ?? join(CODEBUDDY_CONFIG_DIR, 'CODEBUDDY.md');
     if (existsSync(claudeMdPath)) {
       detectedVersion = extractOmcVersionFromClaudeMd(readFileSync(claudeMdPath, 'utf-8')) ?? undefined;
     }
@@ -1500,8 +1500,8 @@ export function syncPersistedSetupVersion(options?: {
 }
 
 /**
- * Merge OMC content into existing CLAUDE.md using markers
- * @param existingContent - Existing CLAUDE.md content (null if file doesn't exist)
+ * Merge OMC content into existing CODEBUDDY.md using markers
+ * @param existingContent - Existing CODEBUDDY.md content (null if file doesn't exist)
  * @param omcContent - New OMC content to inject
  * @returns Merged content with markers
  */
@@ -1517,7 +1517,7 @@ export function mergeClaudeMd(existingContent: string | null, omcContent: string
   const markerEndRegex = createLineAnchoredMarkerRegex(END_MARKER);
 
   // Idempotency guard: strip markers from omcContent if already present
-  // This handles the case where docs/CLAUDE.md ships with markers
+  // This handles the case where docs/CODEBUDDY.md ships with markers
   let cleanOmcContent = omcContent;
   const omcStartIdx = findLineAnchoredMarker(omcContent, START_MARKER);
   const omcEndIdx = findLineAnchoredMarker(omcContent, END_MARKER, true);
@@ -1813,13 +1813,13 @@ export function install(options: InstallOptions = {}): InstallResult {
       }
     }
 
-    // Install CLAUDE.md with merge support.
+    // Install CODEBUDDY.md with merge support.
     // This runs regardless of plugin context so that `omc update` (which re-execs
     // as `update-reconcile` with CLAUDE_PLUGIN_ROOT still set) always keeps the
-    // version marker and OMC instructions in ~/.claude/CLAUDE.md up to date.
+    // version marker and OMC instructions in ~/.claude/CODEBUDDY.md up to date.
     // Skipped only for project-scoped plugins to avoid mutating global config.
     if (!projectScoped) {
-      const claudeMdPath = join(CODEBUDDY_CONFIG_DIR, 'CLAUDE.md');
+      const claudeMdPath = join(CODEBUDDY_CONFIG_DIR, 'CODEBUDDY.md');
       const omcContent = loadClaudeMdContent();
 
       // Read existing content if it exists
@@ -1831,9 +1831,9 @@ export function install(options: InstallOptions = {}): InstallResult {
       // Always create backup before modification (if file exists)
       if (existingContent !== null) {
         const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0]; // YYYY-MM-DDTHH-MM-SS
-        const backupPath = join(CODEBUDDY_CONFIG_DIR, `CLAUDE.md.backup.${timestamp}`);
+        const backupPath = join(CODEBUDDY_CONFIG_DIR, `CODEBUDDY.md.backup.${timestamp}`);
         writeFileSync(backupPath, existingContent);
-        log(`Backed up existing CLAUDE.md to ${backupPath}`);
+        log(`Backed up existing CODEBUDDY.md to ${backupPath}`);
       }
 
       // Merge OMC content with existing content
@@ -1841,9 +1841,9 @@ export function install(options: InstallOptions = {}): InstallResult {
       writeFileSync(claudeMdPath, mergedContent);
 
       if (existingContent) {
-        log('Updated CLAUDE.md (merged with existing content)');
+        log('Updated CODEBUDDY.md (merged with existing content)');
       } else {
-        log('Created CLAUDE.md');
+        log('Created CODEBUDDY.md');
       }
     }
 

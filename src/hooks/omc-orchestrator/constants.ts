@@ -18,7 +18,7 @@ export const ALLOWED_PATH_PATTERNS = [
   /^\.codebuddy\//,                 // .claude/** (local)
   /^~?\/\.codebuddy\//,             // legacy ~/.codebuddy/** references
   /\/\.codebuddy\//,                // any /.codebuddy/ path
-  /CLAUDE\.md$/,                 // **/CLAUDE.md
+  /CODEBUDDY\.md$/,                 // **/CODEBUDDY.md
   /AGENTS\.md$/,                 // **/AGENTS.md
 ];
 
@@ -105,7 +105,7 @@ As an ORCHESTRATOR, you MUST:
 **ALLOWED direct file operations:**
 - Files inside \`.omc/\` (plans, notepads, drafts)
 - Files inside \`[$CODEBUDDY_CONFIG_DIR|~/.codebuddy]/\`
-- \`CLAUDE.md\` and \`AGENTS.md\` files
+- \`CODEBUDDY.md\` and \`AGENTS.md\` files
 - Reading files for verification
 - Running diagnostics/tests
 

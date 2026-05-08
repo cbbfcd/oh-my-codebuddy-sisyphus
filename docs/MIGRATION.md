@@ -192,14 +192,14 @@ Your old commands still work! But now you don't need them.
 The project was rebranded to better reflect its purpose and improve discoverability.
 
 - **Project/brand name**: `oh-my-codebuddy` (GitHub repo, plugin name, commands)
-- **npm package name**: `oh-my-claude-sisyphus` (unchanged)
+- **npm package name**: `oh-my-codebuddy-sisyphus` (unchanged)
 
-> **Why the difference?** The npm package name `oh-my-claude-sisyphus` was kept for backward compatibility with existing installations. The project, GitHub repository, plugin, and all commands use `oh-my-codebuddy`.
+> **Why the difference?** The npm package name `oh-my-codebuddy-sisyphus` was kept for backward compatibility with existing installations. The project, GitHub repository, plugin, and all commands use `oh-my-codebuddy`.
 
 #### NPM Install Command (unchanged)
 
 ```bash
-npm i -g oh-my-claude-sisyphus@latest
+npm i -g oh-my-codebuddy-sisyphus@latest
 ```
 
 ### What Changed

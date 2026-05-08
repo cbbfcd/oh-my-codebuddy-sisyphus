@@ -9,7 +9,7 @@
  *
  * Deliverable requirements are loaded from (in priority order):
  *   1. .omc/deliverables.json (project-specific overrides)
- *   2. ${CLAUDE_PLUGIN_ROOT}/templates/deliverables.json (OMC defaults)
+ *   2. ${CODEBUDDY_PLUGIN_ROOT}/templates/deliverables.json (OMC defaults)
  *
  * This hook is ADVISORY (non-blocking). It returns additionalContext warnings
  * when deliverables are missing, but never prevents the agent from stopping.
@@ -49,7 +49,7 @@ function loadDeliverableConfig(directory) {
   }
 
   // Priority 2: OMC defaults
-  const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+  const pluginRoot = process.env.CODEBUDDY_PLUGIN_ROOT || process.env.CLAUDE_PLUGIN_ROOT;
   if (pluginRoot) {
     const defaultConfig = join(pluginRoot, 'templates', 'deliverables.json');
     if (existsSync(defaultConfig)) {

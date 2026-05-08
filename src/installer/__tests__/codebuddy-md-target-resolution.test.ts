@@ -16,7 +16,7 @@ async function loadInstaller() {
   return import('../index.js');
 }
 
-describe('install() CLAUDE.md target resolution', () => {
+describe('install() CODEBUDDY.md target resolution', () => {
   beforeEach(() => {
     tempRoot = mkdtempSync(join(tmpdir(), 'omc-claude-target-'));
     testClaudeDir = join(tempRoot, 'global-claude');
@@ -52,9 +52,9 @@ describe('install() CLAUDE.md target resolution', () => {
     }
   });
 
-  it('updates ~/.codebuddy/CLAUDE.md even when ~/CLAUDE.md exists', async () => {
-    const configClaudePath = join(testClaudeDir, 'CLAUDE.md');
-    const homeClaudePath = join(testHomeDir, 'CLAUDE.md');
+  it('updates ~/.codebuddy/CODEBUDDY.md even when ~/CODEBUDDY.md exists', async () => {
+    const configClaudePath = join(testClaudeDir, 'CODEBUDDY.md');
+    const homeClaudePath = join(testHomeDir, 'CODEBUDDY.md');
 
     writeFileSync(homeClaudePath, '# Home CLAUDE\nkeep me\n');
     writeFileSync(
@@ -76,13 +76,13 @@ describe('install() CLAUDE.md target resolution', () => {
     expect(updatedConfig).not.toContain('stale installer content');
     expect(readFileSync(homeClaudePath, 'utf-8')).toBe('# Home CLAUDE\nkeep me\n');
 
-    const backups = readdirSync(testClaudeDir).filter(name => name.startsWith('CLAUDE.md.backup.'));
+    const backups = readdirSync(testClaudeDir).filter(name => name.startsWith('CODEBUDDY.md.backup.'));
     expect(backups).toHaveLength(1);
   });
 
-  it('preserves project-scoped behavior by skipping global CLAUDE.md writes', async () => {
+  it('preserves project-scoped behavior by skipping global CODEBUDDY.md writes', async () => {
     process.env.CLAUDE_PLUGIN_ROOT = join(tempRoot, 'project', '.codebuddy', 'plugins', 'oh-my-codebuddy');
-    writeFileSync(join(testHomeDir, 'CLAUDE.md'), '# Home CLAUDE\nkeep me\n');
+    writeFileSync(join(testHomeDir, 'CODEBUDDY.md'), '# Home CLAUDE\nkeep me\n');
 
     const { install } = await loadInstaller();
     const result = install({
@@ -92,6 +92,6 @@ describe('install() CLAUDE.md target resolution', () => {
     });
 
     expect(result.success).toBe(true);
-    expect(existsSync(join(testClaudeDir, 'CLAUDE.md'))).toBe(false);
+    expect(existsSync(join(testClaudeDir, 'CODEBUDDY.md'))).toBe(false);
   });
 });

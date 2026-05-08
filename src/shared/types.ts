@@ -1,5 +1,5 @@
 /**
- * Shared types for Oh-My-ClaudeCode
+ * Shared types for Oh-My-Codebuddy
  */
 
 export type ModelType = "sonnet" | "opus" | "haiku" | "inherit";
@@ -414,7 +414,7 @@ export const CANONICAL_TEAM_ROLES = [
 export type CanonicalTeamRole = typeof CANONICAL_TEAM_ROLES[number];
 
 /** Provider for /team role routing. */
-export type TeamRoleProvider = 'claude' | 'codex' | 'gemini';
+export type TeamRoleProvider = 'codebuddy' | 'codex' | 'gemini';
 
 /** Tier name accepted in role-assignment `model` field. */
 export type TeamRoleTier = 'HIGH' | 'MEDIUM' | 'LOW';

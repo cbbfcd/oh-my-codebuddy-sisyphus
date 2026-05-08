@@ -188,7 +188,7 @@ describe('HUD marketplace resolution', () => {
     const npmRoot = process.platform === 'win32'
       ? join(npmPrefix, 'node_modules')
       : join(npmPrefix, 'lib', 'node_modules');
-    const npmPackageRoot = join(npmRoot, 'oh-my-claude-sisyphus');
+    const npmPackageRoot = join(npmRoot, 'oh-my-codebuddy-sisyphus');
     const npmHudDir = join(npmPackageRoot, 'dist', 'hud');
     mkdirSync(npmHudDir, { recursive: true });
     writeFileSync(join(npmPackageRoot, 'package.json'), '{"type":"module"}\n');
@@ -232,7 +232,7 @@ describe('HUD marketplace resolution', () => {
     mkdirSync(fakeHome, { recursive: true });
 
     const sentinelPath = join(configDir, 'npm-package-loaded.txt');
-    const npmPackageRoot = join(configDir, 'node_modules', 'oh-my-claude-sisyphus');
+    const npmPackageRoot = join(configDir, 'node_modules', 'oh-my-codebuddy-sisyphus');
     const npmHudDir = join(npmPackageRoot, 'dist', 'hud');
     mkdirSync(npmHudDir, { recursive: true });
     writeFileSync(join(npmPackageRoot, 'package.json'), '{"type":"module"}\n');
@@ -255,9 +255,9 @@ describe('HUD marketplace resolution', () => {
     expect(existsSync(hudScriptPath)).toBe(true);
 
     const content = readFileSync(hudScriptPath, 'utf-8');
-    expect(content).toContain('"oh-my-claude-sisyphus/dist/hud/index.js"');
+    expect(content).toContain('"oh-my-codebuddy-sisyphus/dist/hud/index.js"');
     expect(content).toContain('"oh-my-codebuddy/dist/hud/index.js"');
-    expect(content.indexOf('"oh-my-claude-sisyphus/dist/hud/index.js"')).toBeLessThan(
+    expect(content.indexOf('"oh-my-codebuddy-sisyphus/dist/hud/index.js"')).toBeLessThan(
       content.indexOf('"oh-my-codebuddy/dist/hud/index.js"')
     );
 

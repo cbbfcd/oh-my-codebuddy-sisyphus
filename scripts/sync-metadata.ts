@@ -72,7 +72,7 @@ function loadMetadata(): Metadata {
     keywords: packageJson.keywords || [],
     repository: packageJson.repository?.url?.replace(/^git\+/, '').replace(/\.git$/, '') || '',
     homepage: packageJson.homepage || '',
-    npmPackage: packageJson.name || 'oh-my-claude-sisyphus',
+    npmPackage: packageJson.name || 'oh-my-codebuddy',
   };
 }
 
@@ -152,7 +152,7 @@ function getFileSyncConfigs(): FileSync[] {
       ],
     },
     {
-      path: '.github/CLAUDE.md',
+      path: '.github/CODEBUDDY.md',
       replacements: [
         {
           pattern: /\*\*\d+ specialized agents\*\*/g,
@@ -167,12 +167,12 @@ function getFileSyncConfigs(): FileSync[] {
       ],
     },
     {
-      path: 'docs/CLAUDE.md',
+      path: 'docs/CODEBUDDY.md',
       replacements: [
         {
           pattern: /<!-- OMC:VERSION:[^\s]*? -->/g,
           replacement: (m) => `<!-- OMC:VERSION:${m.version} -->`,
-          description: 'CLAUDE.md version marker',
+          description: 'CODEBUDDY.md version marker',
         },
       ],
     },
@@ -361,7 +361,7 @@ ${color('Description:', colors.cyan)}
 ${color('Files Synced:', colors.cyan)}
   - README.md (npm badges + featured contributors)
   - docs/REFERENCE.md (version badges and headers)
-  - .github/CLAUDE.md (agent/skill counts)
+  - .github/CODEBUDDY.md (agent/skill counts)
   - docs/ARCHITECTURE.md (version references)
   - CHANGELOG.md (version header verification)
 

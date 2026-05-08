@@ -177,7 +177,7 @@ ${'- oversized startup guidance\n'.repeat(700)}
         ...process.env,
         HOME: fakeHome,
         USERPROFILE: fakeHome,
-        CLAUDE_CODE_USE_BEDROCK: '1',
+        CODEBUDDY_CODE_USE_BEDROCK: '1',
       },
       timeout: 15000,
     }).trim();

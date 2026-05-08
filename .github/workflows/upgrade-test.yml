@@ -32,25 +32,25 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      # ── 2. Install Claude Code ────────────────────────────────────────────────
-      # Keep Claude Code installed in CI so the upgrade path still runs in a
-      # realistic environment, but avoid relying on Claude runtime behavior for
+      # ── 2. Install Codebuddy Code ────────────────────────────────────────────────
+      # Keep Codebuddy Code installed in CI so the upgrade path still runs in a
+      # realistic environment, but avoid relying on Codebuddy runtime behavior for
       # hook verification. Step 6 validates the installed SessionStart hook
       # directly from repo-owned artifacts and therefore runs on push + PR.
 
-      - name: Install Claude Code
+      - name: Install Codebuddy Code
         run: |
-          npm install -g @anthropic-ai/claude-code
-          claude --version
+          npm install -g codebuddy
+          codebuddy --version
 
-      - name: Verify Claude Code is on PATH
-        run: which claude
+      - name: Verify Codebuddy Code is on PATH
+        run: which codebuddy
 
       # ── 3. Install omc@4.9.3 via npm ────────────────────────────────────────
       # Establishes the "old version" baseline before `omc update` is run.
 
       - name: Install omc v4.9.3 via npm
-        run: npm install -g oh-my-claude-sisyphus@4.9.3
+        run: npm install -g oh-my-codebuddy@4.9.3
 
       - name: Verify omc version is 4.9.3
         run: |
@@ -76,7 +76,7 @@ jobs:
       #   - Produce zero stderr
       # Any npm warnings, git warnings, or sync messages to stderr are failures.
       # Note: syncMarketplaceClone() is best-effort and skips gracefully when
-      # the marketplace clone (~/.claude/plugins/marketplaces/omc/) doesn't exist,
+      # the marketplace clone (~/.codebuddy/plugins/marketplaces/omc/) doesn't exist,
       # so CI runners with a fresh home directory are handled correctly.
 
       - name: Run omc update
@@ -149,14 +149,14 @@ jobs:
       #   - the hook script runs successfully on representative SessionStart JSON
       #
       # This keeps upgrade coverage inside OMC-owned artifacts and avoids relying
-      # on external Claude CLI print-mode behavior in headless CI.
+      # on external Codebuddy CLI print-mode behavior in headless CI.
       - name: Verify SessionStart hook wiring and script
         run: |
           set -o pipefail
 
-          CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-          SESSION_HOOK="$CLAUDE_CONFIG_DIR/hooks/session-start.mjs"
-          SETTINGS_PATH="$CLAUDE_CONFIG_DIR/settings.json"
+          CODEBUDDY_CONFIG_DIR="${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}"
+          SESSION_HOOK="$CODEBUDDY_CONFIG_DIR/hooks/session-start.mjs"
+          SETTINGS_PATH="$CODEBUDDY_CONFIG_DIR/settings.json"
 
           if [ ! -f "$SESSION_HOOK" ]; then
             echo "FAIL: missing SessionStart hook script at $SESSION_HOOK"
@@ -164,7 +164,7 @@ jobs:
           fi
 
           if [ ! -f "$SETTINGS_PATH" ]; then
-            echo "FAIL: missing Claude settings at $SETTINGS_PATH"
+            echo "FAIL: missing Codebuddy settings at $SETTINGS_PATH"
             exit 1
           fi
 

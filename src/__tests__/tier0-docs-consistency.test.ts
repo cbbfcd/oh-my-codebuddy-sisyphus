@@ -13,7 +13,7 @@ function readProjectFile(...segments: string[]): string {
 
 describe('Tier-0 contract docs consistency', () => {
   const referenceDoc = readProjectFile('docs', 'REFERENCE.md');
-  const claudeDoc = readProjectFile('docs', 'CLAUDE.md');
+  const claudeDoc = readProjectFile('docs', 'CODEBUDDY.md');
 
   it('keeps REFERENCE ToC counts aligned with section headings', () => {
     const tocAgents = referenceDoc.match(/\[Agents \((\d+) Total\)\]\(#agents-\d+-total\)/);
@@ -31,7 +31,7 @@ describe('Tier-0 contract docs consistency', () => {
     }
   });
 
-  it('documents all Tier-0 keywords in CLAUDE.md', () => {
+  it('documents all Tier-0 keywords in CODEBUDDY.md', () => {
     for (const keyword of ['autopilot', 'ultrawork', 'ralph', 'team', 'ralplan']) {
       expect(claudeDoc).toContain(`\`${keyword}\``);
     }
