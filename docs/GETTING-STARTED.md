@@ -17,7 +17,7 @@ If you're new to Oh My CodeBuddy (OMC), follow the steps below in order.
 ### Prerequisites
 
 - [CodeBuddy Code](https://docs.anthropic.com/claude-code) must be installed
-- Claude Max/Pro subscription or an Anthropic API key is required
+- CodeBuddy subscription or an Anthropic API key is required
 
 ---
 

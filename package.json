@@ -1,5 +1,5 @@
 {
-  "name": "oh-my-codebuddy",
+  "name": "ooh-my-codebuddy-sisyphus",
   "version": "4.13.6",
   "description": "CodeBuddy Code 多 Agent 智能编排系统",
   "type": "module",
@@ -78,7 +78,7 @@
     "safe-regex": "^2.1.1",
     "vscode-languageserver-protocol": "^3.17.5",
     "zod": "^4.0.0",
-    "@tencent-ai/agent-sdk": "^0.3.146"
+    "@tencent-ai/agent-sdk": "^0.3.147"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
