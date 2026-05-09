@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const availability = vi.hoisted(() => ({
+    codebuddy: true,
     claude: true,
     codex: false,
     gemini: false,
