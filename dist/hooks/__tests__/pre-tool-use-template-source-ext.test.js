@@ -20,7 +20,7 @@ function runPreToolUseHook(command) {
 }
 describe('pre-tool-use template source extension detection', () => {
     it('does not warn for .json with stderr redirect', () => {
-        const output = runPreToolUseHook('cat ~/.claude/settings.json 2>/dev/null | python3 -m json.tool');
+        const output = runPreToolUseHook('cat ~/.codebuddy/settings.json 2>/dev/null | python3 -m json.tool');
         expect(output.continue).toBe(true);
         expect(output.suppressOutput).toBe(true);
         expect(output.hookSpecificOutput).toBeUndefined();

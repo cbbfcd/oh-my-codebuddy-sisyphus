@@ -90,7 +90,7 @@ function resolveTierToModelId(tier, cfg) {
  * Tier names expand to model IDs; explicit IDs pass through;
  * undefined falls back to the role's default tier.
  */
-function resolveClaudeModel(role, raw, cfg) {
+function resolveCodebuddyModel(role, raw, cfg) {
     if (typeof raw === 'string' && raw.length > 0) {
         return isTier(raw) ? resolveTierToModelId(raw, cfg) : raw;
     }
@@ -132,10 +132,10 @@ export function resolveRoleAssignment(role, cfg) {
     const spec = getRoleRoutingSpec(roleRouting, canonical);
     const isOrchestrator = canonical === 'orchestrator';
     const provider = isOrchestrator
-        ? 'claude'
-        : (spec?.provider ?? 'claude');
-    const model = provider === 'claude'
-        ? resolveClaudeModel(canonical, spec?.model, cfg)
+        ? 'codebuddy'
+        : (spec?.provider ?? 'codebuddy');
+    const model = provider === 'codebuddy'
+        ? resolveCodebuddyModel(canonical, spec?.model, cfg)
         : resolveExternalModel(provider, spec?.model, cfg);
     const agent = spec?.agent ?? ROLE_TO_AGENT[canonical];
     return { provider, model, agent };
@@ -163,13 +163,13 @@ export function buildResolvedRoutingSnapshot(cfg) {
         // (e.g., 'gpt-5.3-codex'), drop it for fallback so claude doesn't
         // receive an external model id; tier names always survive.
         const spec = getRoleRoutingSpec(roleRouting, role);
-        const isExternalPrimary = primary.provider !== 'claude';
+        const isExternalPrimary = primary.provider !== 'codebuddy';
         const fallbackModelInput = isExternalPrimary && spec?.model && !isTier(spec.model)
             ? undefined
             : spec?.model;
         const fallback = {
-            provider: 'claude',
-            model: resolveClaudeModel(role, fallbackModelInput, cfg),
+            provider: 'codebuddy',
+            model: resolveCodebuddyModel(role, fallbackModelInput, cfg),
             agent: primary.agent,
         };
         out[role] = { primary, fallback };

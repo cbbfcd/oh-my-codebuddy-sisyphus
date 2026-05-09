@@ -188,7 +188,7 @@ export function getConfigPaths() {
     const userConfigDir = getConfigDir();
     return {
         user: join(userConfigDir, "claude-omc", "config.jsonc"),
-        project: join(process.cwd(), ".claude", "omc.jsonc"),
+        project: join(process.cwd(), ".codebuddy", "omc.jsonc"),
     };
 }
 /**
@@ -520,8 +520,8 @@ export function loadConfig() {
     // Auto-enable forceInherit for non-standard providers (issues #1201, #1025)
     // Only auto-enable if user hasn't explicitly set it via config or env var.
     // Triggers for: CC Switch / LiteLLM (non-Claude model IDs), custom
-    // ANTHROPIC_BASE_URL, AWS Bedrock (CLAUDE_CODE_USE_BEDROCK=1), and
-    // Google Vertex AI (CLAUDE_CODE_USE_VERTEX=1). Passing Claude-specific
+    // ANTHROPIC_BASE_URL, AWS Bedrock (CODEBUDDY_CODE_USE_BEDROCK=1), and
+    // Google Vertex AI (CODEBUDDY_CODE_USE_VERTEX=1). Passing Claude-specific
     // tier names (sonnet/opus/haiku) causes 400 errors on these platforms.
     if (config.routing?.forceInherit !== true &&
         process.env.OMC_ROUTING_FORCE_INHERIT === undefined &&
@@ -556,7 +556,7 @@ function compactBudgetedText(text, maxChars) {
 }
 function looksLikeOmcGuidance(content) {
     return (content.includes("<guidance_schema_contract>") &&
-        /oh-my-(claudecode|codex)/i.test(content) &&
+        /oh-my-(claudecode|codex|codebuddy)/i.test(content) &&
         OMC_STARTUP_COMPACTABLE_SECTIONS.some((section) => content.includes(`<${section}>`) && content.includes(`</${section}>`)));
 }
 export function compactOmcStartupGuidance(content) {
@@ -582,7 +582,7 @@ export function compactOmcStartupGuidance(content) {
     return `${normalized.slice(0, OMC_STARTUP_GUIDANCE_MAX_CHARS - notice.length).trimEnd()}${notice}`;
 }
 /**
- * Find and load AGENTS.md or CLAUDE.md files for context injection
+ * Find and load AGENTS.md or CODEBUDDY.md files for context injection
  */
 export function findContextFiles(startDir) {
     const files = [];
@@ -590,9 +590,9 @@ export function findContextFiles(startDir) {
     // Files to look for
     const contextFileNames = [
         "AGENTS.md",
-        "CLAUDE.md",
-        ".claude/CLAUDE.md",
-        ".claude/AGENTS.md",
+        "CODEBUDDY.md",
+        ".codebuddy/CODEBUDDY.md",
+        ".codebuddy/AGENTS.md",
     ];
     // Search in current directory and parent directories
     let currentDir = searchDir;
@@ -613,7 +613,7 @@ export function findContextFiles(startDir) {
     return files;
 }
 /**
- * Load context from AGENTS.md/CLAUDE.md files
+ * Load context from AGENTS.md/CODEBUDDY.md files
  */
 export function loadContextFromFiles(files) {
     const contexts = [];
@@ -646,7 +646,7 @@ export function loadContextFromFiles(files) {
 export function generateConfigSchema() {
     return {
         $schema: "http://json-schema.org/draft-07/schema#",
-        title: "Oh-My-ClaudeCode Configuration",
+        title: "Oh-My-Codebuddy Configuration",
         type: "object",
         properties: {
             agents: {

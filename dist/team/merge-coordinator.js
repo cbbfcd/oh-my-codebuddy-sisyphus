@@ -29,25 +29,40 @@ export function validateBranchName(branch) {
 export function checkMergeConflicts(workerBranch, baseBranch, repoRoot) {
     validateBranchName(workerBranch);
     validateBranchName(baseBranch);
-    // Try git merge-tree --write-tree (Git 2.38+) for accurate conflict detection
+    // Try git merge-tree --write-tree (Git 2.38+) for accurate conflict detection.
+    // Force C locale so any human-readable lines we may also parse stay in English;
+    // the primary parser below uses the locale-independent machine-readable section.
+    const cLocaleEnv = { ...process.env, LC_ALL: 'C', LANG: 'C' };
     try {
-        execFileSync('git', ['merge-tree', '--write-tree', baseBranch, workerBranch], { cwd: repoRoot, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+        execFileSync('git', ['merge-tree', '--write-tree', baseBranch, workerBranch], { cwd: repoRoot, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'], env: cLocaleEnv });
         // Exit code 0 means no conflicts
         return [];
     }
     catch (err) {
         const error = err;
         if (error.status === 1 && typeof error.stdout === 'string') {
-            // Exit code 1 means conflicts — parse conflicting file paths from output
-            const lines = error.stdout.split('\n');
-            const conflicts = [];
-            for (const line of lines) {
-                const match = line.match(/^CONFLICT\s.*?:\s+.*?\s+in\s+(.+)$/);
-                if (match) {
-                    conflicts.push(match[1].trim());
+            // Exit code 1 means conflicts. Output format:
+            //   <merged-tree-OID>
+            //   <mode> <object> <stage>\t<path>   ← stage 1/2/3 = conflicted entries (machine-readable)
+            //   ...
+            //   <blank line>
+            //   <human-readable messages, e.g. "CONFLICT (content): Merge conflict in <file>">
+            // Prefer the machine-readable section because it is locale-independent.
+            const conflicts = new Set();
+            for (const line of error.stdout.split('\n')) {
+                const machine = line.match(/^\d{6} [0-9a-f]+ ([1-3])\t(.+)$/);
+                if (machine) {
+                    conflicts.add(machine[2]);
+                    continue;
+                }
+                // Fallback: also accept the English human-readable form (defensive — only
+                // helpful if Git ever drops the machine-readable section).
+                const human = line.match(/^CONFLICT\s.*?:\s+.*?\s+in\s+(.+)$/);
+                if (human) {
+                    conflicts.add(human[1].trim());
                 }
             }
-            return conflicts.length > 0 ? conflicts : ['(merge-tree reported conflicts)'];
+            return conflicts.size > 0 ? Array.from(conflicts) : ['(merge-tree reported conflicts)'];
         }
         // If merge-tree --write-tree is not supported, fall back to overlap heuristic
     }

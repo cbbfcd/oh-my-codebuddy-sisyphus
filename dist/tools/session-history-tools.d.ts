@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 export declare const sessionSearchTool: ToolDefinition<{
     query: z.ZodString;

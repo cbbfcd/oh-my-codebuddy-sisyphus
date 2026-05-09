@@ -6,7 +6,7 @@ import { getTeamStatus } from '../team-status.js';
 import { atomicWriteJson } from '../fs-utils.js';
 import { appendOutbox } from '../inbox-outbox.js';
 import { recordTaskUsage } from '../usage-tracker.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 const TEST_TEAM = 'test-team-status';
 let WORK_DIR;
 // Canonical tasks dir: {WORK_DIR}/.omc/state/team/{TEST_TEAM}/tasks/
@@ -20,8 +20,8 @@ beforeEach(() => {
 });
 afterEach(() => {
     rmSync(WORK_DIR, { recursive: true, force: true });
-    // Clean up outbox files written to ~/.claude/teams/ by appendOutbox
-    rmSync(join(getClaudeConfigDir(), 'teams', TEST_TEAM), { recursive: true, force: true });
+    // Clean up outbox files written to ~/.codebuddy/teams/ by appendOutbox
+    rmSync(join(getCodebuddyConfigDir(), 'teams', TEST_TEAM), { recursive: true, force: true });
 });
 function writeWorkerRegistry(workers) {
     const registryPath = join(WORK_DIR, '.omc', 'state', 'team-mcp-workers.json');

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { VERSION, CLAUDE_CONFIG_DIR, AGENTS_DIR, COMMANDS_DIR, SKILLS_DIR, HOOKS_DIR, isRunningAsPlugin, isProjectScopedPlugin, extractOmcVersionFromClaudeMd, syncPersistedSetupVersion, } from '../installer/index.js';
+import { VERSION, CODEBUDDY_CONFIG_DIR, AGENTS_DIR, COMMANDS_DIR, SKILLS_DIR, HOOKS_DIR, isRunningAsPlugin, isProjectScopedPlugin, extractOmcVersionFromClaudeMd, syncPersistedSetupVersion, } from '../installer/index.js';
 import { getRuntimePackageVersion } from '../lib/version.js';
 import { join, dirname } from 'path';
 import { tmpdir } from 'os';
@@ -31,12 +31,12 @@ function loadAgentDefinitions() {
     return definitions;
 }
 /**
- * Load CLAUDE.md content for testing
+ * Load CODEBUDDY.md content for testing
  */
 function loadClaudeMdContent() {
-    const claudeMdPath = join(getPackageDir(), 'docs', 'CLAUDE.md');
+    const claudeMdPath = join(getPackageDir(), 'docs', 'CODEBUDDY.md');
     if (!existsSync(claudeMdPath)) {
-        throw new Error(`CLAUDE.md not found: ${claudeMdPath}`);
+        throw new Error(`CODEBUDDY.md not found: ${claudeMdPath}`);
     }
     return readFileSync(claudeMdPath, 'utf-8');
 }
@@ -155,7 +155,7 @@ describe('Installer Constants', () => {
                 const commandName = file.replace('.md', '');
                 const content = readFileSync(join(commandsDir, file), 'utf-8');
                 // Detect pattern: command file that tells user to invoke the same-named skill
-                const skillInvokePattern = new RegExp(`/oh-my-claudecode:${commandName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
+                const skillInvokePattern = new RegExp(`/oh-my-codebuddy:${commandName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
                 if (skillInvokePattern.test(content) && content.toLowerCase().includes('deprecated')) {
                     selfReferentialStubs.push(file);
                 }
@@ -193,7 +193,7 @@ describe('Installer Constants', () => {
             }
         });
         it('should reference all core agents', () => {
-            // The new CLAUDE.md has agents in tables and examples
+            // The new CODEBUDDY.md has agents in tables and examples
             // We'll check for a subset of key agents to ensure the section exists
             const keyAgents = [
                 'architect',
@@ -263,7 +263,7 @@ describe('Installer Constants', () => {
         it('should stay in sync with runtime package version helper', () => {
             expect(VERSION).toBe(getRuntimePackageVersion());
         });
-        it('should keep docs/CLAUDE.md version marker in sync with package version', () => {
+        it('should keep docs/CODEBUDDY.md version marker in sync with package version', () => {
             const versionMatch = CLAUDE_MD_CONTENT.match(/<!-- OMC:VERSION:([^\s]*?) -->/);
             expect(versionMatch?.[1]).toBe(VERSION);
         });
@@ -271,11 +271,11 @@ describe('Installer Constants', () => {
     describe('extractOmcVersionFromClaudeMd()', () => {
         it('prefers the OMC version marker', () => {
             const content = `<!-- OMC:VERSION:4.7.7 -->
-# oh-my-claudecode - Intelligent Multi-Agent Orchestration`;
+# oh-my-codebuddy - Intelligent Multi-Agent Orchestration`;
             expect(extractOmcVersionFromClaudeMd(content)).toBe('v4.7.7');
         });
         it('falls back to legacy heading versions', () => {
-            const content = '# oh-my-claudecode v4.6.0 - Intelligent Multi-Agent Orchestration';
+            const content = '# oh-my-codebuddy v4.6.0 - Intelligent Multi-Agent Orchestration';
             expect(extractOmcVersionFromClaudeMd(content)).toBe('v4.6.0');
         });
     });
@@ -311,14 +311,14 @@ describe('Installer Constants', () => {
     });
     describe('File Paths', () => {
         it('should define valid directory paths', () => {
-            expect(AGENTS_DIR).toBe(join(CLAUDE_CONFIG_DIR, 'agents'));
-            expect(COMMANDS_DIR).toBe(join(CLAUDE_CONFIG_DIR, 'commands'));
-            expect(SKILLS_DIR).toBe(join(CLAUDE_CONFIG_DIR, 'skills'));
-            expect(HOOKS_DIR).toBe(join(CLAUDE_CONFIG_DIR, 'hooks'));
+            expect(AGENTS_DIR).toBe(join(CODEBUDDY_CONFIG_DIR, 'agents'));
+            expect(COMMANDS_DIR).toBe(join(CODEBUDDY_CONFIG_DIR, 'commands'));
+            expect(SKILLS_DIR).toBe(join(CODEBUDDY_CONFIG_DIR, 'skills'));
+            expect(HOOKS_DIR).toBe(join(CODEBUDDY_CONFIG_DIR, 'hooks'));
         });
         it('should use absolute paths', () => {
             const paths = [
-                CLAUDE_CONFIG_DIR,
+                CODEBUDDY_CONFIG_DIR,
                 AGENTS_DIR,
                 COMMANDS_DIR,
                 SKILLS_DIR,
@@ -336,7 +336,7 @@ describe('Installer Constants', () => {
             const uniqueAgentKeys = new Set(agentKeys);
             expect(agentKeys.length).toBe(uniqueAgentKeys.size);
         });
-        it('should have agents referenced in CLAUDE.md exist in AGENT_DEFINITIONS', () => {
+        it('should have agents referenced in CODEBUDDY.md exist in AGENT_DEFINITIONS', () => {
             const agentMatches = CLAUDE_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(Opus|Sonnet|Haiku)/g);
             for (const match of agentMatches) {
                 const agentName = match[1];
@@ -421,7 +421,7 @@ describe('Installer Constants', () => {
             expect(isRunningAsPlugin()).toBe(false);
         });
         it('should return true when CLAUDE_PLUGIN_ROOT is set', () => {
-            process.env.CLAUDE_PLUGIN_ROOT = '/home/user/.claude/plugins/marketplaces/oh-my-claudecode';
+            process.env.CLAUDE_PLUGIN_ROOT = '/home/user/.codebuddy/plugins/marketplaces/oh-my-codebuddy';
             expect(isRunningAsPlugin()).toBe(true);
         });
         it('should detect plugin context from environment variable', () => {
@@ -447,18 +447,18 @@ describe('Installer Constants', () => {
             expect(isProjectScopedPlugin()).toBe(false);
         });
         it('should return false for global plugin installation', () => {
-            // Global plugins are under ~/.claude/plugins/
-            process.env.CLAUDE_PLUGIN_ROOT = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-claudecode', '3.9.0');
+            // Global plugins are under ~/.codebuddy/plugins/
+            process.env.CLAUDE_PLUGIN_ROOT = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '3.9.0');
             expect(isProjectScopedPlugin()).toBe(false);
         });
         it('should return true for project-scoped plugin installation', () => {
             // Project-scoped plugins are in the project's .claude/plugins/ directory
-            process.env.CLAUDE_PLUGIN_ROOT = '/home/user/myproject/.claude/plugins/oh-my-claudecode';
+            process.env.CLAUDE_PLUGIN_ROOT = '/home/user/myproject/.codebuddy/plugins/oh-my-codebuddy';
             expect(isProjectScopedPlugin()).toBe(true);
         });
         it('should return true when plugin is outside global plugin directory', () => {
-            // Any path that's not under ~/.claude/plugins/ is considered project-scoped
-            process.env.CLAUDE_PLUGIN_ROOT = '/var/projects/app/.claude/plugins/omc';
+            // Any path that's not under ~/.codebuddy/plugins/ is considered project-scoped
+            process.env.CLAUDE_PLUGIN_ROOT = '/var/projects/app/.codebuddy/plugins/omc';
             expect(isProjectScopedPlugin()).toBe(true);
         });
         it('should handle Windows-style paths', () => {
@@ -467,7 +467,7 @@ describe('Installer Constants', () => {
             expect(isProjectScopedPlugin()).toBe(true);
         });
         it('should handle trailing slashes in paths', () => {
-            process.env.CLAUDE_PLUGIN_ROOT = join(CLAUDE_CONFIG_DIR, 'plugins', 'cache', 'omc') + '/';
+            process.env.CLAUDE_PLUGIN_ROOT = join(CODEBUDDY_CONFIG_DIR, 'plugins', 'cache', 'omc') + '/';
             expect(isProjectScopedPlugin()).toBe(false);
         });
     });

@@ -4,7 +4,7 @@
  * Provides trace_timeline and trace_summary tools for the /trace feature.
  * Reads session replay JSONL files and formats them for display.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import { readReplayEvents, getReplaySummary, } from '../hooks/subagent-tracker/session-replay.js';

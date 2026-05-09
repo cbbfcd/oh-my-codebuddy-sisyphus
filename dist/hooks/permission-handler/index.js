@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { getOmcRoot, getWorktreeRoot } from '../../lib/worktree-paths.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 const SAFE_PATTERNS = [
     /^git (status|diff|log|branch|show|fetch)/,
     /^npm run (lint|build|check|typecheck)/,
@@ -66,8 +66,8 @@ function readPermissionStringEntries(filePath, key) {
     }
 }
 export function getClaudePermissionAllowEntries(directory) {
-    const projectSettingsPath = path.join(directory, '.claude', 'settings.local.json');
-    const globalConfigDir = getClaudeConfigDir();
+    const projectSettingsPath = path.join(directory, '.codebuddy', 'settings.local.json');
+    const globalConfigDir = getCodebuddyConfigDir();
     const candidatePaths = [
         projectSettingsPath,
         path.join(globalConfigDir, 'settings.local.json'),
@@ -99,8 +99,8 @@ export function hasClaudePermissionApproval(directory, toolName, command) {
     return allowEntries.includes(`Bash(${trimmedCommand})`);
 }
 export function getClaudePermissionAskEntries(directory) {
-    const projectSettingsPath = path.join(directory, '.claude', 'settings.local.json');
-    const globalConfigDir = getClaudeConfigDir();
+    const projectSettingsPath = path.join(directory, '.codebuddy', 'settings.local.json');
+    const globalConfigDir = getCodebuddyConfigDir();
     const candidatePaths = [
         projectSettingsPath,
         path.join(globalConfigDir, 'settings.local.json'),

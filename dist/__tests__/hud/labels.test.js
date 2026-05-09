@@ -10,7 +10,7 @@ import { readHudConfig } from '../../hud/state.js';
 import { DEFAULT_HUD_CONFIG, DEFAULT_HUD_LABELS, resolveHudLabels, } from '../../hud/types.js';
 const ANSI_REGEX = /\x1b\[[0-9;]*m/g;
 const tempDirs = [];
-const originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+const originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
 function stripAnsi(value) {
     return value.replace(ANSI_REGEX, '');
 }
@@ -103,10 +103,10 @@ describe('HUD labels', () => {
                 rmSync(dir, { recursive: true, force: true });
         }
         if (originalClaudeConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
         }
     });
     it('keeps default HUD labels unchanged for direct renderer calls', () => {
@@ -137,7 +137,7 @@ describe('HUD labels', () => {
                 },
             },
         });
-        process.env.CLAUDE_CONFIG_DIR = configDir;
+        process.env.CODEBUDDY_CONFIG_DIR = configDir;
         const config = readHudConfig();
         expect(config.locale).toBe('en');
         expect(config.labels?.context).toBe('context-custom');

@@ -76,7 +76,7 @@ export declare function getTaskStoragePath(cwd: string, teamName: string, taskId
 /**
  * Legacy task storage path builder (deprecated).
  *
- * Old location: ~/.claude/tasks/{teamName}/{taskId}.json
+ * Old location: ~/.codebuddy/tasks/{teamName}/{taskId}.json
  *
  * Used only by the compatibility shim in task-file-ops.ts to check
  * for data written by older versions during reads. New code must not

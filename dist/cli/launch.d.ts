@@ -98,7 +98,7 @@ export declare function extractWebhookFlag(args: string[]): {
  * Maps --madmax/--yolo to --dangerously-skip-permissions
  * All other flags pass through unchanged
  */
-export declare function normalizeClaudeLaunchArgs(args: string[]): string[];
+export declare function normalizeCodebuddyLaunchArgs(args: string[]): string[];
 /**
  * preLaunch: Prepare environment before Claude starts
  * Currently a placeholder - can be extended for:
@@ -115,12 +115,12 @@ export declare function preLaunch(_cwd: string, _sessionId: string): Promise<voi
 export declare function isPrintMode(args: string[]): boolean;
 /**
  * Detect raw --madmax / --yolo tokens in launch args. Used before
- * normalizeClaudeLaunchArgs strips them so we can apply OMC-specific
+ * normalizeCodebuddyLaunchArgs strips them so we can apply OMC-specific
  * launch contracts (e.g. tmux-mandatory on macOS).
  */
 export declare function hasMadmaxFlag(args: string[]): boolean;
 /**
- * runClaude: Launch Claude CLI (blocks until exit)
+ * runCodebuddy: Launch Claude CLI (blocks until exit)
  * Handles 3 scenarios:
  * 1. inside-tmux: Launch claude in current pane
  * 2. outside-tmux: Create new tmux session with claude
@@ -134,11 +134,11 @@ export declare function hasMadmaxFlag(args: string[]): boolean;
  * tmux is installed but new-session/attach-session fails, we surface the
  * error instead of silently demoting to direct mode.
  */
-export declare function runClaude(cwd: string, args: string[], sessionId: string): void;
+export declare function runCodebuddy(cwd: string, args: string[], sessionId: string): void;
 /**
  * Env vars that must be forwarded into tmux sessions.
  * tmux new-session inherits the *server's* environment, not the calling
- * process's, so vars set on process.env (e.g. CLAUDE_CONFIG_DIR at launch)
+ * process's, so vars set on process.env (e.g. CODEBUDDY_CONFIG_DIR at launch)
  * are silently lost.  We inject them as `export` statements into the shell
  * command that runs inside the tmux pane, *after* .zshrc/.bashrc sourcing
  * so our values take precedence.

@@ -55,7 +55,7 @@ describe('runAutoresearchSetupSession', () => {
         const result = runAutoresearchSetupSession({ repoRoot: '/repo', missionText: 'Improve launch flow' });
         expect(result.slug).toBe('launch-flow');
         expect(result.readyToLaunch).toBe(true);
-        expect(vi.mocked(spawnSync).mock.calls[0]?.[0]).toBe('claude');
+        expect(vi.mocked(spawnSync).mock.calls[0]?.[0]).toBe('codebuddy');
         expect(vi.mocked(spawnSync).mock.calls[0]?.[1]).toEqual(['-p', expect.any(String)]);
     });
     it('fails when claude returns non-zero', () => {
@@ -67,9 +67,9 @@ describe('runAutoresearchSetupSession', () => {
             output: [],
             signal: null,
         });
-        expect(() => runAutoresearchSetupSession({ repoRoot: '/repo', missionText: 'Improve launch flow' })).toThrow(/claude_autoresearch_setup_failed:2/);
+        expect(() => runAutoresearchSetupSession({ repoRoot: '/repo', missionText: 'Improve launch flow' })).toThrow(/codebuddy_autoresearch_setup_failed:2/);
     });
-    it('uses shell:true on win32 so claude.cmd can run in print mode', () => {
+    it('uses shell:true on win32 so codebuddy.cmd can run in print mode', () => {
         const originalPlatform = process.platform;
         Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
         vi.mocked(spawnSync).mockReturnValue({
@@ -81,7 +81,7 @@ describe('runAutoresearchSetupSession', () => {
             signal: null,
         });
         runAutoresearchSetupSession({ repoRoot: '/repo', missionText: 'Improve launch flow' });
-        expect(vi.mocked(spawnSync)).toHaveBeenCalledWith('claude', ['-p', expect.any(String)], expect.objectContaining({
+        expect(vi.mocked(spawnSync)).toHaveBeenCalledWith('codebuddy', ['-p', expect.any(String)], expect.objectContaining({
             cwd: '/repo',
             encoding: 'utf-8',
             shell: true,

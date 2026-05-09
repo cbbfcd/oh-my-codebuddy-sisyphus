@@ -9,7 +9,7 @@ import { execSync } from 'child_process';
 import { colors } from '../utils/formatting.js';
 import { loadConfig } from '../../config/loader.js';
 const PROVIDER_BINARY = {
-    claude: 'claude',
+    codebuddy: 'codebuddy',
     codex: 'codex',
     gemini: 'gemini',
 };
@@ -42,12 +42,12 @@ function probeProvider(provider) {
 function collectConfiguredProviders() {
     const cfg = loadConfig();
     const providers = new Set();
-    // Always include claude so orchestrator presence is reported.
-    providers.add('claude');
+    // Always include codebuddy so orchestrator presence is reported.
+    providers.add('codebuddy');
     const roleRouting = cfg.team?.roleRouting ?? {};
     for (const spec of Object.values(roleRouting)) {
         const provider = spec?.provider;
-        if (provider === 'claude' || provider === 'codex' || provider === 'gemini') {
+        if (provider === 'codebuddy' || provider === 'codex' || provider === 'gemini') {
             providers.add(provider);
         }
     }
@@ -78,14 +78,14 @@ export async function doctorTeamRoutingCommand(options) {
                 console.log(`  ${colors.green('✓')} ${p.provider}: ${p.path}${version}`);
             }
             else {
-                console.log(`  ${colors.yellow('⚠')} ${p.provider}: not found on PATH — /team tasks routed to ${p.provider} will fall back to claude`);
+                console.log(`  ${colors.yellow('⚠')} ${p.provider}: not found on PATH — /team tasks routed to ${p.provider} will fall back to codebuddy`);
             }
         }
         if (missing.length === 0) {
             console.log(colors.green('\nAll configured providers are available.'));
         }
         else {
-            console.log(colors.yellow(`\n${missing.length} provider${missing.length === 1 ? '' : 's'} missing (warn only — /team falls back to claude).`));
+            console.log(colors.yellow(`\n${missing.length} provider${missing.length === 1 ? '' : 's'} missing (warn only — /team falls back to codebuddy).`));
         }
     }
     // Never error on missing providers — AC-11 says warn, not error.

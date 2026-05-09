@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname, sep } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { getPluginCacheBase } from '../utils/paths.js';
 /**
  * HUD Windows Compatibility Tests
@@ -125,16 +125,16 @@ describe('HUD Windows Compatibility', () => {
             const cachePath = getPluginCacheBase();
             // Should contain the expected path segments regardless of separator
             const normalized = cachePath.replace(/\\/g, '/');
-            expect(normalized).toContain('plugins/cache/omc/oh-my-claudecode');
+            expect(normalized).toContain('plugins/cache/omc/oh-my-codebuddy');
         });
         it('getPluginCacheBase should use platform-native separators', () => {
             const cachePath = getPluginCacheBase();
             // On Windows: backslashes, on Unix: forward slashes
-            expect(cachePath).toContain(`plugins${sep}cache${sep}omc${sep}oh-my-claudecode`);
+            expect(cachePath).toContain(`plugins${sep}cache${sep}omc${sep}oh-my-codebuddy`);
         });
         it('getPluginCacheBase should be under claude config dir', () => {
             const cachePath = getPluginCacheBase();
-            const configDir = getClaudeConfigDir();
+            const configDir = getCodebuddyConfigDir();
             expect(cachePath.startsWith(configDir)).toBe(true);
         });
         it('shared HUD wrapper template should use pathToFileURL for dynamic imports', () => {
@@ -145,7 +145,7 @@ describe('HUD Windows Compatibility', () => {
             expect(content).toContain('pathToFileURL } from "node:url"');
             expect(content).toContain('pathToFileURL(pluginPath).href');
         });
-        it('shared HUD wrapper template should respect CLAUDE_CONFIG_DIR for plugin cache base', () => {
+        it('shared HUD wrapper template should respect CODEBUDDY_CONFIG_DIR for plugin cache base', () => {
             const templatePath = join(packageRoot, 'scripts', 'lib', 'hud-wrapper-template.txt');
             const content = readFileSync(templatePath, 'utf-8');
             expect(content).toContain('getClaudeConfigDir()');
@@ -159,9 +159,9 @@ describe('HUD Windows Compatibility', () => {
             // Should use node -e for cross-platform compatibility
             expect(content).toContain("node -e");
             // Should use path.join for constructing paths
-            expect(content).toContain("p.join(d,'plugins','cache','omc','oh-my-claudecode')");
-            expect(content).not.toContain('ls ~/.claude/CLAUDE-*.md');
-            expect(content).toContain("find \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\" -maxdepth 1 -type f -name 'CLAUDE-*.md' -print 2>/dev/null");
+            expect(content).toContain("p.join(d,'plugins','cache','omc','oh-my-codebuddy')");
+            expect(content).not.toContain('ls ~/.codebuddy/CLAUDE-*.md');
+            expect(content).toContain("find \"${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}\" -maxdepth 1 -type f -name 'CLAUDE-*.md' -print 2>/dev/null");
         });
         it('hud skill should use cross-platform Node.js commands for plugin detection', () => {
             const hudPath = join(packageRoot, 'skills', 'hud', 'SKILL.md');
@@ -178,7 +178,7 @@ describe('HUD Windows Compatibility', () => {
             expect(content).toContain(".split(require('path').sep).join('/')");
             expect(content).toContain('The command path MUST use forward slashes on all platforms');
             expect(content).toContain('On Windows the path uses forward slashes (not backslashes):');
-            expect(content).toContain('"command": "node C:/Users/username/.claude/hud/omc-hud.mjs"');
+            expect(content).toContain('"command": "node C:/Users/username/.codebuddy/hud/omc-hud.mjs"');
             expect(content).not.toContain('"command": "node C:\\Users\\username\\.claude\\hud\\omc-hud.mjs"');
         });
         it('usage-api should use path.join with separate segments', () => {
@@ -186,7 +186,7 @@ describe('HUD Windows Compatibility', () => {
             const content = readFileSync(usageApiPath, 'utf-8');
             // Should use join() with separate segments, not forward-slash literals
             // Provider-specific cache files use template literals with the same join() pattern
-            expect(content).toContain("'plugins', 'oh-my-claudecode', `.usage-cache-${source}.json`");
+            expect(content).toContain("'plugins', 'oh-my-codebuddy', `.usage-cache-${source}.json`");
         });
     });
 });

@@ -4,7 +4,7 @@
  * Provides trace_timeline and trace_summary tools for the /trace feature.
  * Reads session replay JSONL files and formats them for display.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 export declare const traceTimelineTool: ToolDefinition<{
     sessionId: z.ZodOptional<z.ZodString>;

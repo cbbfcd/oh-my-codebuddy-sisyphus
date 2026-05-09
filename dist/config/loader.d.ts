@@ -43,11 +43,11 @@ export declare function validateTeamConfig(config: PluginConfig): void;
 export declare function loadConfig(): PluginConfig;
 export declare function compactOmcStartupGuidance(content: string): string;
 /**
- * Find and load AGENTS.md or CLAUDE.md files for context injection
+ * Find and load AGENTS.md or CODEBUDDY.md files for context injection
  */
 export declare function findContextFiles(startDir?: string): string[];
 /**
- * Load context from AGENTS.md/CLAUDE.md files
+ * Load context from AGENTS.md/CODEBUDDY.md files
  */
 export declare function loadContextFromFiles(files: string[]): string;
 /**

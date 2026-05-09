@@ -6,7 +6,7 @@
  *
  * Ported from oh-my-opencode's think-mode hook.
  */
-import { CLAUDE_FAMILY_DEFAULTS, CLAUDE_FAMILY_HIGH_VARIANTS, getClaudeHighVariantFromModel, } from '../../config/models.js';
+import { CODEBUDDY_FAMILY_DEFAULTS, CODEBUDDY_FAMILY_HIGH_VARIANTS, getCodebuddyHighVariantFromModel, } from '../../config/models.js';
 /**
  * Extract provider prefix from model ID.
  * Custom providers may use prefixes like vertex_ai/, openai/.
@@ -34,9 +34,9 @@ function normalizeModelId(modelId) {
  */
 const HIGH_VARIANT_MAP = {
     // Claude canonical families
-    [CLAUDE_FAMILY_DEFAULTS.SONNET]: CLAUDE_FAMILY_HIGH_VARIANTS.SONNET,
-    [CLAUDE_FAMILY_DEFAULTS.OPUS]: CLAUDE_FAMILY_HIGH_VARIANTS.OPUS,
-    [CLAUDE_FAMILY_DEFAULTS.HAIKU]: CLAUDE_FAMILY_HIGH_VARIANTS.HAIKU,
+    [CODEBUDDY_FAMILY_DEFAULTS.SONNET]: CODEBUDDY_FAMILY_HIGH_VARIANTS.SONNET,
+    [CODEBUDDY_FAMILY_DEFAULTS.OPUS]: CODEBUDDY_FAMILY_HIGH_VARIANTS.OPUS,
+    [CODEBUDDY_FAMILY_DEFAULTS.HAIKU]: CODEBUDDY_FAMILY_HIGH_VARIANTS.HAIKU,
     // GPT-4
     'gpt-4': 'gpt-4-high',
     'gpt-4-turbo': 'gpt-4-turbo-high',
@@ -103,7 +103,7 @@ export function getHighVariant(modelId) {
         return null;
     }
     // Resolve Claude families to canonical high variants.
-    const claudeHighBase = getClaudeHighVariantFromModel(base);
+    const claudeHighBase = getCodebuddyHighVariantFromModel(base);
     if (claudeHighBase)
         return prefix + claudeHighBase;
     // Look up exact high variant for non-Claude models

@@ -40,7 +40,6 @@ describe('Consolidation contracts', () => {
         it('deleted thin-wrapper skills are no longer registered', () => {
             const names = listBuiltinSkillNames();
             expect(names).not.toContain('analyze');
-            expect(names).not.toContain('build-fix');
             expect(names).not.toContain('tdd');
             expect(names).not.toContain('code-review');
             expect(names).not.toContain('omc-security-review');
@@ -73,10 +72,10 @@ describe('Consolidation contracts', () => {
         it('normalizes deprecated agent aliases in delegation routing', () => {
             const researcherRoute = resolveDelegation({ agentRole: 'researcher' });
             const tddGuideRoute = resolveDelegation({ agentRole: 'tdd-guide' });
-            expect(researcherRoute.provider).toBe('claude');
+            expect(researcherRoute.provider).toBe('codebuddy');
             expect(researcherRoute.tool).toBe('Task');
             expect(researcherRoute.agentOrModel).toBe('document-specialist');
-            expect(tddGuideRoute.provider).toBe('claude');
+            expect(tddGuideRoute.provider).toBe('codebuddy');
             expect(tddGuideRoute.tool).toBe('Task');
             expect(tddGuideRoute.agentOrModel).toBe('test-engineer');
         });

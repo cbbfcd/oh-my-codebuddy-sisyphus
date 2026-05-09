@@ -4,7 +4,7 @@
  * Provides MCP tool definitions for communication between OMC and OMX.
  * Tools allow sending tasks and messages between the two systems.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from '../tools/types.js';
 export type InteropMode = 'off' | 'observe' | 'active';
 export declare function getInteropMode(env?: NodeJS.ProcessEnv): InteropMode;

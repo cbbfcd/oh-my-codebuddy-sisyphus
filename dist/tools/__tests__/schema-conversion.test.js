@@ -8,7 +8,7 @@
  * enums, objects, arrays, nested objects, and edge cases.
  */
 import { describe, it, expect } from 'vitest';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { toSdkToolFormat, createZodSchema } from '../index.js';
 /**
  * Helper: Create a minimal tool definition for testing schema conversion.

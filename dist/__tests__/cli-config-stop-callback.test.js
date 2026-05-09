@@ -13,7 +13,7 @@ function runCli(args, homeDir) {
         env: {
             ...process.env,
             HOME: homeDir,
-            CLAUDE_CONFIG_DIR: join(homeDir, '.claude'),
+            CODEBUDDY_CONFIG_DIR: join(homeDir, '.codebuddy'),
         },
         encoding: 'utf-8',
     });
@@ -29,8 +29,8 @@ function readConfig(configPath) {
 describe('omc config-stop-callback tag options', () => {
     it('updates telegram tagList options and preserves existing config fields', () => {
         const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-stop-callback-home-'));
-        const configPath = join(homeDir, '.claude', '.omc-config.json');
-        mkdirSync(join(homeDir, '.claude'), { recursive: true });
+        const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+        mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
         writeFileSync(configPath, JSON.stringify({
             silentAutoUpdate: false,
             taskTool: 'task',
@@ -63,8 +63,8 @@ describe('omc config-stop-callback tag options', () => {
     });
     it('applies and clears discord tags and ignores tag options for file callback', () => {
         const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-stop-callback-home-'));
-        const configPath = join(homeDir, '.claude', '.omc-config.json');
-        mkdirSync(join(homeDir, '.claude'), { recursive: true });
+        const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+        mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
         writeFileSync(configPath, JSON.stringify({
             silentAutoUpdate: false,
             stopHookCallbacks: {
@@ -99,8 +99,8 @@ describe('omc config-stop-callback tag options', () => {
     });
     it('configures slack stop-callback with webhook and tags', () => {
         const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-stop-callback-home-'));
-        const configPath = join(homeDir, '.claude', '.omc-config.json');
-        mkdirSync(join(homeDir, '.claude'), { recursive: true });
+        const configPath = join(homeDir, '.codebuddy', '.omc-config.json');
+        mkdirSync(join(homeDir, '.codebuddy'), { recursive: true });
         writeFileSync(configPath, JSON.stringify({
             silentAutoUpdate: false,
             stopHookCallbacks: {},
@@ -128,7 +128,7 @@ describe('omc config-stop-callback tag options', () => {
         expect(show.stdout).toContain('"webhookUrl"');
         expect(show.stdout).toContain('"tagList"');
     });
-    it('uses CLAUDE_CONFIG_DIR for the default file callback path', () => {
+    it('uses CODEBUDDY_CONFIG_DIR for the default file callback path', () => {
         const homeDir = mkdtempSync(join(tmpdir(), 'omc-cli-stop-callback-home-'));
         const claudeConfigDir = join(homeDir, '.claude-isolated-workspace');
         const configPath = join(claudeConfigDir, '.omc-config.json');
@@ -142,7 +142,7 @@ describe('omc config-stop-callback tag options', () => {
             env: {
                 ...process.env,
                 HOME: homeDir,
-                CLAUDE_CONFIG_DIR: claudeConfigDir,
+                CODEBUDDY_CONFIG_DIR: claudeConfigDir,
             },
             encoding: 'utf-8',
         });

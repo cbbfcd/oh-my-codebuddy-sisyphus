@@ -291,8 +291,8 @@ function paneLooksReady(captured) {
     if (/^\s*[›>❯]\s*/u.test(lastLine))
         return true;
     const hasCodexPromptLine = lines.some((line) => /^\s*›\s*/u.test(line));
-    const hasClaudePromptLine = lines.some((line) => /^\s*❯\s*/u.test(line));
-    if (hasCodexPromptLine || hasClaudePromptLine)
+    const hasCodebuddyPromptLine = lines.some((line) => /^\s*❯\s*/u.test(line));
+    if (hasCodexPromptLine || hasCodebuddyPromptLine)
         return true;
     return false;
 }
@@ -302,17 +302,10 @@ function resolveWorkerCliForRequest(request, config) {
     if (idx !== null) {
         const worker = workers.find((c) => Number(c.index) === idx);
         const workerCli = safeString(worker?.worker_cli).trim().toLowerCase();
-        if (workerCli === 'claude')
-            return 'claude';
+        if (workerCli === 'codebuddy')
+            return 'codebuddy';
     }
     return 'codex';
-}
-async function runProcess(cmd, args, timeoutMs) {
-    const { execFile } = await import('child_process');
-    const { promisify } = await import('util');
-    const execFileAsync = promisify(execFile);
-    const result = await execFileAsync(cmd, args, { timeout: timeoutMs });
-    return { stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
 }
 async function defaultInjector(request, config, _cwd) {
     const target = defaultInjectTarget(request, config);
@@ -326,7 +319,7 @@ async function defaultInjector(request, config, _cwd) {
         }
     }
     catch { /* best effort */ }
-    const submitKeyPresses = resolveWorkerCliForRequest(request, config) === 'claude' ? 1 : 2;
+    const submitKeyPresses = resolveWorkerCliForRequest(request, config) === 'codebuddy' ? 1 : 2;
     const attemptCountAtStart = Number.isFinite(request.attempt_count) ? Math.max(0, Math.floor(request.attempt_count)) : 0;
     let preCaptureHasTrigger = false;
     if (attemptCountAtStart >= 1) {

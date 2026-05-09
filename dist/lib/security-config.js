@@ -43,7 +43,7 @@ let cachedConfig = null;
  */
 function loadSecurityFromConfigFiles() {
     const paths = [
-        join(process.cwd(), ".claude", "omc.jsonc"),
+        join(process.cwd(), ".codebuddy", "omc.jsonc"),
         join(getConfigDir(), "claude-omc", "config.jsonc"),
     ];
     for (const configPath of paths) {

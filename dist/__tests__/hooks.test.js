@@ -400,8 +400,8 @@ describe('Keyword Detector', () => {
             const ralphMatch = detected.find(d => d.type === 'ralph');
             expect(ralphMatch).toBeUndefined();
         });
-        it('should not detect ralph in /oh-my-claudecode:ralph-init', () => {
-            const primary = getPrimaryKeyword('/oh-my-claudecode:ralph-init "my project"');
+        it('should not detect ralph in /oh-my-codebuddy:ralph-init', () => {
+            const primary = getPrimaryKeyword('/oh-my-codebuddy:ralph-init "my project"');
             expect(primary?.type).not.toBe('ralph');
         });
         it('should still detect ralph when standalone', () => {
@@ -480,7 +480,7 @@ describe('Team staged workflow integration', () => {
         expect(result.message || '').toContain('team-exec');
     });
     it('compacts OMC-style root AGENTS guidance on session-start without dropping key sections', async () => {
-        const agentsContent = `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+        const agentsContent = `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>
 schema
@@ -525,7 +525,7 @@ schema
             started_at: '2026-04-23T00:00:00.000Z',
             original_prompt: 'budget '.repeat(520),
         }));
-        writeFileSync(join(testDir, 'AGENTS.md'), `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+        writeFileSync(join(testDir, 'AGENTS.md'), `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 
@@ -546,7 +546,7 @@ ${'- preserve this startup guidance\n'.repeat(400)}
             stage: 'team-exec',
             team_name: 'budget-team'
         }));
-        writeFileSync(join(testDir, 'AGENTS.md'), `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+        writeFileSync(join(testDir, 'AGENTS.md'), `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 

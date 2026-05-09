@@ -199,13 +199,36 @@ const CONTRACTS = {
             return rawOutput.trim();
         },
     },
+    codebuddy: {
+        agentType: 'codebuddy',
+        binary: 'codebuddy',
+        installInstructions: 'Install CodeBuddy Code: see https://codebuddy.com/download',
+        buildLaunchArgs(model, extraFlags = []) {
+            const args = ['--dangerously-skip-permissions'];
+            if (shouldUseClaudeBareMode() && !extraFlags.includes('--bare')) {
+                args.push('--bare');
+            }
+            if (model) {
+                // Provider-specific model IDs (Bedrock, Vertex) must be passed as-is.
+                // Normalizing them to aliases like "sonnet" causes Claude Code to expand
+                // them to Anthropic API names (claude-sonnet-4-6) which are invalid on
+                // these providers. (issue #1695)
+                const resolved = isProviderSpecificModelId(model) ? model : normalizeToCcAlias(model);
+                args.push('--model', resolved);
+            }
+            return [...args, ...extraFlags];
+        },
+        parseOutput(rawOutput) {
+            return rawOutput.trim();
+        },
+    },
 };
 export function getContract(agentType) {
     const contract = CONTRACTS[agentType];
     if (!contract) {
         throw new Error(`Unknown agent type: ${agentType}. Supported: ${Object.keys(CONTRACTS).join(', ')}`);
     }
-    if (agentType !== 'claude' && isExternalLLMDisabled()) {
+    if (agentType !== 'codebuddy' && agentType !== 'claude' && isExternalLLMDisabled()) {
         throw new Error(`External LLM provider "${agentType}" is blocked by security policy (disableExternalLLM). ` +
             `Only Claude workers are allowed in the current security configuration.`);
     }
@@ -292,11 +315,11 @@ const WORKER_MODEL_ENV_ALLOWLIST = [
     'ANTHROPIC_MODEL',
     'CLAUDE_MODEL',
     'ANTHROPIC_BASE_URL',
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -343,7 +366,7 @@ export function isPromptModeAgent(agentType) {
  *
  * Resolution order:
  *   1. ANTHROPIC_MODEL / CLAUDE_MODEL env vars (user's explicit setting)
- *   2. Provider tier-specific env vars (CLAUDE_CODE_BEDROCK_SONNET_MODEL, etc.)
+ *   2. Provider tier-specific env vars (CODEBUDDY_CODE_BEDROCK_SONNET_MODEL, etc.)
  *   3. undefined — let Claude Code handle its own default
  *
  * Returns undefined when not on Bedrock/Vertex (standard Anthropic API
@@ -365,7 +388,7 @@ export function resolveClaudeWorkerModel(env = process.env) {
         return directModel;
     }
     // Fallback: Bedrock tier-specific env vars (default to sonnet tier)
-    const bedrockModel = env.CLAUDE_CODE_BEDROCK_SONNET_MODEL ||
+    const bedrockModel = env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL ||
         env.ANTHROPIC_DEFAULT_SONNET_MODEL ||
         '';
     if (bedrockModel) {

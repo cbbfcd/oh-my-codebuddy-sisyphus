@@ -23,7 +23,7 @@ export const PROJECT_MARKERS = [
 export const PROJECT_RULE_SUBDIRS = [
     ['.github', 'instructions'],
     ['.cursor', 'rules'],
-    ['.claude', 'rules'],
+    ['.codebuddy', 'rules'],
 ];
 /** Single-file rules that always apply */
 export const PROJECT_RULE_FILES = [

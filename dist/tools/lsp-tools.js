@@ -10,7 +10,7 @@
  * - Rename
  * - Code actions
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { lspClientManager, getAllServers, getServerForFile, formatHover, formatLocations, formatDocumentSymbols, formatWorkspaceSymbols, formatDiagnostics, formatCodeActions, formatWorkspaceEdit, countEdits } from './lsp/index.js';
 import { runDirectoryDiagnostics } from './diagnostics/index.js';
 /**

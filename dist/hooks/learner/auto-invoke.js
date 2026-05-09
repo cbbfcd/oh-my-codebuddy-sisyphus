@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import { atomicWriteJson } from '../../lib/atomic-write.js';
 const DEFAULT_CONFIG = {
     enabled: true,
@@ -10,10 +10,10 @@ const DEFAULT_CONFIG = {
     cooldownMs: 30000,
 };
 /**
- * Load auto-invocation config from ~/.claude/.omc-config.json
+ * Load auto-invocation config from ~/.codebuddy/.omc-config.json
  */
 export function loadInvocationConfig() {
-    const configPath = path.join(getClaudeConfigDir(), '.omc-config.json');
+    const configPath = path.join(getCodebuddyConfigDir(), '.omc-config.json');
     try {
         if (!fs.existsSync(configPath)) {
             return { ...DEFAULT_CONFIG };

@@ -128,11 +128,11 @@ export function isTmuxAvailable() {
     }
 }
 /**
- * Check if claude CLI is available on the system
+ * Check if codebuddy CLI is available on the system
  */
-export function isClaudeAvailable() {
+export function isCodebuddyAvailable() {
     try {
-        execFileSync('claude', ['--version'], {
+        execFileSync('codebuddy', ['--version'], {
             stdio: 'ignore',
             shell: process.platform === 'win32',
         });
@@ -142,6 +142,10 @@ export function isClaudeAvailable() {
         return false;
     }
 }
+/**
+ * @deprecated Use isCodebuddyAvailable() instead
+ */
+export const isClaudeAvailable = isCodebuddyAvailable;
 /**
  * Resolve launch policy based on environment and args
  * - inside-tmux: Already in tmux session, split pane for HUD
@@ -196,7 +200,7 @@ export function buildTmuxSessionName(cwd) {
         `${pad(now.getUTCHours())}` +
         `${pad(now.getUTCMinutes())}` +
         `${pad(now.getUTCSeconds())}`;
-    const name = `omc-${dirToken}-${branchToken}-${utcTimestamp}`;
+    const name = `omcb-${dirToken}-${branchToken}-${utcTimestamp}`;
     return name.length > 120 ? name.slice(0, 120) : name;
 }
 /**

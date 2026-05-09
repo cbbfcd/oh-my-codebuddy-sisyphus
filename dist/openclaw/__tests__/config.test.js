@@ -5,7 +5,8 @@ vi.mock("fs", () => ({
     readFileSync: vi.fn(),
 }));
 vi.mock("../../utils/config-dir.js", () => ({
-    getClaudeConfigDir: vi.fn(() => "/home/user/.claude"),
+    getCodebuddyConfigDir: vi.fn(() => "/home/user/.codebuddy"),
+    getClaudeConfigDir: vi.fn(() => "/home/user/.codebuddy"),
 }));
 import { existsSync, readFileSync } from "fs";
 import { getOpenClawConfig, resolveGateway, resetOpenClawConfigCache, } from "../config.js";

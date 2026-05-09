@@ -631,7 +631,7 @@ describe('team cli', () => {
         const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
         mocks.resumeTeam.mockResolvedValue({
             teamName: 'demo-team',
-            sessionName: 'omc-team-demo:0',
+            sessionName: 'omcb-team-demo:0',
             leaderPaneId: '%0',
             config: { teamName: 'demo-team', workerCount: 1, agentTypes: ['codex'], tasks: [], cwd: '/tmp/demo' },
             workerNames: ['worker-1'],
@@ -660,7 +660,7 @@ describe('team cli', () => {
         const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
         mocks.resumeTeam.mockResolvedValue({
             teamName: 'alpha-team',
-            sessionName: 'omc-team-alpha:0',
+            sessionName: 'omcb-team-alpha:0',
             leaderPaneId: '%0',
             config: { teamName: 'alpha-team', workerCount: 1, agentTypes: ['codex'], tasks: [], cwd: '/tmp/demo' },
             workerNames: ['worker-1'],
@@ -714,7 +714,7 @@ describe('team cli', () => {
         const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
         mocks.resumeTeam.mockResolvedValue({
             teamName: 'beta-team',
-            sessionName: 'omc-team-beta:0',
+            sessionName: 'omcb-team-beta:0',
             leaderPaneId: '%0',
             config: { teamName: 'beta-team', workerCount: 1, agentTypes: ['codex'], tasks: [], cwd: '/tmp/demo' },
             workerNames: ['worker-1'],
@@ -723,7 +723,7 @@ describe('team cli', () => {
             cwd: '/tmp/demo',
         });
         await teamCommand(['shutdown', 'beta-team', '--force', '--json']);
-        expect(mocks.shutdownTeam).toHaveBeenCalledWith('beta-team', 'omc-team-beta:0', '/tmp/demo', 0, ['%1'], '%0', undefined);
+        expect(mocks.shutdownTeam).toHaveBeenCalledWith('beta-team', 'omcb-team-beta:0', '/tmp/demo', 0, ['%1'], '%0', undefined);
         const payload = JSON.parse(logSpy.mock.calls[0][0]);
         expect(payload.shutdown).toBe(true);
         expect(payload.forced).toBe(true);

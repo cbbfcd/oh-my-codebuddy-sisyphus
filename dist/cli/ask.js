@@ -6,14 +6,14 @@ import { basename, dirname, isAbsolute, join } from 'path';
 import { fileURLToPath } from 'url';
 import { isExternalLLMDisabled } from '../lib/security-config.js';
 export const ASK_USAGE = [
-    'Usage: omc ask <claude|codex|gemini> <question or task>',
-    '   or: omc ask <claude|codex|gemini> -p "<prompt>"',
-    '   or: omc ask <claude|codex|gemini> --print "<prompt>"',
-    '   or: omc ask <claude|codex|gemini> --prompt "<prompt>"',
-    '   or: omc ask <claude|codex|gemini> --agent-prompt <role> "<prompt>"',
-    '   or: omc ask <claude|codex|gemini> --agent-prompt=<role> --prompt "<prompt>"',
+    'Usage: omc ask <codebuddy|codex|gemini> <question or task>',
+    '   or: omc ask <codebuddy|codex|gemini> -p "<prompt>"',
+    '   or: omc ask <codebuddy|codex|gemini> --print "<prompt>"',
+    '   or: omc ask <codebuddy|codex|gemini> --prompt "<prompt>"',
+    '   or: omc ask <codebuddy|codex|gemini> --agent-prompt <role> "<prompt>"',
+    '   or: omc ask <codebuddy|codex|gemini> --agent-prompt=<role> --prompt "<prompt>"',
 ].join('\n');
-const ASK_PROVIDERS = ['claude', 'codex', 'gemini'];
+const ASK_PROVIDERS = ['codebuddy', 'codex', 'gemini'];
 const ASK_PROVIDER_SET = new Set(ASK_PROVIDERS);
 const ASK_AGENT_PROMPT_FLAG = '--agent-prompt';
 const SAFE_ROLE_PATTERN = /^[a-z][a-z0-9-]*$/;
@@ -165,9 +165,9 @@ function resolveSignalExitCode(signal) {
 }
 export async function askCommand(args) {
     const parsed = parseAskArgs(args);
-    if (parsed.provider !== 'claude' && isExternalLLMDisabled()) {
+    if (parsed.provider !== 'codebuddy' && isExternalLLMDisabled()) {
         throw new Error(`[ask] External LLM provider "${parsed.provider}" is blocked by security policy ` +
-            `(disableExternalLLM). Only "claude" is allowed in the current security configuration.`);
+            `(disableExternalLLM). Only "codebuddy" is allowed in the current security configuration.`);
     }
     const packageRoot = getPackageRoot();
     const advisorScriptPath = resolveAskAdvisorScriptPath(packageRoot);

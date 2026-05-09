@@ -9,7 +9,7 @@
  * Uses Zod for structural validation to catch malformed inputs early.
  * Sensitive hooks use strict allowlists; others pass through unknown fields.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { resolveTranscriptPath } from '../lib/worktree-paths.js';
 // --- Zod schemas for hook input validation ---
 /** Schema for the common hook input structure (supports both snake_case and camelCase) */

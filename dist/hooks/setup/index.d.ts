@@ -58,7 +58,7 @@ export declare function setEnvironmentVariables(): string[];
  */
 export declare function patchHooksJsonForWindows(pluginRoot: string): void;
 /**
- * Ensure ~/.claude/hooks/lib/stdin.mjs points to the current plugin version.
+ * Ensure ~/.codebuddy/hooks/lib/stdin.mjs points to the current plugin version.
  *
  * This fixes a silent breakage that occurs when OMC upgrades to a new version:
  * the symlink stays pointing at the old version's cache dir, so hooks that

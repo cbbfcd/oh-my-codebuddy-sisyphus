@@ -4,7 +4,7 @@
  * Provides tools for reading and writing notepad sections
  * (Priority Context, Working Memory, MANUAL).
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { getWorktreeNotepadPath, ensureOmcDir, validateWorkingDirectory, } from '../lib/worktree-paths.js';
 import { getPriorityContext, getWorkingMemory, getManualSection, setPriorityContext, addWorkingMemoryEntry, addManualEntry, pruneOldEntries, getNotepadStats, formatFullNotepad, DEFAULT_CONFIG, } from '../hooks/notepad/index.js';
 const SECTION_NAMES = ['all', 'priority', 'working', 'manual'];

@@ -13,7 +13,7 @@
  * 3. enforceModel() injects 'claude-sonnet-4-6' into Task calls
  * 4. Claude Code passes it to Bedrock API → 400 invalid model
  *
- * The defense (forceInherit) works IF CLAUDE_CODE_USE_BEDROCK=1 is in the env.
+ * The defense (forceInherit) works IF CODEBUDDY_CODE_USE_BEDROCK=1 is in the env.
  * But if that env var doesn't propagate to the MCP server / hook process,
  * forceInherit is never auto-enabled, and bare model IDs leak through.
  */

@@ -134,7 +134,7 @@ function configFromManifest(manifest) {
     return {
         name: manifest.name,
         task: manifest.task,
-        agent_type: 'claude',
+        agent_type: 'codebuddy',
         policy: manifest.policy,
         governance: manifest.governance,
         worker_launch_mode: manifest.policy.worker_launch_mode,

@@ -8,7 +8,7 @@
  */
 import { join } from 'path';
 import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from 'fs';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { atomicWriteJsonSync } from '../lib/atomic-write.js';
 import { withFileLockSync } from '../lib/file-lock.js';
 import { createArtifactHandoff, writeTextArtifact, } from '../shared/artifact-descriptor.js';

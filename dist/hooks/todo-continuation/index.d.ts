@@ -25,7 +25,7 @@ export interface Todo {
  * Claude Code Task system task
  *
  * IMPORTANT: This interface is based on observed behavior and the TaskCreate/TaskUpdate
- * tool schema. The file structure ~/.claude/tasks/{sessionId}/{taskId}.json is inferred
+ * tool schema. The file structure ~/.codebuddy/tasks/{sessionId}/{taskId}.json is inferred
  * from Claude Code's implementation and may change in future versions.
  *
  * As of 2025-01, Anthropic has not published official documentation for the Task system
@@ -171,7 +171,7 @@ export declare function isAuthenticationError(context?: StopContext): boolean;
 /**
  * Get the Task directory for a session
  *
- * NOTE: This path (~/.claude/tasks/{sessionId}/) is inferred from Claude Code's
+ * NOTE: This path (~/.codebuddy/tasks/{sessionId}/) is inferred from Claude Code's
  * implementation. Anthropic has not officially documented this structure.
  * The Task files are created by Claude Code's TaskCreate tool.
  */

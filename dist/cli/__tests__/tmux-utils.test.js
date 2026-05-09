@@ -17,7 +17,7 @@ vi.mock('child_process', async (importOriginal) => {
         spawnSync: vi.fn(),
     };
 });
-import { buildTmuxShellCommand, buildTmuxShellCommandWithEnv, createHudWatchPane, isClaudeAvailable, killTmuxPane, listHudWatchPaneIdsInCurrentWindow, resolveLaunchPolicy, tmuxExec, tmuxSpawn, wrapWithLoginShell, quoteShellArg, sanitizeTmuxToken, } from '../tmux-utils.js';
+import { buildTmuxShellCommand, buildTmuxShellCommandWithEnv, createHudWatchPane, isCodebuddyAvailable, killTmuxPane, listHudWatchPaneIdsInCurrentWindow, resolveLaunchPolicy, tmuxExec, tmuxSpawn, wrapWithLoginShell, quoteShellArg, sanitizeTmuxToken, } from '../tmux-utils.js';
 const mockedExecFileSync = vi.mocked(execFileSync);
 const mockedSpawnSync = vi.mocked(spawnSync);
 const baselinePlatform = process.platform;
@@ -113,13 +113,13 @@ describe('resolveLaunchPolicy', () => {
         Object.defineProperty(process, 'platform', { value: originalPlatform, configurable: true });
     });
 });
-describe('isClaudeAvailable', () => {
+describe('isCodebuddyAvailable', () => {
     it('uses shell:true on win32 so npm .cmd wrappers resolve', () => {
         const originalPlatform = process.platform;
         Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
         mockedExecFileSync.mockReturnValue(Buffer.from('2.1.116'));
-        expect(isClaudeAvailable()).toBe(true);
-        expect(mockedExecFileSync).toHaveBeenCalledWith('claude', ['--version'], {
+        expect(isCodebuddyAvailable()).toBe(true);
+        expect(mockedExecFileSync).toHaveBeenCalledWith('codebuddy', ['--version'], {
             stdio: 'ignore',
             shell: true,
         });

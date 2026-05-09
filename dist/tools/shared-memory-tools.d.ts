@@ -7,11 +7,11 @@
  * session group or pipeline run.
  *
  * Storage: .omc/state/shared-memory/{namespace}/{key}.json
- * Config gate: agents.sharedMemory.enabled in ~/.claude/.omc-config.json
+ * Config gate: agents.sharedMemory.enabled in ~/.codebuddy/.omc-config.json
  *
  * @see https://github.com/anthropics/oh-my-codebuddy/issues/1119
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { ToolDefinition } from './types.js';
 export declare const sharedMemoryWriteTool: ToolDefinition<{
     key: z.ZodString;

@@ -6,8 +6,8 @@ vi.mock('fs', async () => {
     const actual = await vi.importActual('fs');
     const { join: pathJoin } = await import('path');
     const repoRoot = process.cwd();
-    const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CLAUDE.md');
-    const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CLAUDE.md');
+    const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CODEBUDDY.md');
+    const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CODEBUDDY.md');
     const withRedirect = (pathLike) => {
         const normalized = String(pathLike).replace(/\\/g, '/');
         if (normalized === sourceClaudeMdPath.replace(/\\/g, '/')) {
@@ -23,7 +23,7 @@ vi.mock('fs', async () => {
 });
 async function loadInstallerWithEnv(claudeConfigDir, homeDir, codexHome, omcHome) {
     vi.resetModules();
-    process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+    process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
     process.env.HOME = homeDir;
     process.env.CODEX_HOME = codexHome;
     process.env.OMC_HOME = omcHome;
@@ -41,7 +41,7 @@ describe('installer MCP config ownership (issue #1802)', () => {
     beforeEach(() => {
         tempRoot = mkdtempSync(join(tmpdir(), 'omc-installer-mcp-config-'));
         homeDir = join(tempRoot, 'home');
-        claudeConfigDir = join(homeDir, '.claude');
+        claudeConfigDir = join(homeDir, '.codebuddy');
         codexHome = join(tempRoot, '.codex');
         omcHome = join(tempRoot, '.omc');
         mkdirSync(homeDir, { recursive: true });

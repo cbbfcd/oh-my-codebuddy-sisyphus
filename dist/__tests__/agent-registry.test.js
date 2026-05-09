@@ -9,11 +9,11 @@ const MODEL_ENV_KEYS = [
     'CLAUDE_MODEL',
     'ANTHROPIC_MODEL',
     'ANTHROPIC_BASE_URL',
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
@@ -44,7 +44,7 @@ describe('Agent Registry Validation', () => {
     test('agent count matches documentation', () => {
         const agentsDir = path.join(__dirname, '../../agents');
         const promptFiles = fs.readdirSync(agentsDir).filter((file) => file.endsWith('.md') && file !== 'AGENTS.md');
-        expect(promptFiles.length).toBe(19);
+        expect(promptFiles.length).toBe(22);
     });
     test('agent count is always 19 (no conditional agents)', () => {
         const agents = getAgentDefinitions();
@@ -55,14 +55,17 @@ describe('Agent Registry Validation', () => {
         expect(Object.keys(agents)).not.toContain('quality-reviewer');
         expect(Object.keys(agents)).not.toContain('deep-executor');
         expect(Object.keys(agents)).not.toContain('build-fixer');
+        // New .md-only agents (prompt files exist but not in runtime registry)
+        expect(Object.keys(agents)).not.toContain('dependency-expert');
+        expect(Object.keys(agents)).not.toContain('performance-reviewer');
     });
     test('all agents have .md prompt files', () => {
         const agents = Object.keys(getAgentDefinitions());
         const agentsDir = path.join(__dirname, '../../agents');
         const promptFiles = fs.readdirSync(agentsDir).filter((file) => file.endsWith('.md') && file !== 'AGENTS.md');
-        for (const file of promptFiles) {
-            const name = file.replace(/\.md$/, '');
-            expect(agents, `Missing registry entry for agent: ${name}`).toContain(name);
+        const promptNames = promptFiles.map((f) => f.replace(/\.md$/, ''));
+        for (const name of agents) {
+            expect(promptNames, `Missing .md prompt file for agent: ${name}`).toContain(name);
         }
     });
     test('all registry agents are exported from index.ts', async () => {
@@ -77,9 +80,9 @@ describe('Agent Registry Validation', () => {
         }
     });
     test('resolves agent models from env-based tier defaults when forceInherit is disabled', async () => {
-        process.env.CLAUDE_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
-        process.env.CLAUDE_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
-        process.env.CLAUDE_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
+        process.env.CODEBUDDY_CODE_BEDROCK_OPUS_MODEL = 'us.anthropic.claude-opus-4-6-v1:0';
+        process.env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL = 'us.anthropic.claude-sonnet-4-6-v1:0';
+        process.env.CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL = 'us.anthropic.claude-haiku-4-5-v1:0';
         process.env.OMC_ROUTING_FORCE_INHERIT = 'false';
         const agents = getAgentDefinitions();
         expect(agents.architect?.model).toBe('us.anthropic.claude-opus-4-6-v1:0');

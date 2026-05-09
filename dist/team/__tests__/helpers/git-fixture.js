@@ -182,9 +182,6 @@ export async function waitForEventInLog(opts) {
         if (existsSync(eventLogPath)) {
             try {
                 const raw = readFileSync(eventLogPath, 'utf-8');
-                if (raw.includes(eventType) && (worker === undefined || raw.includes(worker))) {
-                    return;
-                }
                 const lines = raw
                     .split('\n')
                     .filter((l) => l.trim().length > 0);

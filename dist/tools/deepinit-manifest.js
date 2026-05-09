@@ -10,9 +10,9 @@
  * - save: Write current filesystem state as manifest
  * - check: Return whether manifest exists and is valid
  *
- * @see https://github.com/Yeachan-Heo/oh-my-claudecode/issues/1719
+ * @see https://github.com/cbbfcd/oh-my-codebuddy/issues/1719
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { readdirSync, statSync, readFileSync, existsSync, realpathSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { validateWorkingDirectory, getOmcRoot } from '../lib/worktree-paths.js';

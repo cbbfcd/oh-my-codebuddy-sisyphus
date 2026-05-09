@@ -4,7 +4,7 @@
  * Provides tools for reading and writing notepad sections
  * (Priority Context, Working Memory, MANUAL).
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 declare const SECTION_NAMES: [string, ...string[]];
 export declare const notepadReadTool: ToolDefinition<{

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtempSync, rmSync, existsSync, writeFileSync, mkdirSync, readFileSync } from 'fs';
+import { mkdtempSync, rmSync, existsSync, writeFileSync, mkdirSync, readFileSync, realpathSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { execFileSync } from 'child_process';
@@ -8,7 +8,7 @@ describe('git-worktree', () => {
     let repoDir;
     const teamName = 'test-wt';
     beforeEach(() => {
-        repoDir = mkdtempSync(join(tmpdir(), 'git-worktree-test-'));
+        repoDir = realpathSync(mkdtempSync(join(tmpdir(), 'git-worktree-test-')));
         // Initialize a git repo with an initial commit
         execFileSync('git', ['init'], { cwd: repoDir, stdio: 'pipe' });
         execFileSync('git', ['config', 'user.email', 'test@test.com'], { cwd: repoDir, stdio: 'pipe' });

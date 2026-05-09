@@ -8,8 +8,8 @@ import { homedir } from 'os';
 import { basename, join } from 'path';
 import { resolvePluginDirArg } from '../lib/plugin-dir.js';
 import { stripRetiredTeamMcpServers } from '../installer/mcp-registry.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
-import { resolveLaunchPolicy, buildTmuxSessionName, buildTmuxShellCommand, buildTmuxShellCommandWithEnv, isNativeWindowsShell, wrapWithLoginShell, isClaudeAvailable, isTmuxAvailable, quoteShellArg, tmuxExec, } from './tmux-utils.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
+import { resolveLaunchPolicy, buildTmuxSessionName, buildTmuxShellCommand, buildTmuxShellCommandWithEnv, isNativeWindowsShell, wrapWithLoginShell, isCodebuddyAvailable, isTmuxAvailable, quoteShellArg, tmuxExec, } from './tmux-utils.js';
 import { OMC_PLUGIN_ROOT_ENV } from '../lib/env-vars.js';
 import { OMC_CONFIG_FILE_REL } from '../lib/paths.js';
 // Flag mapping
@@ -22,7 +22,7 @@ const TELEGRAM_FLAG = '--telegram';
 const DISCORD_FLAG = '--discord';
 const SLACK_FLAG = '--slack';
 const WEBHOOK_FLAG = '--webhook';
-const OMC_RUNTIME_DIRNAME = '.omc-launch';
+const OMC_RUNTIME_DIRNAME = '.omcb-launch';
 function hasOmcMarkers(path) {
     if (!existsSync(path))
         return false;
@@ -57,8 +57,8 @@ function ensureMirroredPath(sourcePath, targetPath) {
         copyFileSync(sourcePath, targetPath);
     }
 }
-export function prepareOmcLaunchConfigDir(baseConfigDir = getClaudeConfigDir()) {
-    const companionPath = join(baseConfigDir, 'CLAUDE-omc.md');
+export function prepareOmcLaunchConfigDir(baseConfigDir = getCodebuddyConfigDir()) {
+    const companionPath = join(baseConfigDir, 'CODEBUDDY-omcb.md');
     if (!hasOmcMarkers(companionPath)) {
         return baseConfigDir;
     }
@@ -72,7 +72,7 @@ export function prepareOmcLaunchConfigDir(baseConfigDir = getClaudeConfigDir()) 
     if (preservedClaudeJson) {
         writeFileSync(runtimeClaudeJsonPath, preservedClaudeJson);
     }
-    copyFileSync(companionPath, join(runtimeConfigDir, 'CLAUDE.md'));
+    copyFileSync(companionPath, join(runtimeConfigDir, 'CODEBUDDY.md'));
     for (const entry of [
         'agents',
         'commands',
@@ -108,8 +108,8 @@ export function prepareOmcLaunchConfigDir(baseConfigDir = getClaudeConfigDir()) 
     writeFileSync(join(runtimeConfigDir, '.omc-launch-profile.json'), JSON.stringify({ sourceConfigDir: baseConfigDir, sourceClaudeMd: companionPath }, null, 2));
     return runtimeConfigDir;
 }
-function isDefaultClaudeConfigDirPath(configDir) {
-    return configDir === join(homedir(), '.claude');
+function isDefaultCodebuddyConfigDirPath(configDir) {
+    return configDir === join(homedir(), '.codebuddy');
 }
 /**
  * Extract the OMC-specific --notify flag from launch args.
@@ -293,7 +293,7 @@ export function extractWebhookFlag(args) {
  * Maps --madmax/--yolo to --dangerously-skip-permissions
  * All other flags pass through unchanged
  */
-export function normalizeClaudeLaunchArgs(args) {
+export function normalizeCodebuddyLaunchArgs(args) {
     const normalized = [];
     let wantsBypass = false;
     let hasBypass = false;
@@ -338,7 +338,7 @@ export function isPrintMode(args) {
 }
 /**
  * Detect raw --madmax / --yolo tokens in launch args. Used before
- * normalizeClaudeLaunchArgs strips them so we can apply OMC-specific
+ * normalizeCodebuddyLaunchArgs strips them so we can apply OMC-specific
  * launch contracts (e.g. tmux-mandatory on macOS).
  */
 export function hasMadmaxFlag(args) {
@@ -367,7 +367,7 @@ function abortMadmaxRequiresTmux(reason) {
     throw new MadmaxTmuxRequiredError(reason);
 }
 /**
- * runClaude: Launch Claude CLI (blocks until exit)
+ * runCodebuddy: Launch Claude CLI (blocks until exit)
  * Handles 3 scenarios:
  * 1. inside-tmux: Launch claude in current pane
  * 2. outside-tmux: Create new tmux session with claude
@@ -381,10 +381,10 @@ function abortMadmaxRequiresTmux(reason) {
  * tmux is installed but new-session/attach-session fails, we surface the
  * error instead of silently demoting to direct mode.
  */
-export function runClaude(cwd, args, sessionId) {
+export function runCodebuddy(cwd, args, sessionId) {
     // Print mode must bypass tmux so stdout flows to the parent process (issue #1665)
     if (isPrintMode(args)) {
-        runClaudeDirect(cwd, args);
+        runCodebuddyDirect(cwd, args);
         return;
     }
     const requireTmux = process.platform === 'darwin' && hasMadmaxFlag(args);
@@ -395,23 +395,23 @@ export function runClaude(cwd, args, sessionId) {
         const policy = resolveLaunchPolicy(process.env, args, { requireTmux });
         switch (policy) {
             case 'inside-tmux':
-                runClaudeInsideTmux(cwd, args);
+                runCodebuddyInsideTmux(cwd, args);
                 break;
             case 'outside-tmux':
-                runClaudeOutsideTmux(cwd, args, sessionId, { requireTmux });
+                runCodebuddyOutsideTmux(cwd, args, sessionId, { requireTmux });
                 break;
             case 'direct':
                 if (requireTmux) {
                     abortMadmaxRequiresTmux('missing');
                 }
-                runClaudeDirect(cwd, args);
+                runCodebuddyDirect(cwd, args);
                 break;
         }
     }
     catch (err) {
         if (err instanceof MadmaxTmuxRequiredError) {
             // Already reported via stderr + process.exit(1); swallow so test harnesses
-            // that mock process.exit do not see the synthetic throw escape runClaude.
+            // that mock process.exit do not see the synthetic throw escape runCodebuddy.
             return;
         }
         throw err;
@@ -421,7 +421,7 @@ export function runClaude(cwd, args, sessionId) {
  * Run Claude inside existing tmux session
  * Launches Claude in current pane
  */
-function runClaudeInsideTmux(cwd, args) {
+function runCodebuddyInsideTmux(cwd, args) {
     // Enable mouse scrolling in the current tmux session (non-fatal if it fails)
     try {
         tmuxExec(['set-option', 'mouse', 'on'], { stdio: 'ignore' });
@@ -429,7 +429,7 @@ function runClaudeInsideTmux(cwd, args) {
     catch { /* non-fatal — user's tmux may not support these options */ }
     // Launch Claude in current pane
     try {
-        execFileSync('claude', args, {
+        execFileSync('codebuddy', args, {
             cwd,
             stdio: 'inherit',
             shell: process.platform === 'win32',
@@ -438,23 +438,23 @@ function runClaudeInsideTmux(cwd, args) {
     catch (error) {
         const err = error;
         if (err.code === 'ENOENT') {
-            console.error('[omc] Error: claude CLI not found in PATH.');
+            console.error('[omc] Error: codebuddy CLI not found in PATH.');
             process.exit(1);
         }
-        // Propagate Claude's exit code so omc does not swallow failures
+        // Propagate codebuddy's exit code so omc does not swallow failures
         process.exit(typeof err.status === 'number' ? err.status : 1);
     }
 }
 /**
  * Env vars that must be forwarded into tmux sessions.
  * tmux new-session inherits the *server's* environment, not the calling
- * process's, so vars set on process.env (e.g. CLAUDE_CONFIG_DIR at launch)
+ * process's, so vars set on process.env (e.g. CODEBUDDY_CONFIG_DIR at launch)
  * are silently lost.  We inject them as `export` statements into the shell
  * command that runs inside the tmux pane, *after* .zshrc/.bashrc sourcing
  * so our values take precedence.
  */
 export const TMUX_ENV_FORWARD = [
-    'CLAUDE_CONFIG_DIR',
+    'CODEBUDDY_CONFIG_DIR',
     'OMC_NOTIFY',
     'OMC_OPENCLAW',
     'OMC_TELEGRAM',
@@ -479,13 +479,13 @@ export function buildEnvExportPrefix(vars) {
  * `requireTmux=true` (set by --madmax on macOS) turns the tmux launch
  * failures from silent demotions into hard errors with a remediation hint.
  */
-function runClaudeOutsideTmux(cwd, args, _sessionId, options = {}) {
+function runCodebuddyOutsideTmux(cwd, args, _sessionId, options = {}) {
     const forwardedEnv = Object.fromEntries(TMUX_ENV_FORWARD
         .map((name) => [name, process.env[name]])
         .filter(([, value]) => value !== undefined));
     const rawClaudeCmd = isNativeWindowsShell()
-        ? buildTmuxShellCommandWithEnv('claude', args, forwardedEnv)
-        : buildTmuxShellCommand('claude', args);
+        ? buildTmuxShellCommandWithEnv('codebuddy', args, forwardedEnv)
+        : buildTmuxShellCommand('codebuddy', args);
     const envPrefix = !isNativeWindowsShell() && Object.keys(forwardedEnv).length > 0
         ? buildEnvExportPrefix(TMUX_ENV_FORWARD)
         : '';
@@ -507,7 +507,7 @@ function runClaudeOutsideTmux(cwd, args, _sessionId, options = {}) {
         if (options.requireTmux) {
             abortMadmaxRequiresTmux('launch-failed');
         }
-        runClaudeDirect(cwd, args);
+        runCodebuddyDirect(cwd, args);
         return;
     }
     try {
@@ -531,7 +531,7 @@ function runClaudeOutsideTmux(cwd, args, _sessionId, options = {}) {
             return;
         }
         catch {
-            runClaudeDirect(cwd, args);
+            runCodebuddyDirect(cwd, args);
         }
     }
 }
@@ -539,9 +539,9 @@ function runClaudeOutsideTmux(cwd, args, _sessionId, options = {}) {
  * Run Claude directly (no tmux)
  * Fallback when tmux is not available
  */
-function runClaudeDirect(cwd, args) {
+function runCodebuddyDirect(cwd, args) {
     try {
-        execFileSync('claude', args, {
+        execFileSync('codebuddy', args, {
             cwd,
             stdio: 'inherit',
             shell: process.platform === 'win32',
@@ -550,10 +550,10 @@ function runClaudeDirect(cwd, args) {
     catch (error) {
         const err = error;
         if (err.code === 'ENOENT') {
-            console.error('[omc] Error: claude CLI not found in PATH.');
+            console.error('[omc] Error: codebuddy CLI not found in PATH.');
             process.exit(1);
         }
-        // Propagate Claude's exit code so omc does not swallow failures
+        // Propagate codebuddy's exit code so omc does not swallow failures
         process.exit(typeof err.status === 'number' ? err.status : 1);
     }
 }
@@ -651,25 +651,25 @@ export async function launchCommand(args) {
     }
     const cwd = process.cwd();
     // Pre-flight: check for nested session
-    if (process.env.CLAUDECODE) {
-        console.error('[omc] Error: Already inside a Claude Code session. Nested launches are not supported.');
+    if (process.env.CODEBUDDY_RUNNING) {
+        console.error('[omc] Error: Already inside a CodeBuddy session. Nested launches are not supported.');
         process.exit(1);
     }
-    // Pre-flight: check claude CLI availability
-    if (!isClaudeAvailable()) {
-        console.error('[omc] Error: claude CLI not found. Install Claude Code first:');
-        console.error('  npm install -g @anthropic-ai/claude-code');
+    // Pre-flight: check codebuddy CLI availability
+    if (!isCodebuddyAvailable()) {
+        console.error('[omc] Error: codebuddy CLI not found. Install CodeBuddy first:');
+        console.error('  npm install -g @codebuddy-ai/codebuddy');
         process.exit(1);
     }
     const launchConfigDir = prepareOmcLaunchConfigDir();
-    if (isDefaultClaudeConfigDirPath(launchConfigDir)) {
-        delete process.env.CLAUDE_CONFIG_DIR;
+    if (isDefaultCodebuddyConfigDirPath(launchConfigDir)) {
+        delete process.env.CODEBUDDY_CONFIG_DIR;
     }
     else {
-        process.env.CLAUDE_CONFIG_DIR = launchConfigDir;
+        process.env.CODEBUDDY_CONFIG_DIR = launchConfigDir;
     }
-    const normalizedArgs = normalizeClaudeLaunchArgs(argsAfterWebhook);
-    const sessionId = `omc-${Date.now()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 8)}`;
+    const normalizedArgs = normalizeCodebuddyLaunchArgs(argsAfterWebhook);
+    const sessionId = `omcb-${Date.now()}-${crypto.randomUUID().replace(/-/g, '').slice(0, 8)}`;
     // Phase 1: preLaunch
     try {
         await preLaunch(cwd, sessionId);
@@ -680,7 +680,7 @@ export async function launchCommand(args) {
     }
     // Phase 2: run
     try {
-        runClaude(cwd, normalizedArgs, sessionId);
+        runCodebuddy(cwd, normalizedArgs, sessionId);
     }
     finally {
         // Phase 3: postLaunch

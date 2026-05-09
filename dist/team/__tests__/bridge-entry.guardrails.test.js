@@ -19,7 +19,7 @@ describe('bridge-entry workdir guardrails (source contract)', () => {
 });
 describe('validateConfigPath guardrails', () => {
     const home = '/home/user';
-    const claudeConfigDir = '/home/user/.claude';
+    const claudeConfigDir = '/home/user/.codebuddy';
     it('rejects path outside home', () => {
         expect(validateConfigPath('/tmp/.omc/config.json', home, claudeConfigDir)).toBe(false);
     });

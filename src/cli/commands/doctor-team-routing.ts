@@ -55,13 +55,13 @@ function probeProvider(provider: TeamRoleProvider): ProviderProbe {
 function collectConfiguredProviders(): Set<TeamRoleProvider> {
   const cfg = loadConfig();
   const providers = new Set<TeamRoleProvider>();
-  // Always include claude so orchestrator presence is reported.
-  providers.add('claude');
+  // Always include codebuddy so orchestrator presence is reported.
+  providers.add('codebuddy');
 
   const roleRouting = cfg.team?.roleRouting ?? {};
   for (const spec of Object.values(roleRouting)) {
     const provider = spec?.provider as TeamRoleProvider | undefined;
-    if (provider === 'claude' || provider === 'codex' || provider === 'gemini') {
+    if (provider === 'codebuddy' || provider === 'codex' || provider === 'gemini') {
       providers.add(provider);
     }
   }

@@ -4,7 +4,7 @@
  * Verifies that the installer removes stale OMC-created files from the config
  * directory while preserving user-created files.
  *
- * Contract: setup must clean up ~/.claude/agents and ~/.claude/skills that were
+ * Contract: setup must clean up ~/.codebuddy/agents and ~/.codebuddy/skills that were
  * created by OMC in previous versions but are no longer shipped.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -42,21 +42,21 @@ describe('cleanupStaleAgents', () => {
     const log = vi.fn();
     beforeEach(() => {
         tempDir = mkdtempSync(join(tmpdir(), 'omc-stale-agents-'));
-        originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-        process.env.CLAUDE_CONFIG_DIR = tempDir;
+        originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+        process.env.CODEBUDDY_CONFIG_DIR = tempDir;
         log.mockClear();
     });
     afterEach(() => {
         if (originalConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
         }
         rmSync(tempDir, { recursive: true, force: true });
     });
     it('removes agent files that have OMC frontmatter but are no longer in the package', async () => {
-        // Re-import with fresh CLAUDE_CONFIG_DIR
+        // Re-import with fresh CODEBUDDY_CONFIG_DIR
         vi.resetModules();
         const { cleanupStaleAgents: cleanup, AGENTS_DIR: agentsDir } = await import('../index.js');
         mkdirSync(agentsDir, { recursive: true });
@@ -108,16 +108,16 @@ describe('cleanupStaleSkills', () => {
     const log = vi.fn();
     beforeEach(() => {
         tempDir = mkdtempSync(join(tmpdir(), 'omc-stale-skills-'));
-        originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-        process.env.CLAUDE_CONFIG_DIR = tempDir;
+        originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+        process.env.CODEBUDDY_CONFIG_DIR = tempDir;
         log.mockClear();
     });
     afterEach(() => {
         if (originalConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
         }
         rmSync(tempDir, { recursive: true, force: true });
     });
@@ -211,16 +211,16 @@ describe('prunePluginDuplicateSkills', () => {
     const log = vi.fn();
     beforeEach(() => {
         tempDir = mkdtempSync(join(tmpdir(), 'omc-prune-dupes-'));
-        originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-        process.env.CLAUDE_CONFIG_DIR = tempDir;
+        originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+        process.env.CODEBUDDY_CONFIG_DIR = tempDir;
         log.mockClear();
     });
     afterEach(() => {
         if (originalConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
         }
         rmSync(tempDir, { recursive: true, force: true });
     });
@@ -326,16 +326,16 @@ describe('prunePluginDuplicateAgents', () => {
     const log = vi.fn();
     beforeEach(() => {
         tempDir = mkdtempSync(join(tmpdir(), 'omc-prune-agent-dupes-'));
-        originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-        process.env.CLAUDE_CONFIG_DIR = tempDir;
+        originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+        process.env.CODEBUDDY_CONFIG_DIR = tempDir;
         log.mockClear();
     });
     afterEach(() => {
         if (originalConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
         }
         rmSync(tempDir, { recursive: true, force: true });
     });

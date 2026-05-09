@@ -7,7 +7,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { listMcpWorkers } from './team-registration.js';
 import { readHeartbeat, isWorkerAlive } from './heartbeat.js';
 import { getDefaultCapabilities } from './capabilities.js';
@@ -18,7 +18,7 @@ export function getTeamMembers(teamName, workingDirectory) {
     const members = [];
     // 1. Read Claude native members from config.json
     try {
-        const configPath = join(getClaudeConfigDir(), 'teams', teamName, 'config.json');
+        const configPath = join(getCodebuddyConfigDir(), 'teams', teamName, 'config.json');
         if (existsSync(configPath)) {
             const config = JSON.parse(readFileSync(configPath, 'utf-8'));
             if (Array.isArray(config.members)) {

@@ -50,7 +50,7 @@ describe.skipIf(process.env.CI === '1')('auto-merge perf: p95 < 2000ms over 50 s
     });
     it('50 sequential merges complete with p95 latency < 2000ms', async () => {
         const MERGE_COUNT = 50;
-        const FILES_PER_MERGE = 10;
+        const _FILES_PER_MERGE = 10;
         const LINES_PER_FILE = 100;
         const eventLog = orchestratorEventLogPath(fixture.repoRoot, fixture.teamName);
         const latencies = [];

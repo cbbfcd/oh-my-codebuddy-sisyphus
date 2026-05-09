@@ -39,7 +39,7 @@ function getGitHubHeaders() {
     const token = getGitHubToken();
     return {
         Accept: 'application/vnd.github+json',
-        'User-Agent': 'oh-my-claudecode-featured-contributors-generator',
+        'User-Agent': 'oh-my-codebuddy-featured-contributors-generator',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 }

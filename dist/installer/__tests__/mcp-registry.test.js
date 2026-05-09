@@ -14,13 +14,13 @@ describe('unified MCP registry sync', () => {
         originalEnv = { ...process.env };
         originalPlatform = process.platform;
         testRoot = mkdtempSync(join(tmpdir(), 'omc-mcp-registry-'));
-        claudeDir = join(testRoot, '.claude');
+        claudeDir = join(testRoot, '.codebuddy');
         codexDir = join(testRoot, '.codex');
         omcDir = join(testRoot, '.omc');
         mkdirSync(claudeDir, { recursive: true });
         mkdirSync(codexDir, { recursive: true });
         mkdirSync(omcDir, { recursive: true });
-        process.env.CLAUDE_CONFIG_DIR = claudeDir;
+        process.env.CODEBUDDY_CONFIG_DIR = claudeDir;
         process.env.CLAUDE_MCP_CONFIG_PATH = join(testRoot, '.claude.json');
         process.env.CODEX_HOME = codexDir;
         process.env.OMC_HOME = omcDir;
@@ -66,7 +66,7 @@ describe('unified MCP registry sync', () => {
             mcpServers: {
                 team: {
                     command: 'node',
-                    args: ['${CLAUDE_PLUGIN_ROOT}/bridge/team-mcp.cjs'],
+                    args: ['${CODEBUDDY_PLUGIN_ROOT}/bridge/team-mcp.cjs'],
                 },
                 gitnexus: {
                     command: 'gitnexus',

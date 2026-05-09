@@ -6,12 +6,12 @@
  */
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 /**
  * Get the commands directory path
  */
 export function getCommandsDir() {
-    return join(getClaudeConfigDir(), 'commands');
+    return join(getCodebuddyConfigDir(), 'commands');
 }
 /**
  * Parse command frontmatter and content
@@ -92,7 +92,7 @@ export function listCommands() {
  *
  * @example
  * ```typescript
- * import { expandCommand } from 'oh-my-claudecode';
+ * import { expandCommand } from 'oh-my-codebuddy';
  *
  * const prompt = expandCommand('ralph', 'Build a REST API');
  * // Returns the full ralph template with "Build a REST API" substituted
@@ -117,8 +117,8 @@ export function expandCommand(name, args = '') {
  *
  * @example
  * ```typescript
- * import { expandCommandPrompt } from 'oh-my-claudecode';
- * import { query } from '@anthropic-ai/claude-agent-sdk';
+ * import { expandCommandPrompt } from 'oh-my-codebuddy';
+ * import { query } from '@tencent-ai/agent-sdk';
  *
  * const prompt = expandCommandPrompt('ultrawork', 'Refactor the auth module');
  *

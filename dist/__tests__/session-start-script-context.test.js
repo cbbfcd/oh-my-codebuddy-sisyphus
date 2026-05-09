@@ -131,7 +131,7 @@ describe('session-start.mjs regression #1386', () => {
         expect(context).toContain('</project-memory-context>');
     });
     it('injects model routing override for non-standard providers before lower-priority context', () => {
-        writeFileSync(join(fakeProject, 'AGENTS.md'), `# oh-my-claudecode - Intelligent Multi-Agent Orchestration
+        writeFileSync(join(fakeProject, 'AGENTS.md'), `# oh-my-codebuddy - Intelligent Multi-Agent Orchestration
 
 <guidance_schema_contract>schema</guidance_schema_contract>
 
@@ -149,7 +149,7 @@ ${'- oversized startup guidance\n'.repeat(700)}
                 ...process.env,
                 HOME: fakeHome,
                 USERPROFILE: fakeHome,
-                CLAUDE_CODE_USE_BEDROCK: '1',
+                CODEBUDDY_CODE_USE_BEDROCK: '1',
             },
             timeout: 15000,
         }).trim();

@@ -1,14 +1,14 @@
 export type ModelTier = 'LOW' | 'MEDIUM' | 'HIGH';
-export type ClaudeModelFamily = 'HAIKU' | 'SONNET' | 'OPUS';
+export type CodebuddyModelFamily = 'HAIKU' | 'SONNET' | 'OPUS';
 /**
  * Canonical Claude family defaults.
  * Keep these date-less so version bumps are a one-line edit per family.
  */
-export declare const CLAUDE_FAMILY_DEFAULTS: Record<ClaudeModelFamily, string>;
+export declare const CODEBUDDY_FAMILY_DEFAULTS: Record<CodebuddyModelFamily, string>;
 /** Canonical tier->model mapping used as built-in defaults */
 export declare const BUILTIN_TIER_MODEL_DEFAULTS: Record<ModelTier, string>;
 /** Canonical Claude high-reasoning variants by family */
-export declare const CLAUDE_FAMILY_HIGH_VARIANTS: Record<ClaudeModelFamily, string>;
+export declare const CODEBUDDY_FAMILY_HIGH_VARIANTS: Record<CodebuddyModelFamily, string>;
 /** Built-in defaults for external provider models */
 export declare const BUILTIN_EXTERNAL_MODEL_DEFAULTS: {
     readonly codexModel: "gpt-5.3-codex";
@@ -28,18 +28,18 @@ export declare function getDefaultTierModels(): Record<ModelTier, string>;
  * Resolve a Claude family from an arbitrary model ID.
  * Supports Anthropic IDs and provider-prefixed forms (e.g. vertex_ai/...).
  */
-export declare function resolveClaudeFamily(modelId: string): ClaudeModelFamily | null;
+export declare function resolveCodebuddyFamily(modelId: string): CodebuddyModelFamily | null;
 /**
  * Resolve a canonical Claude high variant from a Claude model ID.
  * Returns null for non-Claude model IDs.
  */
-export declare function getClaudeHighVariantFromModel(modelId: string): string | null;
+export declare function getCodebuddyHighVariantFromModel(modelId: string): string | null;
 /** Get built-in default model for an external provider */
 export declare function getBuiltinExternalDefaultModel(provider: 'codex' | 'gemini'): string;
 /**
  * Detect whether Claude Code is running on AWS Bedrock.
  *
- * Claude Code sets CLAUDE_CODE_USE_BEDROCK=1 when configured for Bedrock.
+ * Claude Code sets CODEBUDDY_CODE_USE_BEDROCK=1 when configured for Bedrock.
  * As a fallback, Bedrock model IDs use prefixed formats like:
  *   - us.anthropic.claude-sonnet-4-6-v1:0
  *   - global.anthropic.claude-sonnet-4-6-v1:0
@@ -86,7 +86,7 @@ export declare function isSubagentSafeModelId(modelId: string): boolean;
 /**
  * Detect whether Claude Code is running on Google Vertex AI.
  *
- * Claude Code sets CLAUDE_CODE_USE_VERTEX=1 when configured for Vertex AI.
+ * Claude Code sets CODEBUDDY_CODE_USE_VERTEX=1 when configured for Vertex AI.
  * Vertex model IDs typically use a "vertex_ai/" prefix.
  *
  * On Vertex, passing bare tier names causes errors because the provider
@@ -112,4 +112,13 @@ export declare function isNonClaudeProvider(): boolean;
  * OMC routing, not proof that every delegated agent should drop its model.
  */
 export declare function shouldAutoForceInherit(): boolean;
+/**
+ * CodeBuddy Code model tier mapping.
+ * Maps OMC internal tier names to CodeBuddy model routing keys.
+ */
+export declare function mapToCodebuddyTier(tier: string): string;
+/**
+ * Reverse mapping: CodeBuddy model routing keys back to OMC internal tier names.
+ */
+export declare function mapFromCodebuddyTier(codeBuddyTier: string): string;
 //# sourceMappingURL=models.d.ts.map

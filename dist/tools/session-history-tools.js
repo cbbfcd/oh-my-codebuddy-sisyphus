@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { searchSessionHistory, } from '../features/session-history-search/index.js';
 function buildToolJson(report) {
     return JSON.stringify(report, null, 2);

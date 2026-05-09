@@ -8,15 +8,15 @@ import { pythonReplHandler } from './tool.js';
 export declare const pythonReplTool: {
     name: string;
     description: string;
-    schema: import("zod").ZodObject<{
-        action: import("zod").ZodEnum<["execute", "interrupt", "reset", "get_state"]>;
-        researchSessionID: import("zod").ZodString;
-        code: import("zod").ZodOptional<import("zod").ZodString>;
-        executionLabel: import("zod").ZodOptional<import("zod").ZodString>;
-        executionTimeout: import("zod").ZodDefault<import("zod").ZodNumber>;
-        queueTimeout: import("zod").ZodDefault<import("zod").ZodNumber>;
-        projectDir: import("zod").ZodOptional<import("zod").ZodString>;
-    }, "strip", import("zod").ZodTypeAny, {
+    schema: import("zod/v3").ZodObject<{
+        action: import("zod/v3").ZodEnum<["execute", "interrupt", "reset", "get_state"]>;
+        researchSessionID: import("zod/v3").ZodString;
+        code: import("zod/v3").ZodOptional<import("zod/v3").ZodString>;
+        executionLabel: import("zod/v3").ZodOptional<import("zod/v3").ZodString>;
+        executionTimeout: import("zod/v3").ZodDefault<import("zod/v3").ZodNumber>;
+        queueTimeout: import("zod/v3").ZodDefault<import("zod/v3").ZodNumber>;
+        projectDir: import("zod/v3").ZodOptional<import("zod/v3").ZodString>;
+    }, "strip", import("zod/v3").ZodTypeAny, {
         action: "execute" | "interrupt" | "reset" | "get_state";
         researchSessionID: string;
         executionTimeout: number;

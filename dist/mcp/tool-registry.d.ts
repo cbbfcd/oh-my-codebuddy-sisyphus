@@ -12,7 +12,7 @@
  * Team runtime tools (omc_run_team_start, omc_run_team_status) are intentionally
  * excluded: they live in the separate "team" MCP server (bridge/team-mcp.cjs).
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 /** Minimal tool definition shape shared across all tool families. */
 export interface ToolDef {
     name: string;

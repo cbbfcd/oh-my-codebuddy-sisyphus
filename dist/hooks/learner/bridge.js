@@ -14,7 +14,7 @@ import { OmcPaths } from "../../lib/worktree-paths.js";
 import { parseYamlMetadata } from "./parser.js";
 import { expandTriggers } from "./transliteration-map.js";
 // Re-export constants
-export const USER_SKILLS_DIR = join(homedir(), ".claude", "skills", "omc-learned");
+export const USER_SKILLS_DIR = join(homedir(), ".codebuddy", "skills", "omc-learned");
 export const GLOBAL_SKILLS_DIR = join(homedir(), ".omc", "skills");
 export const PROJECT_SKILLS_SUBDIR = OmcPaths.SKILLS;
 export const PROJECT_AGENT_SKILLS_SUBDIR = join(".agents", "skills");

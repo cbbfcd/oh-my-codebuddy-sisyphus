@@ -7,7 +7,9 @@
  * Cross-platform support via Node.js-based hook scripts (.mjs).
  * Bash hook scripts were removed in v3.9.0.
  */
-/** Claude Code configuration directory */
+/** CodeBuddy Code configuration directory */
+export declare const CODEBUDDY_CONFIG_DIR: string;
+/** @deprecated Use CODEBUDDY_CONFIG_DIR instead */
 export declare const CLAUDE_CONFIG_DIR: string;
 export declare const AGENTS_DIR: string;
 export declare const COMMANDS_DIR: string;
@@ -52,7 +54,7 @@ export interface InstallOptions {
      * Dev plugin-dir mode: skip copying agents and bundled skills into
      * `<configDir>` because the user is launching OMC via
      * `claude --plugin-dir <path>` (or `omc --plugin-dir <path>`) and the
-     * plugin already provides them at runtime. HUD, hooks, CLAUDE.md, and
+     * plugin already provides them at runtime. HUD, hooks, CODEBUDDY.md, and
      * `.omc-config.json` are still installed. Mutually exclusive with
      * `noPlugin` (the CLI gives `noPlugin` precedence).
      */
@@ -186,7 +188,7 @@ export declare function hasPluginProvidedHookFiles(): boolean;
 export declare function hasEnabledOmcPlugin(): boolean;
 export declare function getRuntimePackageRoot(): string;
 /**
- * Extract the embedded OMC version from a CLAUDE.md file.
+ * Extract the embedded OMC version from a CODEBUDDY.md file.
  *
  * Primary source of truth is the injected `<!-- OMC:VERSION:x.y.z -->` marker.
  * Falls back to legacy headings that may include a version string inline.
@@ -206,8 +208,8 @@ export declare function syncPersistedSetupVersion(options?: {
     onlyIfConfigured?: boolean;
 }): boolean;
 /**
- * Merge OMC content into existing CLAUDE.md using markers
- * @param existingContent - Existing CLAUDE.md content (null if file doesn't exist)
+ * Merge OMC content into existing CODEBUDDY.md using markers
+ * @param existingContent - Existing CODEBUDDY.md content (null if file doesn't exist)
  * @param omcContent - New OMC content to inject
  * @returns Merged content with markers
  */

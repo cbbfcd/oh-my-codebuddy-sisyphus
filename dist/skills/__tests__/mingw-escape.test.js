@@ -106,9 +106,9 @@ describe('MINGW64 escape safety: no "!" in node -e inline scripts (issue #729)',
         });
         it('hud SKILL.md keeps Unix statusLine guidance portable while preserving Windows-safe paths', () => {
             const content = readFileSync(join(REPO_ROOT, 'skills', 'hud', 'SKILL.md'), 'utf-8');
-            expect(content).toContain('"command": "node ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hud/omc-hud.mjs"');
-            expect(content).toContain('"command": "node C:/Users/username/.claude/hud/omc-hud.mjs"');
-            expect(content).not.toContain('"command": "node /home/username/.claude/hud/omc-hud.mjs"');
+            expect(content).toContain('"command": "node ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}/hud/omc-hud.mjs"');
+            expect(content).toContain('"command": "node C:/Users/username/.codebuddy/hud/omc-hud.mjs"');
+            expect(content).not.toContain('"command": "node /home/username/.codebuddy/hud/omc-hud.mjs"');
             expect(content).not.toContain('The command must use an absolute path, not `~`');
         });
         it('hud SKILL.md cleanup step removes only the legacy HUD wrapper filename', () => {
@@ -130,16 +130,16 @@ describe('MINGW64 escape safety: no "!" in node -e inline scripts (issue #729)',
             expect(combined).toContain("if(v==='')");
             expect(combined).not.toContain('if(!v)');
         });
-        it('omc-setup extracts CLAUDE.md version from OMC marker', () => {
+        it('omc-setup extracts CODEBUDDY.md version from OMC marker', () => {
             const setupDir = join(REPO_ROOT, 'skills', 'omc-setup');
             const files = [
                 join(setupDir, 'SKILL.md'),
                 ...readdirSync(join(setupDir, 'phases')).map(f => join(setupDir, 'phases', f)),
-                join(REPO_ROOT, 'scripts', 'setup-claude-md.sh'),
+                join(REPO_ROOT, 'scripts', 'setup-codebuddy-md.sh'),
             ].filter(f => f.endsWith('.md') || f.endsWith('.sh'));
             const combined = files.map(f => readFileSync(f, 'utf-8')).join('\n');
             expect(combined).toContain("grep -m1 'OMC:VERSION:'");
-            expect(combined).not.toContain('grep -m1 "^# oh-my-claudecode"');
+            expect(combined).not.toContain('grep -m1 "^# oh-my-codebuddy"');
         });
         it('omc-setup SKILL.md explicitly tells the agent to execute immediately', () => {
             const content = readFileSync(join(REPO_ROOT, 'skills', 'omc-setup', 'SKILL.md'), 'utf-8');
@@ -149,8 +149,8 @@ describe('MINGW64 escape safety: no "!" in node -e inline scripts (issue #729)',
         it('omc-setup phase 2 delegates HUD setup instead of inlining statusLine formatting', () => {
             const content = readFileSync(join(REPO_ROOT, 'skills', 'omc-setup', 'phases', '02-configure.md'), 'utf-8');
             expect(content).toContain('Use the Skill tool to invoke: `hud` with args: `setup`');
-            expect(content).toContain('Configure `statusLine` in `~/.claude/settings.json`');
-            expect(content).not.toContain('Read `~/.claude/settings.json`, then update/add the `statusLine` field.');
+            expect(content).toContain('Configure `statusLine` in `~/.codebuddy/settings.json`');
+            expect(content).not.toContain('Read `~/.codebuddy/settings.json`, then update/add the `statusLine` field.');
             expect(content).not.toContain('"statusLine": {');
             expect(content).not.toContain('C:\\Users');
         });

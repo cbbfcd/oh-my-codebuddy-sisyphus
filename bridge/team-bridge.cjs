@@ -120,11 +120,11 @@ function stripTrailingSep(p) {
   }
   return p === (0, import_path2.parse)(p).root ? p : p.slice(0, -1);
 }
-function getClaudeConfigDir() {
+function getCodebuddyConfigDir() {
   const home = (0, import_os.homedir)();
-  const configured = process.env.CLAUDE_CONFIG_DIR?.trim();
+  const configured = (process.env.CODEBUDDY_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR)?.trim();
   if (!configured) {
-    return stripTrailingSep((0, import_path2.normalize)((0, import_path2.join)(home, ".claude")));
+    return stripTrailingSep((0, import_path2.normalize)((0, import_path2.join)(home, ".codebuddy")));
   }
   if (configured === "~") {
     return stripTrailingSep((0, import_path2.normalize)(home));
@@ -197,7 +197,7 @@ function resolveTmuxBinaryPath() {
 }
 
 // src/team/tmux-session.ts
-var TMUX_SESSION_PREFIX = "omc-team";
+var TMUX_SESSION_PREFIX = "omcb-team";
 function sanitizeName(name) {
   const sanitized = name.replace(/[^a-zA-Z0-9-]/g, "");
   if (sanitized.length === 0) {
@@ -369,7 +369,7 @@ function canonicalTasksDir(teamName, cwd) {
   return dir;
 }
 function legacyTasksDir(teamName) {
-  const claudeConfigDir = getClaudeConfigDir();
+  const claudeConfigDir = getCodebuddyConfigDir();
   const dir = getLegacyTaskStoragePath(claudeConfigDir, sanitizeName(teamName));
   validateResolvedPath(dir, (0, import_path6.join)(claudeConfigDir, "tasks"));
   return dir;
@@ -524,8 +524,8 @@ var import_fs5 = require("fs");
 var import_path7 = require("path");
 var MAX_INBOX_READ_SIZE = 10 * 1024 * 1024;
 function teamsDir(teamName) {
-  const result = (0, import_path7.join)(getClaudeConfigDir(), "teams", sanitizeName(teamName));
-  validateResolvedPath(result, (0, import_path7.join)(getClaudeConfigDir(), "teams"));
+  const result = (0, import_path7.join)(getCodebuddyConfigDir(), "teams", sanitizeName(teamName));
+  validateResolvedPath(result, (0, import_path7.join)(getCodebuddyConfigDir(), "teams"));
   return result;
 }
 function inboxPath(teamName, workerName) {
@@ -839,8 +839,8 @@ function withFileLockSync(lockPath, fn, opts) {
 
 // src/team/team-registration.ts
 function configPath(teamName) {
-  const result = (0, import_path8.join)(getClaudeConfigDir(), "teams", sanitizeName(teamName), "config.json");
-  validateResolvedPath(result, (0, import_path8.join)(getClaudeConfigDir(), "teams"));
+  const result = (0, import_path8.join)(getCodebuddyConfigDir(), "teams", sanitizeName(teamName), "config.json");
+  validateResolvedPath(result, (0, import_path8.join)(getCodebuddyConfigDir(), "teams"));
   return result;
 }
 function shadowRegistryPath(workingDirectory) {
@@ -1083,20 +1083,20 @@ function findPermissionViolations(changedPaths, permissions, cwd) {
 }
 
 // src/config/models.ts
-var CLAUDE_FAMILY_DEFAULTS = {
+var CODEBUDDY_FAMILY_DEFAULTS = {
   HAIKU: "claude-haiku-4-5",
   SONNET: "claude-sonnet-4-6",
   OPUS: "claude-opus-4-7"
 };
 var BUILTIN_TIER_MODEL_DEFAULTS = {
-  LOW: CLAUDE_FAMILY_DEFAULTS.HAIKU,
-  MEDIUM: CLAUDE_FAMILY_DEFAULTS.SONNET,
-  HIGH: CLAUDE_FAMILY_DEFAULTS.OPUS
+  LOW: CODEBUDDY_FAMILY_DEFAULTS.HAIKU,
+  MEDIUM: CODEBUDDY_FAMILY_DEFAULTS.SONNET,
+  HIGH: CODEBUDDY_FAMILY_DEFAULTS.OPUS
 };
-var CLAUDE_FAMILY_HIGH_VARIANTS = {
-  HAIKU: `${CLAUDE_FAMILY_DEFAULTS.HAIKU}-high`,
-  SONNET: `${CLAUDE_FAMILY_DEFAULTS.SONNET}-high`,
-  OPUS: `${CLAUDE_FAMILY_DEFAULTS.OPUS}-high`
+var CODEBUDDY_FAMILY_HIGH_VARIANTS = {
+  HAIKU: `${CODEBUDDY_FAMILY_DEFAULTS.HAIKU}-high`,
+  SONNET: `${CODEBUDDY_FAMILY_DEFAULTS.SONNET}-high`,
+  OPUS: `${CODEBUDDY_FAMILY_DEFAULTS.OPUS}-high`
 };
 var BUILTIN_EXTERNAL_MODEL_DEFAULTS = {
   codexModel: "gpt-5.3-codex",
@@ -1266,7 +1266,7 @@ function emptyUsageReport(teamName) {
 function peekRecentOutboxMessages(teamName, workerName, maxMessages = 10) {
   const safeName = sanitizeName(teamName);
   const safeWorker = sanitizeName(workerName);
-  const outboxPath2 = (0, import_path12.join)(getClaudeConfigDir(), "teams", safeName, "outbox", `${safeWorker}.jsonl`);
+  const outboxPath2 = (0, import_path12.join)(getCodebuddyConfigDir(), "teams", safeName, "outbox", `${safeWorker}.jsonl`);
   if (!(0, import_fs11.existsSync)(outboxPath2)) return [];
   try {
     const content = (0, import_fs11.readFileSync)(outboxPath2, "utf-8");
@@ -2209,7 +2209,7 @@ function main() {
   }
   const configPath2 = (0, import_path15.resolve)(process.argv[configIdx + 1]);
   const home = (0, import_os3.homedir)();
-  const claudeConfigDir = getClaudeConfigDir();
+  const claudeConfigDir = getCodebuddyConfigDir();
   if (!validateConfigPath(configPath2, home, claudeConfigDir)) {
     console.error(`Config path must be under ~/ with ${claudeConfigDir} or ~/.omc/ subpath: ${configPath2}`);
     process.exit(1);

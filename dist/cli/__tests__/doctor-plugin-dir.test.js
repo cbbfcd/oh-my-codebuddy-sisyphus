@@ -7,7 +7,7 @@
  *
  * OMC_CLI_SKIP_PARSE prevents index.ts from calling program.parse() at import
  * time (which would trigger launchCommand → process.exit inside the test
- * worker that inherits CLAUDECODE from the parent Claude Code session).
+ * worker that inherits CLAUDECODE from the parent CodeBuddy Code session).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { resolve } from 'path';

@@ -3,8 +3,8 @@
  *
  * Guards against recurring setup violations found in issues #2155, #2084, #2348, #2347.
  * Two core contracts:
- *   1. Never hardcode paths — use getClaudeConfigDir() or CLAUDE_CONFIG_DIR env var
- *   2. Never install to root ~/.claude when CLAUDE_CONFIG_DIR is set to a custom path
+ *   1. Never hardcode paths — use getCodebuddyConfigDir() or CODEBUDDY_CONFIG_DIR env var
+ *   2. Never install to root ~/.codebuddy when CODEBUDDY_CONFIG_DIR is set to a custom path
  *
  * Scanning approach: narrow construction-pattern matching (not broad string literals)
  * to avoid false positives and allowlist bloat.
@@ -86,21 +86,21 @@ function isInsideStringLiteral(line, pattern) {
     const quoteCount = (beforeMatch.match(/['"]/g) || []).length;
     return quoteCount % 2 === 1; // odd number of quotes means we're inside a string
 }
-// ── Contract 1: No dangerous join(homedir(), '.claude') in runtime source ────
-// Issue #2155 — functions that construct config paths inline instead of using getClaudeConfigDir()
-describe('Contract 1: no join(homedir()...".claude") outside canonical helpers', () => {
+// ── Contract 1: No dangerous join(homedir(), '.codebuddy') in runtime source ────
+// Issue #2155 — functions that construct config paths inline instead of using getCodebuddyConfigDir()
+describe('Contract 1: no join(homedir()...".codebuddy") outside canonical helpers', () => {
     const SRC_DIR = join(REPO_ROOT, 'src');
     const tsFiles = findFiles(SRC_DIR, ['.ts'], ['__tests__', 'node_modules']);
     // Canonical helper file and legitimate comparison functions
     const EXCLUDED_FILE = 'src/utils/config-dir.ts';
-    // Functions that legitimately need to reference ~/.claude as a default/comparison
+    // Functions that legitimately need to reference ~/.codebuddy as a default/comparison
     const EXCLUDED_FUNCTIONS = [
-        'isDefaultClaudeConfigDir',
-        'isDefaultClaudeConfigDirPath',
-        'prepareOmcLaunchConfigDir', // entry-point with its own CLAUDE_CONFIG_DIR || fallback
+        'isDefaultCodebuddyConfigDir',
+        'isDefaultCodebuddyConfigDirPath',
+        'prepareOmcLaunchConfigDir', // entry-point with its own CODEBUDDY_CONFIG_DIR || fallback
     ];
-    // Pattern: join(homedir() ... '.claude') — the dangerous inline path construction
-    const DANGEROUS_PATTERN = /join\(homedir\(\)[^)]*['"]\.claude['"]/;
+    // Pattern: join(homedir() ... '.codebuddy') — the dangerous inline path construction
+    const DANGEROUS_PATTERN = /join\(homedir\(\)[^)]*['"]\.codebuddy['"]/;
     const violations = [];
     for (const file of tsFiles) {
         const rel = relPath(file);
@@ -120,19 +120,19 @@ describe('Contract 1: no join(homedir()...".claude") outside canonical helpers',
             }
         }
     }
-    it('has no unguarded join(homedir(), ".claude") in runtime TypeScript', () => {
+    it('has no unguarded join(homedir(), ".codebuddy") in runtime TypeScript', () => {
         if (violations.length > 0) {
             const details = violations
                 .map(v => `  ${v.file}:${v.line}: ${v.text}`)
                 .join('\n');
-            expect.fail(`Found join(homedir(), '.claude') outside canonical helpers:\n${details}\n\n` +
-                `Use getClaudeConfigDir() instead of join(homedir(), '.claude').`);
+            expect.fail(`Found join(homedir(), '.codebuddy') outside canonical helpers:\n${details}\n\n` +
+                `Use getCodebuddyConfigDir() instead of join(homedir(), '.codebuddy').`);
         }
     });
 });
-// ── Contract 2: No unguarded $HOME/.claude in runtime shell scripts ──────────
-// Issue #2155 §11-13 — scripts with inline $HOME/.claude without CLAUDE_CONFIG_DIR guard
-describe('Contract 2: no unguarded $HOME/.claude in shell/script files', () => {
+// ── Contract 2: No unguarded $HOME/.codebuddy in runtime shell scripts ──────────
+// Issue #2155 §11-13 — scripts with inline $HOME/.codebuddy without CODEBUDDY_CONFIG_DIR guard
+describe('Contract 2: no unguarded $HOME/.codebuddy in shell/script files', () => {
     const SCRIPT_DIRS = [
         join(REPO_ROOT, 'scripts'),
         join(REPO_ROOT, 'templates', 'hooks'),
@@ -143,9 +143,9 @@ describe('Contract 2: no unguarded $HOME/.claude in shell/script files', () => {
         'scripts/lib/config-dir.cjs',
         'scripts/lib/config-dir.sh',
     ]);
-    // The safe pattern: ${CLAUDE_CONFIG_DIR:-$HOME/.claude}
-    const SAFE_PATTERN = /\$\{CLAUDE_CONFIG_DIR:-\$HOME\/\.claude\}/;
-    const DANGEROUS_PATTERN = /\$HOME\/\.claude/;
+    // The safe pattern: ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}
+    const SAFE_PATTERN = /\$\{CODEBUDDY_CONFIG_DIR:-\$HOME\/\.codebuddy\}/;
+    const DANGEROUS_PATTERN = /\$HOME\/\.codebuddy/;
     const violations = [];
     for (const dir of SCRIPT_DIRS) {
         const files = findFiles(dir, EXTENSIONS);
@@ -167,13 +167,13 @@ describe('Contract 2: no unguarded $HOME/.claude in shell/script files', () => {
             }
         }
     }
-    it('has no $HOME/.claude without ${CLAUDE_CONFIG_DIR:-...} guard in scripts', () => {
+    it('has no $HOME/.codebuddy without ${CODEBUDDY_CONFIG_DIR:-...} guard in scripts', () => {
         if (violations.length > 0) {
             const details = violations
                 .map(v => `  ${v.file}:${v.line}: ${v.text}`)
                 .join('\n');
-            expect.fail(`Found $HOME/.claude without CLAUDE_CONFIG_DIR guard:\n${details}\n\n` +
-                `Replace with: \${CLAUDE_CONFIG_DIR:-$HOME/.claude}`);
+            expect.fail(`Found $HOME/.codebuddy without CODEBUDDY_CONFIG_DIR guard:\n${details}\n\n` +
+                `Replace with: \${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}`);
         }
     });
 });
@@ -217,17 +217,17 @@ describe('Contract 3: no raw __dirname path resolution in installer outside getP
 // ── Contract 4: No absolute node binary paths in generated hook commands ─────
 // Issue #2348 — CI baked /opt/hostedtoolcache/node/... into hooks
 describe('Contract 4: no absolute node binary paths in hook commands', () => {
-    const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
+    const originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
     afterEach(() => {
         if (originalConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
         }
     });
     it('getHooksSettingsConfig() produces no absolute node paths (default config)', async () => {
-        delete process.env.CLAUDE_CONFIG_DIR;
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         // Dynamic import to get fresh module evaluation
         const { getHooksSettingsConfig } = await import('../installer/hooks.js');
         const config = getHooksSettingsConfig();
@@ -253,14 +253,14 @@ describe('Contract 4: no absolute node binary paths in hook commands', () => {
 });
 // ── Contract 5: No hardcoded paths in LLM-consumed artifacts ─────────────────
 // Architect recommendation + Issue #2155 §16
-describe('Contract 5: no hardcoded ~/.claude in LLM-consumed artifacts', () => {
+describe('Contract 5: no hardcoded ~/.codebuddy in LLM-consumed artifacts', () => {
     const AGENTS_DIR = join(REPO_ROOT, 'agents');
     const DOCS_DIR = join(REPO_ROOT, 'docs');
-    // Match ~/.claude NOT inside portable notation [$CLAUDE_CONFIG_DIR|~/.claude]
-    // or ${CLAUDE_CONFIG_DIR:-...} pattern
-    const TILDE_CLAUDE_PATTERN = /~\/\.claude/;
-    const SAFE_PORTABLE = /\[\$CLAUDE_CONFIG_DIR\|~\/\.claude\]/;
-    const SAFE_ENV_FALLBACK = /\$\{CLAUDE_CONFIG_DIR:-/;
+    // Match ~/.codebuddy NOT inside portable notation [$CODEBUDDY_CONFIG_DIR|~/.codebuddy]
+    // or ${CODEBUDDY_CONFIG_DIR:-...} pattern
+    const TILDE_CODEBUDDY_PATTERN = /~\/\.codebuddy/;
+    const SAFE_PORTABLE = /\[\$CODEBUDDY_CONFIG_DIR\|~\/\.codebuddy\]/;
+    const SAFE_ENV_FALLBACK = /\$\{CODEBUDDY_CONFIG_DIR:-/;
     function scanForViolations(dir) {
         const violations = [];
         const files = findFiles(dir, ['.md']);
@@ -269,16 +269,16 @@ describe('Contract 5: no hardcoded ~/.claude in LLM-consumed artifacts', () => {
             const lines = content.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                if (TILDE_CLAUDE_PATTERN.test(line) && !SAFE_PORTABLE.test(line) && !SAFE_ENV_FALLBACK.test(line)) {
+                if (TILDE_CODEBUDDY_PATTERN.test(line) && !SAFE_PORTABLE.test(line) && !SAFE_ENV_FALLBACK.test(line)) {
                     // Skip markdown comments
                     const trimmed = line.trim();
                     if (trimmed.startsWith('<!--') && trimmed.endsWith('-->'))
                         continue;
-                    // Skip lines that are just describing what CLAUDE_CONFIG_DIR defaults to
-                    if (/default.*~\/\.claude/i.test(line) || /fallback.*~\/\.claude/i.test(line))
+                    // Skip lines that are just describing what CODEBUDDY_CONFIG_DIR defaults to
+                    if (/default.*~\/\.codebuddy/i.test(line) || /fallback.*~\/\.codebuddy/i.test(line))
                         continue;
                     // Skip lines documenting the config-dir behavior
-                    if (/CLAUDE_CONFIG_DIR/i.test(line))
+                    if (/CODEBUDDY_CONFIG_DIR/i.test(line))
                         continue;
                     violations.push({ file: relPath(file), line: i + 1, text: trimmed });
                 }
@@ -286,49 +286,49 @@ describe('Contract 5: no hardcoded ~/.claude in LLM-consumed artifacts', () => {
         }
         return violations;
     }
-    it('agents/*.md have no unguarded ~/.claude references', () => {
+    it('agents/*.md have no unguarded ~/.codebuddy references', () => {
         if (!existsSync(AGENTS_DIR))
             return;
         const violations = scanForViolations(AGENTS_DIR);
         if (violations.length > 0) {
             const details = violations.map(v => `  ${v.file}:${v.line}: ${v.text}`).join('\n');
-            expect.fail(`Found unguarded ~/.claude in agent definitions:\n${details}\n\n` +
-                `Use [$CLAUDE_CONFIG_DIR|~/.claude] notation in LLM-consumed artifacts.`);
+            expect.fail(`Found unguarded ~/.codebuddy in agent definitions:\n${details}\n\n` +
+                `Use [$CODEBUDDY_CONFIG_DIR|~/.codebuddy] notation in LLM-consumed artifacts.`);
         }
     });
-    it('docs/CLAUDE.md (the installed template) has no unguarded ~/.claude references', () => {
-        // Only scan docs/CLAUDE.md — this is the file installed to users' config dirs
+    it('docs/CODEBUDDY.md (the installed template) has no unguarded ~/.codebuddy references', () => {
+        // Only scan docs/CODEBUDDY.md — this is the file installed to users' config dirs
         // and consumed by LLMs. Other docs/ files are developer documentation, not runtime artifacts.
-        const claudeMdPath = join(DOCS_DIR, 'CLAUDE.md');
-        if (!existsSync(claudeMdPath))
+        const codebuddyMdPath = join(DOCS_DIR, 'CODEBUDDY.md');
+        if (!existsSync(codebuddyMdPath))
             return;
-        const content = readFileSync(claudeMdPath, 'utf-8');
+        const content = readFileSync(codebuddyMdPath, 'utf-8');
         const lines = content.split('\n');
         const violations = [];
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            if (TILDE_CLAUDE_PATTERN.test(line) && !SAFE_PORTABLE.test(line) && !SAFE_ENV_FALLBACK.test(line)) {
+            if (TILDE_CODEBUDDY_PATTERN.test(line) && !SAFE_PORTABLE.test(line) && !SAFE_ENV_FALLBACK.test(line)) {
                 const trimmed = line.trim();
                 if (trimmed.startsWith('<!--') && trimmed.endsWith('-->'))
                     continue;
-                if (/default.*~\/\.claude/i.test(line) || /fallback.*~\/\.claude/i.test(line))
+                if (/default.*~\/\.codebuddy/i.test(line) || /fallback.*~\/\.codebuddy/i.test(line))
                     continue;
-                if (/CLAUDE_CONFIG_DIR/i.test(line))
+                if (/CODEBUDDY_CONFIG_DIR/i.test(line))
                     continue;
-                // Skip glob/permission patterns like ~/.claude/** (describes allowed paths, not path resolution)
-                if (/~\/\.claude\/\*/.test(line))
+                // Skip glob/permission patterns like ~/.codebuddy/** (describes allowed paths, not path resolution)
+                if (/~\/\.codebuddy\/\*/.test(line))
                     continue;
-                violations.push({ file: 'docs/CLAUDE.md', line: i + 1, text: trimmed });
+                violations.push({ file: 'docs/CODEBUDDY.md', line: i + 1, text: trimmed });
             }
         }
         if (violations.length > 0) {
             const details = violations.map(v => `  ${v.file}:${v.line}: ${v.text}`).join('\n');
-            expect.fail(`Found unguarded ~/.claude in docs/CLAUDE.md:\n${details}\n\n` +
-                `Use [$CLAUDE_CONFIG_DIR|~/.claude] notation in LLM-consumed artifacts.`);
+            expect.fail(`Found unguarded ~/.codebuddy in docs/CODEBUDDY.md:\n${details}\n\n` +
+                `Use [$CODEBUDDY_CONFIG_DIR|~/.codebuddy] notation in LLM-consumed artifacts.`);
         }
     });
 });
-// ── Contract 9: hooks/hooks.json commands use $CLAUDE_PLUGIN_ROOT, no absolute paths ──
+// ── Contract 9: hooks/hooks.json commands use $CODEBUDDY_PLUGIN_ROOT, no absolute paths ──
 // Issue #2348 — plugin hook delivery must be portable
 describe('Contract 9: hooks/hooks.json portability', () => {
     const HOOKS_JSON_PATH = join(REPO_ROOT, 'hooks', 'hooks.json');
@@ -345,7 +345,7 @@ describe('Contract 9: hooks/hooks.json portability', () => {
             // Non-fatal: if git is unavailable or hooks.json is already clean, proceed anyway.
         }
     });
-    it('all hook commands reference $CLAUDE_PLUGIN_ROOT', () => {
+    it('all hook commands reference $CODEBUDDY_PLUGIN_ROOT', () => {
         if (!existsSync(HOOKS_JSON_PATH))
             return;
         const hooksJson = JSON.parse(readFileSync(HOOKS_JSON_PATH, 'utf-8'));
@@ -355,7 +355,7 @@ describe('Contract 9: hooks/hooks.json portability', () => {
                 for (const hook of hookGroup.hooks) {
                     if (hook.type !== 'command')
                         continue;
-                    if (!hook.command.includes('$CLAUDE_PLUGIN_ROOT')) {
+                    if (!hook.command.includes('$CODEBUDDY_PLUGIN_ROOT')) {
                         violations.push({ event: eventType, command: hook.command });
                     }
                 }
@@ -363,8 +363,8 @@ describe('Contract 9: hooks/hooks.json portability', () => {
         }
         if (violations.length > 0) {
             const details = violations.map(v => `  ${v.event}: ${v.command}`).join('\n');
-            expect.fail(`Found hook commands not using $CLAUDE_PLUGIN_ROOT:\n${details}\n\n` +
-                `All plugin hook commands must reference $CLAUDE_PLUGIN_ROOT for portability.`);
+            expect.fail(`Found hook commands not using $CODEBUDDY_PLUGIN_ROOT:\n${details}\n\n` +
+                `All plugin hook commands must reference $CODEBUDDY_PLUGIN_ROOT for portability.`);
         }
     });
     it('no hook command contains an absolute node binary path', () => {
@@ -392,7 +392,7 @@ describe('Contract 9: hooks/hooks.json portability', () => {
     });
 });
 // ── Contract 10: Setup installer manages stale OMC-created files ─────────────
-// User requirement: setup cleanup stale ~/.claude/skills and ~/.claude/agents created by OMC
+// User requirement: setup cleanup stale ~/.codebuddy/skills and ~/.codebuddy/agents created by OMC
 describe('Contract 10: installer manages stale OMC-created agents and skills', () => {
     it('package ships agent definitions that can be enumerated', () => {
         const agentsDir = join(REPO_ROOT, 'agents');

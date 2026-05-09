@@ -114,20 +114,20 @@ export function buildAutoresearchSetupPrompt(input) {
 }
 export function runAutoresearchSetupSession(input) {
     const prompt = buildAutoresearchSetupPrompt(input);
-    const result = spawnSync('claude', ['-p', prompt], {
+    const result = spawnSync('codebuddy', ['-p', prompt], {
         cwd: input.repoRoot,
         encoding: 'utf-8',
         shell: process.platform === 'win32',
         env: {
             ...process.env,
-            CLAUDE_CODE_ENTRYPOINT: AUTORESEARCH_SETUP_ENTRYPOINT,
+            CODEBUDDY_CODE_ENTRYPOINT: AUTORESEARCH_SETUP_ENTRYPOINT,
         },
     });
     if (result.error) {
         throw result.error;
     }
     if (result.status !== 0) {
-        throw new Error(`claude_autoresearch_setup_failed:${result.status ?? 'unknown'}`);
+        throw new Error(`codebuddy_autoresearch_setup_failed:${result.status ?? 'unknown'}`);
     }
     return parseAutoresearchSetupHandoffJson(result.stdout || '');
 }

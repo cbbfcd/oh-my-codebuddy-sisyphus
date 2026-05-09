@@ -5,7 +5,7 @@ import { normalizeToCcAlias } from '../features/delegation-enforcer.js';
 import { isBedrock, isVertexAI, isProviderSpecificModelId } from '../config/models.js';
 import { isExternalLLMDisabled } from '../lib/security-config.js';
 
-export type CliAgentType = 'codebuddy' | 'codex' | 'gemini' | 'cursor';
+export type CliAgentType = 'codebuddy' | 'claude' | 'codex' | 'gemini' | 'cursor';
 
 export interface CliAgentContract {
   agentType: CliAgentType;
@@ -169,9 +169,9 @@ export function shouldUseClaudeBareMode(env: NodeJS.ProcessEnv = process.env): b
 }
 
 const CONTRACTS: Record<CliAgentType, CliAgentContract> = {
-  codebuddy: {
-    agentType: 'codebuddy',
-    binary: 'codebuddy',
+  claude: {
+    agentType: 'claude',
+    binary: 'claude',
     installInstructions: 'Install Claude CLI: https://claude.ai/download',
     buildLaunchArgs(model?: string, extraFlags: string[] = []): string[] {
       const args = ['--dangerously-skip-permissions'];
@@ -287,7 +287,7 @@ export function getContract(agentType: CliAgentType): CliAgentContract {
   if (!contract) {
     throw new Error(`Unknown agent type: ${agentType}. Supported: ${Object.keys(CONTRACTS).join(', ')}`);
   }
-  if (agentType !== 'codebuddy' && isExternalLLMDisabled()) {
+  if (agentType !== 'codebuddy' && agentType !== 'claude' && isExternalLLMDisabled()) {
     throw new Error(
       `External LLM provider "${agentType}" is blocked by security policy (disableExternalLLM). ` +
       `Only Claude workers are allowed in the current security configuration.`

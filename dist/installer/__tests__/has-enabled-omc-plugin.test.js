@@ -4,7 +4,7 @@
  * Background: prior to this fix, the function read `settings.plugins`, but
  * Claude Code 1.x writes the canonical field as `settings.enabledPlugins`.
  * As a result, `omc update`/`omc setup` invoked from a regular shell (where
- * `CLAUDE_PLUGIN_ROOT` is unset) saw "no plugin enabled" and bypassed the
+ * `CODEBUDDY_PLUGIN_ROOT` is unset) saw "no plugin enabled" and bypassed the
  * `prunePluginDuplicateSkills` branch entirely, leaving every user with a
  * Claude Code 1.x settings.json permanently stuck in the duplicate-skill
  * state from #2252.
@@ -29,7 +29,7 @@ function writeSettings(content) {
 }
 beforeEach(() => {
     testDir = mkdtempSync(join(tmpdir(), 'omc-has-enabled-'));
-    process.env.CLAUDE_CONFIG_DIR = testDir;
+    process.env.CODEBUDDY_CONFIG_DIR = testDir;
     delete process.env.CLAUDE_PLUGIN_ROOT;
     delete process.env.OMC_PLUGIN_ROOT;
 });
@@ -53,35 +53,35 @@ describe('hasEnabledOmcPlugin', () => {
         });
     });
     describe('Modern Claude Code 1.x format (`enabledPlugins`)', () => {
-        it('returns true when enabledPlugins.oh-my-claudecode@omc is true', async () => {
+        it('returns true when enabledPlugins.oh-my-codebuddy@omc is true', async () => {
             writeSettings({
                 enabledPlugins: {
-                    'oh-my-claudecode@omc': true,
+                    'oh-my-codebuddy@omc': true,
                     'unrelated-plugin@foo': true,
                 },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
         });
-        it('returns true for any pluginId substring matching oh-my-claudecode', async () => {
+        it('returns true for any pluginId substring matching oh-my-codebuddy', async () => {
             writeSettings({
                 enabledPlugins: {
-                    'oh-my-claudecode-fork@somerepo': true,
+                    'oh-my-codebuddy-fork@somerepo': true,
                 },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
         });
-        it('returns false when enabledPlugins.oh-my-claudecode@omc is explicitly false', async () => {
+        it('returns false when enabledPlugins.oh-my-codebuddy@omc is explicitly false', async () => {
             writeSettings({
                 enabledPlugins: {
-                    'oh-my-claudecode@omc': false,
+                    'oh-my-codebuddy@omc': false,
                 },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(false);
         });
-        it('returns false when enabledPlugins has no oh-my-claudecode entry', async () => {
+        it('returns false when enabledPlugins has no oh-my-codebuddy entry', async () => {
             writeSettings({
                 enabledPlugins: {
                     'unrelated-plugin@foo': true,
@@ -92,25 +92,25 @@ describe('hasEnabledOmcPlugin', () => {
         });
         it('handles enabledPlugins as an array of plugin id strings', async () => {
             writeSettings({
-                enabledPlugins: ['oh-my-claudecode@omc', 'other'],
+                enabledPlugins: ['oh-my-codebuddy@omc', 'other'],
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
         });
     });
     describe('Legacy `plugins` field (backward compatibility)', () => {
-        it('returns true when plugins.oh-my-claudecode@omc is true', async () => {
+        it('returns true when plugins.oh-my-codebuddy@omc is true', async () => {
             writeSettings({
                 plugins: {
-                    'oh-my-claudecode@omc': true,
+                    'oh-my-codebuddy@omc': true,
                 },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
         });
-        it('returns true when plugins is an array with oh-my-claudecode entry', async () => {
+        it('returns true when plugins is an array with oh-my-codebuddy entry', async () => {
             writeSettings({
-                plugins: ['oh-my-claudecode'],
+                plugins: ['oh-my-codebuddy'],
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
@@ -118,7 +118,7 @@ describe('hasEnabledOmcPlugin', () => {
         it('returns false when legacy plugins entry is explicitly false', async () => {
             writeSettings({
                 plugins: {
-                    'oh-my-claudecode@omc': false,
+                    'oh-my-codebuddy@omc': false,
                 },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
@@ -126,18 +126,18 @@ describe('hasEnabledOmcPlugin', () => {
         });
     });
     describe('Mixed format support', () => {
-        it('matches oh-my-claudecode in EITHER enabledPlugins or plugins', async () => {
+        it('matches oh-my-codebuddy in EITHER enabledPlugins or plugins', async () => {
             // settings has both fields; enabledPlugins is empty, plugins has the entry
             writeSettings({
                 enabledPlugins: { 'unrelated@foo': true },
-                plugins: { 'oh-my-claudecode@omc': true },
+                plugins: { 'oh-my-codebuddy@omc': true },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();
             expect(hasEnabledOmcPlugin()).toBe(true);
         });
         it('returns true when modern enabledPlugins has the entry but legacy plugins does not', async () => {
             writeSettings({
-                enabledPlugins: { 'oh-my-claudecode@omc': true },
+                enabledPlugins: { 'oh-my-codebuddy@omc': true },
                 plugins: { 'unrelated@foo': true },
             });
             const { hasEnabledOmcPlugin } = await freshInstaller();

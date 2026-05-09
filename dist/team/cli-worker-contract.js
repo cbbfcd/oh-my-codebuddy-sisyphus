@@ -38,7 +38,7 @@ export function shouldInjectContract(role, provider) {
     // role-router and worker-bootstrap guidance both flag this; here we
     // simply skip contract injection if a cursor worker somehow lands on
     // a CONTRACT_ROLES role rather than emit instructions it cannot follow.
-    if (provider === 'claude' || provider === 'cursor')
+    if (provider === 'claude' || provider === 'cursor' || provider === 'codebuddy')
         return false;
     return CONTRACT_ROLES.has(role);
 }

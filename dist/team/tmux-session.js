@@ -11,7 +11,7 @@ import fs from 'fs/promises';
 import { validateTeamName } from './team-name.js';
 import { tmuxExec, tmuxExecAsync, tmuxShell, tmuxCmdAsync } from '../cli/tmux-utils.js';
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-const TMUX_SESSION_PREFIX = 'omc-team';
+const TMUX_SESSION_PREFIX = 'omcb-team';
 export function detectTeamMultiplexerContext(env = process.env) {
     if (env.TMUX)
         return 'tmux';
@@ -448,7 +448,7 @@ export async function createTeamSession(teamName, workerCount, cwd, options = {}
     }
     if (useDedicatedWindow) {
         const targetSession = sessionAndWindow.split(':')[0] ?? sessionAndWindow;
-        const windowName = `omc-${sanitizeName(teamName)}`.slice(0, 32);
+        const windowName = `omcb-${sanitizeName(teamName)}`.slice(0, 32);
         const newWindowResult = await tmuxExecAsync([
             'new-window', '-d', '-P', '-F', '#S:#I #{pane_id}',
             '-t', targetSession,

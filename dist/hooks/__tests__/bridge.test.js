@@ -197,7 +197,7 @@ describe('processHook - Environment Kill-Switches', () => {
     });
     describe('Bedrock/Vertex model deny on Agent tool (issue #1415)', () => {
         it('should deny Agent calls with model param when forceInherit is enabled', async () => {
-            process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+            process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
             const input = {
                 sessionId: 'test-session',
                 prompt: 'test',
@@ -206,7 +206,7 @@ describe('processHook - Environment Kill-Switches', () => {
                 toolInput: {
                     description: 'Test agent',
                     prompt: 'Do something',
-                    subagent_type: 'oh-my-claudecode:executor',
+                    subagent_type: 'oh-my-codebuddy:executor',
                     model: 'sonnet',
                 },
             };
@@ -218,7 +218,7 @@ describe('processHook - Environment Kill-Switches', () => {
             expect(output.permissionDecisionReason).toContain('Agent');
         });
         it('should deny Task calls with model param when forceInherit is enabled', async () => {
-            process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+            process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
             const input = {
                 sessionId: 'test-session',
                 prompt: 'test',
@@ -227,7 +227,7 @@ describe('processHook - Environment Kill-Switches', () => {
                 toolInput: {
                     description: 'Test task',
                     prompt: 'Do something',
-                    subagent_type: 'oh-my-claudecode:executor',
+                    subagent_type: 'oh-my-codebuddy:executor',
                     model: 'opus',
                 },
             };
@@ -239,7 +239,7 @@ describe('processHook - Environment Kill-Switches', () => {
             expect(output.permissionDecisionReason).toContain('Task');
         });
         it('should allow Agent calls without model param on Bedrock', async () => {
-            process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+            process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
             const input = {
                 sessionId: 'test-session',
                 prompt: 'test',
@@ -248,7 +248,7 @@ describe('processHook - Environment Kill-Switches', () => {
                 toolInput: {
                     description: 'Test agent',
                     prompt: 'Do something',
-                    subagent_type: 'oh-my-claudecode:executor',
+                    subagent_type: 'oh-my-codebuddy:executor',
                 },
             };
             const result = await processHook('pre-tool-use', input);
@@ -256,7 +256,7 @@ describe('processHook - Environment Kill-Switches', () => {
             expect(output?.permissionDecision).not.toBe('deny');
         });
         it('should deny lowercase agent calls with model param when forceInherit is enabled', async () => {
-            process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+            process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
             const input = {
                 sessionId: 'test-session',
                 prompt: 'test',
@@ -265,7 +265,7 @@ describe('processHook - Environment Kill-Switches', () => {
                 toolInput: {
                     description: 'Test agent',
                     prompt: 'Do something',
-                    subagent_type: 'oh-my-claudecode:executor',
+                    subagent_type: 'oh-my-codebuddy:executor',
                     model: 'sonnet',
                 },
             };
@@ -286,7 +286,7 @@ describe('processHook - Environment Kill-Switches', () => {
                 toolInput: {
                     description: 'Test agent',
                     prompt: 'Do something',
-                    subagent_type: 'oh-my-claudecode:executor',
+                    subagent_type: 'oh-my-codebuddy:executor',
                 },
                 toolOutput: 'done',
             };
@@ -343,7 +343,7 @@ describe('processHook - Environment Kill-Switches', () => {
                     hookEventName: 'UserPromptSubmit',
                     additionalContext: '[RALPLAN INIT] Explicit /ralplan invoke detected during UserPromptSubmit.\n' +
                         'Proceed immediately with the consensus planning workflow for:\n' +
-                        '/oh-my-claudecode:ralplan issue #2622',
+                        '/oh-my-codebuddy:ralplan issue #2622',
                 },
             })).toEqual({
                 continue: true,
@@ -351,7 +351,7 @@ describe('processHook - Environment Kill-Switches', () => {
                     hookEventName: 'UserPromptSubmit',
                     additionalContext: '[RALPLAN INIT] Explicit /ralplan invoke detected during UserPromptSubmit.\n' +
                         'Proceed immediately with the consensus planning workflow for:\n' +
-                        '/oh-my-claudecode:ralplan issue #2622',
+                        '/oh-my-codebuddy:ralplan issue #2622',
                 },
             });
         });

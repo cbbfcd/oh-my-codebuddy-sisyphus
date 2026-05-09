@@ -9,7 +9,7 @@
  * Tests the exported getHooksSettingsConfig() function which is the public API
  * for standalone hook configuration. Uses vi.resetModules() + dynamic import
  * because HOOKS_SETTINGS_CONFIG_NODE is a module-level constant evaluated at
- * import time based on CLAUDE_CONFIG_DIR.
+ * import time based on CODEBUDDY_CONFIG_DIR.
  */
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { existsSync, readdirSync } from 'fs';
@@ -20,19 +20,27 @@ const __dirname = dirname(__filename);
 const REPO_ROOT = join(__dirname, '..', '..', '..');
 // ── Contract 7: getHooksSettingsConfig() generates portable hook commands ─────
 describe('Contract 7: hook command portability (#2084, #2348)', () => {
-    const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
+    const originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+    const originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
     const originalPlatform = process.platform;
     afterEach(() => {
         if (originalConfigDir === undefined) {
+            delete process.env.CODEBUDDY_CONFIG_DIR;
+        }
+        else {
+            process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
+        }
+        if (originalClaudeConfigDir === undefined) {
             delete process.env.CLAUDE_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+            process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
         }
         Object.defineProperty(process, 'platform', { value: originalPlatform });
         vi.resetModules();
     });
-    it('default config: commands use ${CLAUDE_CONFIG_DIR:-$HOME/.claude} pattern', async () => {
+    it('default config: commands use ${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy} pattern', async () => {
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.CLAUDE_CONFIG_DIR;
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');
@@ -48,10 +56,11 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
         expect(commands.length).toBeGreaterThan(0);
         // On default config, all commands should use the portable env-var pattern
         for (const cmd of commands) {
-            expect(cmd).toContain('${CLAUDE_CONFIG_DIR:-$HOME/.claude}');
+            expect(cmd).toContain('${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}');
         }
     });
     it('no command contains an absolute path to a node binary', async () => {
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.CLAUDE_CONFIG_DIR;
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');
@@ -77,6 +86,7 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
         }
     });
     it('no command contains a hardcoded home directory path', async () => {
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.CLAUDE_CONFIG_DIR;
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');
@@ -96,11 +106,11 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
         if (violations.length > 0) {
             const details = violations.map(v => `  ${v.event}: ${v.command}`).join('\n');
             expect.fail(`Found hardcoded home directory paths in hook commands:\n${details}\n\n` +
-                `Hook commands must use $HOME or \${CLAUDE_CONFIG_DIR:-$HOME/.claude}, not resolved absolute home paths.`);
+                `Hook commands must use $HOME or \${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}, not resolved absolute home paths.`);
         }
     });
     it('custom config: commands use the custom absolute path', async () => {
-        process.env.CLAUDE_CONFIG_DIR = '/tmp/custom-claude-test-config';
+        process.env.CODEBUDDY_CONFIG_DIR = '/tmp/custom-claude-test-config';
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');
         const config = getHooksSettingsConfig();
@@ -120,6 +130,7 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
     });
     it('Windows default config: avoids CMD-only %USERPROFILE% and keeps portable bash-style expansion', async () => {
         Object.defineProperty(process, 'platform', { value: 'win32' });
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.CLAUDE_CONFIG_DIR;
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');
@@ -134,7 +145,7 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
         }
         expect(commands.length).toBeGreaterThan(0);
         for (const cmd of commands) {
-            expect(cmd).toContain('${CLAUDE_CONFIG_DIR:-$HOME/.claude}');
+            expect(cmd).toContain('${CODEBUDDY_CONFIG_DIR:-$HOME/.codebuddy}');
             expect(cmd).not.toContain('%USERPROFILE%');
         }
     });
@@ -142,6 +153,7 @@ describe('Contract 7: hook command portability (#2084, #2348)', () => {
 // ── Contract 8: Hook config commands reference known OMC hook filenames ───────
 describe('Contract 8: hook commands reference existing template files', () => {
     it('all hook commands reference files that exist in templates/hooks/', async () => {
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.CLAUDE_CONFIG_DIR;
         vi.resetModules();
         const { getHooksSettingsConfig } = await import('../../installer/hooks.js');

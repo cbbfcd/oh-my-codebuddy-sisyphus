@@ -90,7 +90,7 @@ export interface McpWorkerMember {
 export interface HeartbeatData {
     workerName: string;
     teamName: string;
-    provider: 'codex' | 'gemini' | 'claude';
+    provider: 'codex' | 'gemini' | 'claude' | 'codebuddy';
     pid: number;
     lastPollAt: string;
     currentTaskId?: string;
@@ -232,7 +232,7 @@ export interface WorkerInfo {
     name: string;
     index: number;
     role: string;
-    worker_cli?: 'codex' | 'claude' | 'gemini' | 'cursor';
+    worker_cli?: 'codex' | 'claude' | 'gemini' | 'cursor' | 'codebuddy';
     assigned_tasks: string[];
     pid?: number;
     pane_id?: string;

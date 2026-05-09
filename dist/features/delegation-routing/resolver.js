@@ -35,7 +35,7 @@ export function resolveDelegation(options) {
 function resolveExplicitTool(tool, model, agentRole) {
     // Only 'Task' is supported - explicit tool invocation always uses Claude
     return {
-        provider: 'claude',
+        provider: 'codebuddy',
         tool: 'Task',
         agentOrModel: agentRole,
         reason: `Explicit tool invocation: ${tool}`,
@@ -53,7 +53,7 @@ function resolveFromConfig(agentRole, route) {
         const agentOrModel = route.model || route.agentType || agentRole;
         const fallbackChain = route.fallback;
         return {
-            provider: 'claude',
+            provider: 'codebuddy',
             tool: 'Task',
             agentOrModel,
             reason: `Configured routing for role "${agentRole}" (deprecated provider "${provider}", falling back to Claude Task)`,
@@ -83,7 +83,7 @@ function resolveDefault(agentRole, config) {
     const defaultAgent = ROLE_CATEGORY_DEFAULTS[agentRole];
     if (defaultAgent) {
         return {
-            provider: 'claude',
+            provider: 'codebuddy',
             tool: 'Task',
             agentOrModel: defaultAgent,
             reason: `Default heuristic: role "${agentRole}" → Claude subagent "${defaultAgent}"`,
@@ -96,7 +96,7 @@ function resolveDefault(agentRole, config) {
     }
     // Default to claude Task (codex/gemini default providers fall back to claude)
     return {
-        provider: 'claude',
+        provider: 'codebuddy',
         tool: 'Task',
         agentOrModel: agentRole,
         reason: `Fallback to Claude Task for role "${agentRole}"`,

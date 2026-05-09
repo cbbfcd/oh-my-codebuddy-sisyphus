@@ -10,7 +10,7 @@
  * - Rename
  * - Code actions
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 /**
  * LSP Hover Tool - Get type information and documentation at a position

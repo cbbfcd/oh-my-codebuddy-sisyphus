@@ -201,7 +201,7 @@ function expandTriggers(triggersLower) {
 // src/hooks/learner/bridge.ts
 var USER_SKILLS_DIR = (0, import_path3.join)(
   (0, import_os3.homedir)(),
-  ".claude",
+  ".codebuddy",
   "skills",
   "omc-learned"
 );

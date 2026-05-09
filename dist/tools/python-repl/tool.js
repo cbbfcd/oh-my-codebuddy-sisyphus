@@ -12,7 +12,7 @@
  *
  * @module python-repl/tool
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { validatePathSegment } from './paths.js';
 import { SessionLock, LockTimeoutError } from './session-lock.js';
 import { sendSocketRequest, SocketConnectionError, SocketTimeoutError, JsonRpcError } from './socket-client.js';

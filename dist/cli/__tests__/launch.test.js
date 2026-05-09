@@ -2,7 +2,7 @@
  * Tests for src/cli/launch.ts
  *
  * Covers:
- * - Exit code propagation (runClaude direct / inside-tmux)
+ * - Exit code propagation (runCodebuddy direct / inside-tmux)
  * - No OMC HUD pane spawning in tmux launch paths
  */
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
@@ -28,11 +28,11 @@ vi.mock('../tmux-utils.js', () => ({
     isNativeWindowsShell: vi.fn(() => false),
     wrapWithLoginShell: vi.fn((cmd) => cmd),
     quoteShellArg: vi.fn((s) => s),
-    isClaudeAvailable: vi.fn(() => true),
+    isCodebuddyAvailable: vi.fn(() => true),
     isTmuxAvailable: vi.fn(() => true),
     tmuxExec: vi.fn(),
 }));
-import { runClaude, launchCommand, extractNotifyFlag, extractOpenClawFlag, extractTelegramFlag, extractDiscordFlag, extractSlackFlag, extractWebhookFlag, normalizeClaudeLaunchArgs, isPrintMode, prepareOmcLaunchConfigDir, buildEnvExportPrefix, hasMadmaxFlag, TMUX_ENV_FORWARD } from '../launch.js';
+import { runCodebuddy, launchCommand, extractNotifyFlag, extractOpenClawFlag, extractTelegramFlag, extractDiscordFlag, extractSlackFlag, extractWebhookFlag, normalizeCodebuddyLaunchArgs, isPrintMode, prepareOmcLaunchConfigDir, buildEnvExportPrefix, hasMadmaxFlag, TMUX_ENV_FORWARD } from '../launch.js';
 import { resolveLaunchPolicy, buildTmuxShellCommand, buildTmuxShellCommandWithEnv, isNativeWindowsShell, wrapWithLoginShell, isTmuxAvailable, tmuxExec, } from '../tmux-utils.js';
 // ---------------------------------------------------------------------------
 // extractNotifyFlag
@@ -76,37 +76,37 @@ describe('extractNotifyFlag', () => {
     });
 });
 // ---------------------------------------------------------------------------
-// normalizeClaudeLaunchArgs
+// normalizeCodebuddyLaunchArgs
 // ---------------------------------------------------------------------------
-describe('normalizeClaudeLaunchArgs', () => {
+describe('normalizeCodebuddyLaunchArgs', () => {
     it('maps --madmax to --dangerously-skip-permissions', () => {
-        expect(normalizeClaudeLaunchArgs(['--madmax'])).toEqual([
+        expect(normalizeCodebuddyLaunchArgs(['--madmax'])).toEqual([
             '--dangerously-skip-permissions',
         ]);
     });
     it('maps --yolo to --dangerously-skip-permissions', () => {
-        expect(normalizeClaudeLaunchArgs(['--yolo'])).toEqual([
+        expect(normalizeCodebuddyLaunchArgs(['--yolo'])).toEqual([
             '--dangerously-skip-permissions',
         ]);
     });
     it('deduplicates --dangerously-skip-permissions', () => {
-        const result = normalizeClaudeLaunchArgs([
+        const result = normalizeCodebuddyLaunchArgs([
             '--madmax',
             '--dangerously-skip-permissions',
         ]);
         expect(result.filter((a) => a === '--dangerously-skip-permissions')).toHaveLength(1);
     });
     it('passes unknown flags through unchanged', () => {
-        expect(normalizeClaudeLaunchArgs(['--print', '--verbose'])).toEqual([
+        expect(normalizeCodebuddyLaunchArgs(['--print', '--verbose'])).toEqual([
             '--print',
             '--verbose',
         ]);
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — exit code propagation
+// runCodebuddy — exit code propagation
 // ---------------------------------------------------------------------------
-describe('runClaude — exit code propagation', () => {
+describe('runCodebuddy — exit code propagation', () => {
     let processExitSpy;
     beforeEach(() => {
         vi.resetAllMocks();
@@ -121,41 +121,41 @@ describe('runClaude — exit code propagation', () => {
         });
         it('bypasses tmux for --print mode', () => {
             execFileSync.mockReturnValue(Buffer.from(''));
-            runClaude('/tmp', ['--print'], 'sid');
+            runCodebuddy('/tmp', ['--print'], 'sid');
             // isPrintMode short-circuits before resolveLaunchPolicy is called
             expect(resolveLaunchPolicy).not.toHaveBeenCalled();
             expect(vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'tmux')).toBeUndefined();
-            expect(vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude')?.[1]).toEqual(['--print']);
+            expect(vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy')?.[1]).toEqual(['--print']);
         });
-        it('propagates Claude non-zero exit code', () => {
+        it('propagates Codebuddy non-zero exit code', () => {
             const err = Object.assign(new Error('Command failed'), { status: 2 });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(2);
         });
         it('exits with code 1 when status is null', () => {
             const err = Object.assign(new Error('Command failed'), { status: null });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(1);
         });
         it('exits with code 1 on ENOENT', () => {
             const err = Object.assign(new Error('Not found'), { code: 'ENOENT' });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(1);
         });
         it('does not call process.exit on success', () => {
             execFileSync.mockReturnValue(Buffer.from(''));
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).not.toHaveBeenCalled();
         });
         it('uses shell:true on win32 so claude.cmd can launch', () => {
             const originalPlatform = process.platform;
             Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
             execFileSync.mockReturnValue(Buffer.from(''));
-            runClaude('/tmp', ['--resume'], 'sid');
-            expect(vi.mocked(execFileSync)).toHaveBeenCalledWith('claude', ['--resume'], {
+            runCodebuddy('/tmp', ['--resume'], 'sid');
+            expect(vi.mocked(execFileSync)).toHaveBeenCalledWith('codebuddy', ['--resume'], {
                 cwd: '/tmp',
                 stdio: 'inherit',
                 shell: true,
@@ -171,24 +171,24 @@ describe('runClaude — exit code propagation', () => {
         afterEach(() => {
             delete process.env.TMUX_PANE;
         });
-        it('propagates Claude non-zero exit code', () => {
+        it('propagates Codebuddy non-zero exit code', () => {
             const err = Object.assign(new Error('Command failed'), { status: 3 });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(3);
         });
         it('exits with code 1 when status is null', () => {
             const err = Object.assign(new Error('Command failed'), { status: null });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(1);
         });
         it('uses shell:true on win32 so claude.cmd can launch inside tmux', () => {
             const originalPlatform = process.platform;
             Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
             execFileSync.mockReturnValue(Buffer.from(''));
-            runClaude('/tmp', ['--continue'], 'sid');
-            expect(vi.mocked(execFileSync)).toHaveBeenCalledWith('claude', ['--continue'], {
+            runCodebuddy('/tmp', ['--continue'], 'sid');
+            expect(vi.mocked(execFileSync)).toHaveBeenCalledWith('codebuddy', ['--continue'], {
                 cwd: '/tmp',
                 stdio: 'inherit',
                 shell: true,
@@ -198,43 +198,43 @@ describe('runClaude — exit code propagation', () => {
         it('exits with code 1 on ENOENT', () => {
             const err = Object.assign(new Error('Not found'), { code: 'ENOENT' });
             execFileSync.mockImplementation(() => { throw err; });
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).toHaveBeenCalledWith(1);
         });
         it('does not call process.exit on success', () => {
             execFileSync.mockReturnValue(Buffer.from(''));
-            runClaude('/tmp', [], 'sid');
+            runCodebuddy('/tmp', [], 'sid');
             expect(processExitSpy).not.toHaveBeenCalled();
         });
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — OMC HUD pane spawning disabled
+// runCodebuddy — OMC HUD pane spawning disabled
 // ---------------------------------------------------------------------------
-describe('runClaude OMC HUD behavior', () => {
+describe('runCodebuddy OMC HUD behavior', () => {
     beforeEach(() => {
         vi.resetAllMocks();
         execFileSync.mockReturnValue(Buffer.from(''));
     });
     it('does not build an omc hud --watch command inside tmux', () => {
         resolveLaunchPolicy.mockReturnValue('inside-tmux');
-        runClaude('/tmp/cwd', [], 'test-session');
+        runCodebuddy('/tmp/cwd', [], 'test-session');
         const calls = vi.mocked(buildTmuxShellCommand).mock.calls;
         const omcHudCall = calls.find(([cmd, args]) => cmd === 'node' && Array.isArray(args) && args.includes('hud'));
         expect(omcHudCall).toBeUndefined();
     });
     it('does not add split-window HUD pane args when launching outside tmux', () => {
         resolveLaunchPolicy.mockReturnValue('outside-tmux');
-        runClaude('/tmp/cwd', [], 'test-session');
+        runCodebuddy('/tmp/cwd', [], 'test-session');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls;
         expect(tmuxCalls.length).toBeGreaterThan(0);
         expect(tmuxCalls.every(([args]) => !args.includes('split-window'))).toBe(true);
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — outside-tmux mouse scrolling (issue #890 regression guard)
+// runCodebuddy — outside-tmux mouse scrolling (issue #890 regression guard)
 // ---------------------------------------------------------------------------
-describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
+describe('runCodebuddy outside-tmux — mouse scrolling (issue #890)', () => {
     let processExitSpy;
     beforeEach(() => {
         vi.resetAllMocks();
@@ -246,7 +246,7 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
         processExitSpy.mockRestore();
     });
     it('uses session-targeted mouse option instead of global (-t sessionName, not -g)', () => {
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls;
         const tmuxCall = tmuxCalls.find(([args]) => args[0] === 'set-option');
         expect(tmuxCall).toBeDefined();
@@ -259,7 +259,7 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
         expect(tmuxArgs).not.toContain('-g');
     });
     it('does not set terminal-overrides in tmux args', () => {
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls;
         const tmuxCall = tmuxCalls.find(([args]) => args[0] === 'new-session');
         expect(tmuxCall).toBeDefined();
@@ -268,7 +268,7 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
         expect(tmuxArgs).not.toContain('*:smcup@:rmcup@');
     });
     it('places mouse mode setup before attach-session', () => {
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls.map(([args]) => args);
         const mouseIdx = tmuxCalls.findIndex((args) => args[0] === 'set-option');
         const attachIdx = tmuxCalls.findIndex((args) => args[0] === 'attach-session');
@@ -283,7 +283,7 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
             }
             return '';
         });
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls.map(([args]) => args);
         expect(tmuxCalls.map((args) => args[0])).toEqual([
             'new-session',
@@ -292,7 +292,7 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
             'has-session',
         ]);
         expect(tmuxCalls.some((args) => args[0] === 'kill-session')).toBe(false);
-        expect(vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude')).toBeUndefined();
+        expect(vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy')).toBeUndefined();
         expect(processExitSpy).not.toHaveBeenCalled();
     });
     it('falls back to direct launch when detached session creation fails', () => {
@@ -302,15 +302,15 @@ describe('runClaude outside-tmux — mouse scrolling (issue #890)', () => {
             }
             return '';
         });
-        runClaude('/tmp', ['--dangerously-skip-permissions'], 'sid');
+        runCodebuddy('/tmp', ['--dangerously-skip-permissions'], 'sid');
         expect(vi.mocked(tmuxExec).mock.calls).toHaveLength(1);
-        expect(vi.mocked(execFileSync).mock.calls.find(([cmd, args]) => cmd === 'claude' && args[0] === '--dangerously-skip-permissions')).toBeDefined();
+        expect(vi.mocked(execFileSync).mock.calls.find(([cmd, args]) => cmd === 'codebuddy' && args[0] === '--dangerously-skip-permissions')).toBeDefined();
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — inside-tmux mouse configuration (issue #890)
+// runCodebuddy — inside-tmux mouse configuration (issue #890)
 // ---------------------------------------------------------------------------
-describe('runClaude inside-tmux — mouse configuration (issue #890)', () => {
+describe('runCodebuddy inside-tmux — mouse configuration (issue #890)', () => {
     let processExitSpy;
     beforeEach(() => {
         vi.resetAllMocks();
@@ -322,14 +322,14 @@ describe('runClaude inside-tmux — mouse configuration (issue #890)', () => {
         processExitSpy.mockRestore();
     });
     it('enables mouse mode before launching claude', () => {
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         // tmuxExec should have been called for mouse config
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls;
         expect(tmuxCalls.length).toBeGreaterThanOrEqual(1);
         expect(tmuxCalls[0][0]).toEqual(['set-option', 'mouse', 'on']);
         // execFileSync should have been called for claude
         const claudeCalls = vi.mocked(execFileSync).mock.calls;
-        expect(claudeCalls.find(([cmd]) => cmd === 'claude')).toBeDefined();
+        expect(claudeCalls.find(([cmd]) => cmd === 'codebuddy')).toBeDefined();
     });
     it('still launches claude even if tmux mouse config fails', () => {
         execFileSync.mockImplementation((cmd) => {
@@ -337,10 +337,10 @@ describe('runClaude inside-tmux — mouse configuration (issue #890)', () => {
                 throw new Error('tmux set-option failed');
             return Buffer.from('');
         });
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         // tmux calls fail but claude should still be called
         const calls = vi.mocked(execFileSync).mock.calls;
-        const claudeCall = calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeDefined();
     });
 });
@@ -699,10 +699,10 @@ describe('launchCommand — env var propagation', () => {
         expect(process.env.OMC_SLACK).toBe('1');
         expect(process.env.OMC_WEBHOOK).toBe('1');
     });
-    it('OMC flags are stripped from args passed to Claude', async () => {
+    it('OMC flags are stripped from args passed to Codebuddy', async () => {
         await launchCommand(['--telegram', '--discord', '--slack', '--webhook', '--openclaw', '--print']);
         const calls = vi.mocked(execFileSync).mock.calls;
-        const claudeCall = calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeDefined();
         const claudeArgs = claudeCall[1];
         expect(claudeArgs).not.toContain('--telegram');
@@ -714,10 +714,10 @@ describe('launchCommand — env var propagation', () => {
     });
 });
 describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () => {
-    const originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+    const originalCodebuddyConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
     const originalHome = process.env.HOME;
     let tempRoot = null;
-    const originalClaudecode = process.env.CLAUDECODE;
+    const originalCodebuddycode = process.env.CLAUDECODE;
     beforeEach(() => {
         vi.resetAllMocks();
         delete process.env.CLAUDECODE;
@@ -739,48 +739,48 @@ describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () =
         else {
             process.env.HOME = originalHome;
         }
-        if (originalClaudeConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+        if (originalCodebuddyConfigDir === undefined) {
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalCodebuddyConfigDir;
         }
-        if (originalClaudecode === undefined) {
+        if (originalCodebuddycode === undefined) {
             delete process.env.CLAUDECODE;
         }
         else {
-            process.env.CLAUDECODE = originalClaudecode;
+            process.env.CLAUDECODE = originalCodebuddycode;
         }
     });
     it('uses a runtime launch profile when a preserved CLAUDE-omc.md companion exists', async () => {
-        const configDir = join(tempRoot, '.claude');
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(join(configDir, 'skills'), { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE.md'), '# User base config\n');
-        writeFileSync(join(configDir, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC companion\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY.md'), '# User base config\n');
+        writeFileSync(join(configDir, 'CODEBUDDY-omcb.md'), '<!-- OMC:START -->\n# OMC companion\n<!-- OMC:END -->\n');
         writeFileSync(join(configDir, 'settings.json'), '{"hooks":{}}');
-        process.env.CLAUDE_CONFIG_DIR = configDir;
+        process.env.CODEBUDDY_CONFIG_DIR = configDir;
         await launchCommand(['--print']);
-        const runtimeDir = join(configDir, '.omc-launch');
-        expect(process.env.CLAUDE_CONFIG_DIR).toBe(runtimeDir);
-        expect(existsSync(join(runtimeDir, 'CLAUDE.md'))).toBe(true);
-        expect(readFileSync(join(runtimeDir, 'CLAUDE.md'), 'utf-8')).toContain('# OMC companion');
-        expect(readFileSync(join(configDir, 'CLAUDE.md'), 'utf-8')).toBe('# User base config\n');
+        const runtimeDir = join(configDir, '.omcb-launch');
+        expect(process.env.CODEBUDDY_CONFIG_DIR).toBe(runtimeDir);
+        expect(existsSync(join(runtimeDir, 'CODEBUDDY.md'))).toBe(true);
+        expect(readFileSync(join(runtimeDir, 'CODEBUDDY.md'), 'utf-8')).toContain('# OMC companion');
+        expect(readFileSync(join(configDir, 'CODEBUDDY.md'), 'utf-8')).toBe('# User base config\n');
         expect(existsSync(join(runtimeDir, 'settings.json'))).toBe(true);
     });
     it('repairs retired team MCP entries in the runtime settings copy', () => {
-        const configDir = join(tempRoot, '.claude');
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(join(configDir, 'skills'), { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC companion\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY-omcb.md'), '<!-- OMC:START -->\n# OMC companion\n<!-- OMC:END -->\n');
         writeFileSync(join(configDir, 'settings.json'), JSON.stringify({
             theme: 'dark',
             mcpServers: {
                 team: {
                     command: 'node',
-                    args: ['${CLAUDE_PLUGIN_ROOT}/bridge/team-mcp.cjs'],
+                    args: ['${CODEBUDDY_PLUGIN_ROOT}/bridge/team-mcp.cjs'],
                 },
                 exa: {
                     command: 'node',
-                    args: ['${CLAUDE_PLUGIN_ROOT}/bridge/mcp-server.cjs'],
+                    args: ['${CODEBUDDY_PLUGIN_ROOT}/bridge/mcp-server.cjs'],
                 },
             },
         }, null, 2));
@@ -792,9 +792,9 @@ describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () =
         expect(runtimeSettings.mcpServers?.exa).toBeDefined();
     });
     it('mirrors keybindings.json and rules/ into the runtime config dir', () => {
-        const configDir = join(tempRoot, '.claude');
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(join(configDir, 'rules'), { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY-omcb.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
         writeFileSync(join(configDir, 'keybindings.json'), '{"bindings":[]}');
         writeFileSync(join(configDir, 'rules', 'my-rule.md'), '# Rule');
         const runtimeDir = prepareOmcLaunchConfigDir(configDir);
@@ -803,9 +803,9 @@ describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () =
         expect(existsSync(join(runtimeDir, 'rules'))).toBe(true);
     });
     it('preserves runtime .claude.json across runtime config dir rebuilds', () => {
-        const configDir = join(tempRoot, '.claude');
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(configDir, { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY-omcb.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
         const runtimeDir = prepareOmcLaunchConfigDir(configDir);
         writeFileSync(join(runtimeDir, '.claude.json'), '{"session":"keep-me"}');
         const rebuiltRuntimeDir = prepareOmcLaunchConfigDir(configDir);
@@ -813,9 +813,9 @@ describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () =
         expect(readFileSync(join(rebuiltRuntimeDir, '.claude.json'), 'utf-8')).toBe('{"session":"keep-me"}');
     });
     it('removes non-mirrored runtime junk across runtime config dir rebuilds', () => {
-        const configDir = join(tempRoot, '.claude');
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(configDir, { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE-omc.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY-omcb.md'), '<!-- OMC:START -->\n# OMC\n<!-- OMC:END -->\n');
         const runtimeDir = prepareOmcLaunchConfigDir(configDir);
         writeFileSync(join(runtimeDir, 'junk.txt'), 'remove me');
         mkdirSync(join(runtimeDir, 'junk-dir'), { recursive: true });
@@ -825,28 +825,28 @@ describe('prepareOmcLaunchConfigDir / launchCommand OMC companion loading', () =
         expect(existsSync(join(rebuiltRuntimeDir, 'junk.txt'))).toBe(false);
         expect(existsSync(join(rebuiltRuntimeDir, 'junk-dir'))).toBe(false);
     });
-    it('leaves CLAUDE_CONFIG_DIR unchanged when no preserved companion exists', () => {
-        const configDir = join(tempRoot, '.claude');
+    it('leaves CODEBUDDY_CONFIG_DIR unchanged when no preserved companion exists', () => {
+        const configDir = join(tempRoot, '.codebuddy');
         mkdirSync(configDir, { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE.md'), '<!-- OMC:START -->\n# OMC base\n<!-- OMC:END -->\n');
+        writeFileSync(join(configDir, 'CODEBUDDY.md'), '<!-- OMC:START -->\n# OMC base\n<!-- OMC:END -->\n');
         expect(prepareOmcLaunchConfigDir(configDir)).toBe(configDir);
-        expect(existsSync(join(configDir, '.omc-launch'))).toBe(false);
+        expect(existsSync(join(configDir, '.omcb-launch'))).toBe(false);
     });
-    it('does not keep CLAUDE_CONFIG_DIR set when it resolves to the default ~/.claude path', async () => {
-        const configDir = join(tempRoot, 'home', '.claude');
+    it('does not keep CODEBUDDY_CONFIG_DIR set when it resolves to the default ~/.codebuddy path', async () => {
+        const configDir = join(tempRoot, 'home', '.codebuddy');
         mkdirSync(configDir, { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE.md'), '# User config\n');
-        process.env.CLAUDE_CONFIG_DIR = configDir;
+        writeFileSync(join(configDir, 'CODEBUDDY.md'), '# User config\n');
+        process.env.CODEBUDDY_CONFIG_DIR = configDir;
         await launchCommand(['--print']);
-        expect(process.env.CLAUDE_CONFIG_DIR).toBeUndefined();
+        expect(process.env.CODEBUDDY_CONFIG_DIR).toBeUndefined();
     });
-    it('preserves explicit non-default CLAUDE_CONFIG_DIR values when no companion exists', async () => {
+    it('preserves explicit non-default CODEBUDDY_CONFIG_DIR values when no companion exists', async () => {
         const configDir = join(tempRoot, 'custom-claude');
         mkdirSync(configDir, { recursive: true });
-        writeFileSync(join(configDir, 'CLAUDE.md'), '# Custom user config\n');
-        process.env.CLAUDE_CONFIG_DIR = configDir;
+        writeFileSync(join(configDir, 'CODEBUDDY.md'), '# Custom user config\n');
+        process.env.CODEBUDDY_CONFIG_DIR = configDir;
         await launchCommand(['--print']);
-        expect(process.env.CLAUDE_CONFIG_DIR).toBe(configDir);
+        expect(process.env.CODEBUDDY_CONFIG_DIR).toBe(configDir);
     });
 });
 // ---------------------------------------------------------------------------
@@ -873,9 +873,9 @@ describe('isPrintMode', () => {
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — print mode bypasses tmux (issue #1665)
+// runCodebuddy — print mode bypasses tmux (issue #1665)
 // ---------------------------------------------------------------------------
-describe('runClaude — print mode bypasses tmux (issue #1665)', () => {
+describe('runCodebuddy — print mode bypasses tmux (issue #1665)', () => {
     let processExitSpy;
     beforeEach(() => {
         vi.resetAllMocks();
@@ -887,32 +887,32 @@ describe('runClaude — print mode bypasses tmux (issue #1665)', () => {
     });
     it('runs claude directly when --print is present (outside-tmux policy)', () => {
         resolveLaunchPolicy.mockReturnValue('outside-tmux');
-        runClaude('/tmp', ['--print', 'say hello'], 'sid');
+        runCodebuddy('/tmp', ['--print', 'say hello'], 'sid');
         const calls = vi.mocked(execFileSync).mock.calls;
         // Should call claude directly, NOT tmux
         expect(calls).toHaveLength(1);
-        expect(calls[0][0]).toBe('claude');
+        expect(calls[0][0]).toBe('codebuddy');
         expect(calls[0][1]).toEqual(['--print', 'say hello']);
         expect(calls[0][2]).toEqual(expect.objectContaining({ stdio: 'inherit' }));
     });
     it('runs claude directly when -p is present (outside-tmux policy)', () => {
         resolveLaunchPolicy.mockReturnValue('outside-tmux');
-        runClaude('/tmp', ['-p', 'say hello'], 'sid');
+        runCodebuddy('/tmp', ['-p', 'say hello'], 'sid');
         const calls = vi.mocked(execFileSync).mock.calls;
         expect(calls).toHaveLength(1);
-        expect(calls[0][0]).toBe('claude');
+        expect(calls[0][0]).toBe('codebuddy');
     });
     it('runs claude directly when --print is present (inside-tmux policy)', () => {
         resolveLaunchPolicy.mockReturnValue('inside-tmux');
-        runClaude('/tmp', ['--dangerously-skip-permissions', '--print', 'say hello'], 'sid');
+        runCodebuddy('/tmp', ['--dangerously-skip-permissions', '--print', 'say hello'], 'sid');
         const calls = vi.mocked(execFileSync).mock.calls;
         // Should NOT call tmux set-option (mouse config), just claude directly
         expect(calls).toHaveLength(1);
-        expect(calls[0][0]).toBe('claude');
+        expect(calls[0][0]).toBe('codebuddy');
     });
     it('does not bypass tmux when --print is absent', () => {
         resolveLaunchPolicy.mockReturnValue('outside-tmux');
-        runClaude('/tmp', ['--dangerously-skip-permissions'], 'sid');
+        runCodebuddy('/tmp', ['--dangerously-skip-permissions'], 'sid');
         // tmux calls go through tmuxExec, not execFileSync
         expect(vi.mocked(tmuxExec).mock.calls.length).toBeGreaterThan(0);
     });
@@ -988,8 +988,8 @@ describe('buildEnvExportPrefix — quoting delegation', () => {
 // TMUX_ENV_FORWARD — allowlist contract
 // ---------------------------------------------------------------------------
 describe('TMUX_ENV_FORWARD allowlist', () => {
-    it('includes CLAUDE_CONFIG_DIR', () => {
-        expect(TMUX_ENV_FORWARD).toContain('CLAUDE_CONFIG_DIR');
+    it('includes CODEBUDDY_CONFIG_DIR', () => {
+        expect(TMUX_ENV_FORWARD).toContain('CODEBUDDY_CONFIG_DIR');
     });
     it('includes all OMC launch flags', () => {
         for (const name of ['OMC_NOTIFY', 'OMC_OPENCLAW', 'OMC_TELEGRAM', 'OMC_DISCORD', 'OMC_SLACK', 'OMC_WEBHOOK']) {
@@ -998,10 +998,10 @@ describe('TMUX_ENV_FORWARD allowlist', () => {
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude outside-tmux — env forwarding into tmux command
+// runCodebuddy outside-tmux — env forwarding into tmux command
 // ---------------------------------------------------------------------------
-describe('runClaude outside-tmux — env forwarding', () => {
-    const savedConfigDir = process.env.CLAUDE_CONFIG_DIR;
+describe('runCodebuddy outside-tmux — env forwarding', () => {
+    const savedConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
     beforeEach(() => {
         vi.resetAllMocks();
         execFileSync.mockReturnValue(Buffer.from(''));
@@ -1009,32 +1009,32 @@ describe('runClaude outside-tmux — env forwarding', () => {
     });
     afterEach(() => {
         if (savedConfigDir !== undefined) {
-            process.env.CLAUDE_CONFIG_DIR = savedConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = savedConfigDir;
         }
         else {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
     });
-    it('injects CLAUDE_CONFIG_DIR export into the tmux shell command', () => {
-        process.env.CLAUDE_CONFIG_DIR = '/custom/config';
+    it('injects CODEBUDDY_CONFIG_DIR export into the tmux shell command', () => {
+        process.env.CODEBUDDY_CONFIG_DIR = '/custom/config';
         vi.mocked(isNativeWindowsShell).mockReturnValue(false);
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const wrapCall = vi.mocked(wrapWithLoginShell).mock.calls[0];
         expect(wrapCall).toBeDefined();
-        expect(wrapCall[0]).toContain('export CLAUDE_CONFIG_DIR=/custom/config');
+        expect(wrapCall[0]).toContain('export CODEBUDDY_CONFIG_DIR=/custom/config');
     });
     it('places env exports before the sleep/claude command', () => {
-        process.env.CLAUDE_CONFIG_DIR = '/custom/config';
+        process.env.CODEBUDDY_CONFIG_DIR = '/custom/config';
         vi.mocked(isNativeWindowsShell).mockReturnValue(false);
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const cmdString = vi.mocked(wrapWithLoginShell).mock.calls[0][0];
-        const exportIdx = cmdString.indexOf('export CLAUDE_CONFIG_DIR');
+        const exportIdx = cmdString.indexOf('export CODEBUDDY_CONFIG_DIR');
         const sleepIdx = cmdString.indexOf('sleep 0.3');
         expect(exportIdx).toBeGreaterThanOrEqual(0);
         expect(sleepIdx).toBeGreaterThan(exportIdx);
     });
     it('does not inject exports when no forwarded vars are set', () => {
-        delete process.env.CLAUDE_CONFIG_DIR;
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.OMC_NOTIFY;
         delete process.env.OMC_OPENCLAW;
         delete process.env.OMC_TELEGRAM;
@@ -1043,20 +1043,20 @@ describe('runClaude outside-tmux — env forwarding', () => {
         delete process.env.OMC_WEBHOOK;
         delete process.env.OMC_PLUGIN_ROOT;
         vi.mocked(isNativeWindowsShell).mockReturnValue(false);
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         const cmdString = vi.mocked(wrapWithLoginShell).mock.calls[0][0];
         expect(cmdString).not.toContain('export ');
     });
     it('passes a cmd-friendly raw command string into login-shell wrapping on native Windows', () => {
         const originalPlatform = process.platform;
         Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
-        process.env.CLAUDE_CONFIG_DIR = 'C:\\Users\\bellman\\config dir';
+        process.env.CODEBUDDY_CONFIG_DIR = 'C:\\Users\\bellman\\config dir';
         vi.mocked(isNativeWindowsShell).mockReturnValue(true);
-        runClaude('/tmp', ['--print-system-prompt', 'hello world'], 'sid');
-        expect(vi.mocked(buildTmuxShellCommandWithEnv)).toHaveBeenCalledWith('claude', ['--print-system-prompt', 'hello world'], { CLAUDE_CONFIG_DIR: 'C:\\Users\\bellman\\config dir' });
+        runCodebuddy('/tmp', ['--print-system-prompt', 'hello world'], 'sid');
+        expect(vi.mocked(buildTmuxShellCommandWithEnv)).toHaveBeenCalledWith('codebuddy', ['--print-system-prompt', 'hello world'], { CODEBUDDY_CONFIG_DIR: 'C:\\Users\\bellman\\config dir' });
         const rawCommand = vi.mocked(wrapWithLoginShell).mock.calls[0][0];
-        expect(rawCommand).toContain('CLAUDE_CONFIG_DIR=C:\\Users\\bellman\\config dir');
-        expect(rawCommand).toContain('claude --print-system-prompt hello world');
+        expect(rawCommand).toContain('CODEBUDDY_CONFIG_DIR=C:\\Users\\bellman\\config dir');
+        expect(rawCommand).toContain('codebuddy --print-system-prompt hello world');
         expect(rawCommand).not.toContain('sleep 0.3');
         expect(rawCommand).not.toContain('tcflush');
         Object.defineProperty(process, 'platform', { value: originalPlatform, configurable: true });
@@ -1064,11 +1064,11 @@ describe('runClaude outside-tmux — env forwarding', () => {
     it('keeps POSIX preflight commands on MSYS2 Windows shells', () => {
         const originalPlatform = process.platform;
         Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
-        process.env.CLAUDE_CONFIG_DIR = '/custom/config';
+        process.env.CODEBUDDY_CONFIG_DIR = '/custom/config';
         vi.mocked(isNativeWindowsShell).mockReturnValue(false);
-        runClaude('/tmp', ['--print-system-prompt', 'hello world'], 'sid');
+        runCodebuddy('/tmp', ['--print-system-prompt', 'hello world'], 'sid');
         const rawCommand = vi.mocked(wrapWithLoginShell).mock.calls[0][0];
-        expect(rawCommand).toContain('export CLAUDE_CONFIG_DIR=/custom/config');
+        expect(rawCommand).toContain('export CODEBUDDY_CONFIG_DIR=/custom/config');
         expect(rawCommand).toContain('sleep 0.3');
         expect(rawCommand).toContain("perl -e 'use POSIX;tcflush(0,TCIFLUSH)' 2>/dev/null;");
         Object.defineProperty(process, 'platform', { value: originalPlatform, configurable: true });
@@ -1095,9 +1095,9 @@ describe('hasMadmaxFlag', () => {
     });
 });
 // ---------------------------------------------------------------------------
-// runClaude — --madmax on macOS forces tmux
+// runCodebuddy — --madmax on macOS forces tmux
 // ---------------------------------------------------------------------------
-describe('runClaude — --madmax on macOS forces tmux', () => {
+describe('runCodebuddy — --madmax on macOS forces tmux', () => {
     let processExitSpy;
     let stderrSpy;
     const savedTmux = process.env.TMUX;
@@ -1124,7 +1124,7 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
         Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(false);
         vi.mocked(resolveLaunchPolicy).mockReturnValue('direct');
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
         const messages = stderrSpy.mock.calls.map((call) => String(call[0])).join('\n');
         expect(messages).toContain('--madmax');
@@ -1136,7 +1136,7 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
         Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(false);
         vi.mocked(resolveLaunchPolicy).mockReturnValue('direct');
-        runClaude('/tmp', ['--yolo'], 'sid');
+        runCodebuddy('/tmp', ['--yolo'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
         const messages = stderrSpy.mock.calls.map((call) => String(call[0])).join('\n');
         expect(messages).toContain('brew install tmux');
@@ -1147,21 +1147,21 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
         // Even with tmux available, if the resolver returns 'direct' under
         // requireTmux the launcher must exit rather than silently demote.
         vi.mocked(resolveLaunchPolicy).mockReturnValue('direct');
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
     });
     it('passes requireTmux=true to resolveLaunchPolicy on darwin --madmax', () => {
         Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(true);
         vi.mocked(resolveLaunchPolicy).mockReturnValue('outside-tmux');
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(resolveLaunchPolicy).toHaveBeenCalledWith(process.env, ['--madmax'], { requireTmux: true });
     });
     it('does not require tmux on darwin without --madmax', () => {
         Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(false);
         vi.mocked(resolveLaunchPolicy).mockReturnValue('direct');
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         expect(processExitSpy).not.toHaveBeenCalledWith(1);
         expect(resolveLaunchPolicy).toHaveBeenCalledWith(process.env, [], { requireTmux: false });
     });
@@ -1169,7 +1169,7 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
         Object.defineProperty(process, 'platform', { value: 'linux', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(false);
         vi.mocked(resolveLaunchPolicy).mockReturnValue('direct');
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).not.toHaveBeenCalledWith(1);
         expect(resolveLaunchPolicy).toHaveBeenCalledWith(process.env, ['--madmax'], { requireTmux: false });
     });
@@ -1178,17 +1178,17 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
         process.env.TMUX = '/tmp/tmux-501/default,1234,0';
         vi.mocked(isTmuxAvailable).mockReturnValue(false); // would normally fail, but TMUX env wins
         vi.mocked(resolveLaunchPolicy).mockReturnValue('inside-tmux');
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).not.toHaveBeenCalledWith(1);
         expect(isTmuxAvailable).not.toHaveBeenCalled();
     });
     it('still bypasses tmux for --print even with --madmax on darwin', () => {
         Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true });
         vi.mocked(isTmuxAvailable).mockReturnValue(false);
-        runClaude('/tmp', ['--madmax', '--print', 'hi'], 'sid');
+        runCodebuddy('/tmp', ['--madmax', '--print', 'hi'], 'sid');
         expect(processExitSpy).not.toHaveBeenCalledWith(1);
         expect(resolveLaunchPolicy).not.toHaveBeenCalled();
-        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeDefined();
     });
     it('exits 1 when tmux new-session fails under --madmax (no silent direct)', () => {
@@ -1201,11 +1201,11 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
             }
             return '';
         });
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
         const messages = stderrSpy.mock.calls.map((call) => String(call[0])).join('\n');
         expect(messages).toContain('launching tmux failed');
-        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeUndefined();
     });
     it('exits 1 when tmux attach + has-session both fail under --madmax', () => {
@@ -1218,11 +1218,11 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
             }
             return '';
         });
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
         const messages = stderrSpy.mock.calls.map((call) => String(call[0])).join('\n');
         expect(messages).toContain('launching tmux failed');
-        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeUndefined();
     });
     it('exits 1 when tmux attach fails under --madmax even if detached session exists', () => {
@@ -1235,14 +1235,14 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
             }
             return '';
         });
-        runClaude('/tmp', ['--madmax'], 'sid');
+        runCodebuddy('/tmp', ['--madmax'], 'sid');
         expect(processExitSpy).toHaveBeenCalledWith(1);
         const messages = stderrSpy.mock.calls.map((call) => String(call[0])).join('\n');
         expect(messages).toContain('launching tmux failed');
         const tmuxCalls = vi.mocked(tmuxExec).mock.calls.map(([tmuxArgs]) => tmuxArgs[0]);
         expect(tmuxCalls).toContain('attach-session');
         expect(tmuxCalls).not.toContain('has-session');
-        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeUndefined();
     });
     it('preserves the existing direct fallback when tmux new-session fails WITHOUT --madmax', () => {
@@ -1255,10 +1255,10 @@ describe('runClaude — --madmax on macOS forces tmux', () => {
             }
             return '';
         });
-        runClaude('/tmp', [], 'sid');
+        runCodebuddy('/tmp', [], 'sid');
         // No --madmax: existing behavior preserved (direct path runs, no exit-1).
         expect(processExitSpy).not.toHaveBeenCalledWith(1);
-        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'claude');
+        const claudeCall = vi.mocked(execFileSync).mock.calls.find(([cmd]) => cmd === 'codebuddy');
         expect(claudeCall).toBeDefined();
     });
 });

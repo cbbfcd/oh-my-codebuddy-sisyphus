@@ -7,15 +7,15 @@
  */
 import { readFileSync, existsSync, statSync, unlinkSync, renameSync, openSync, readSync, closeSync } from 'fs';
 import { join, dirname } from 'path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { sanitizeName } from './tmux-session.js';
 import { appendFileWithMode, writeFileWithMode, atomicWriteJson, ensureDirWithMode, validateResolvedPath } from './fs-utils.js';
 /** Maximum bytes to read from inbox in a single call (10 MB) */
 const MAX_INBOX_READ_SIZE = 10 * 1024 * 1024;
 // --- Path helpers ---
 function teamsDir(teamName) {
-    const result = join(getClaudeConfigDir(), 'teams', sanitizeName(teamName));
-    validateResolvedPath(result, join(getClaudeConfigDir(), 'teams'));
+    const result = join(getCodebuddyConfigDir(), 'teams', sanitizeName(teamName));
+    validateResolvedPath(result, join(getCodebuddyConfigDir(), 'teams'));
     return result;
 }
 function inboxPath(teamName, workerName) {

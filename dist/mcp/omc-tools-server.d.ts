@@ -1,8 +1,8 @@
 /**
  * OMC Tools Server - In-process MCP server for custom tools
  *
- * Exposes 18 custom tools (12 LSP, 2 AST, 1 python_repl, 3 skills) via the Claude Agent SDK's
- * createSdkMcpServer helper for use by subagents.
+ * Exposes 18 custom tools (12 LSP, 2 AST, 1 python_repl, 3 skills) via the CodeBuddy Agent SDK's
+ * createSdkMcpServer helper (see sdk-compat.ts) for use by subagents.
  */
 import { type ToolCategory } from "../constants/index.js";
 /**
@@ -30,7 +30,7 @@ export declare function parseDisabledGroups(envValue?: string): Set<ToolCategory
  * Tools will be available as mcp__t__<tool_name>.
  * Tools in disabled groups (via OMC_DISABLE_TOOLS) are excluded at startup.
  */
-export declare const omcToolsServer: import("@anthropic-ai/claude-agent-sdk").McpSdkServerConfigWithInstance;
+export declare const omcToolsServer: any;
 /**
  * Tool names in MCP format for allowedTools configuration.
  * Only includes tools that are enabled (not disabled via OMC_DISABLE_TOOLS).

@@ -8,7 +8,7 @@
  *   {cwd}/.omc/state/team/{teamName}/tasks/{id}.json
  *
  * Legacy path (read-only fallback during migration):
- *   ~/.claude/tasks/{teamName}/{id}.json
+ *   ~/.codebuddy/tasks/{teamName}/{id}.json
  *
  * New writes always go to the canonical path. Reads check the canonical
  * path first; if the file is absent there, the legacy path is tried so
@@ -16,7 +16,7 @@
  */
 import { readFileSync, readdirSync, existsSync, openSync, closeSync, unlinkSync, writeSync, statSync, constants as fsConstants } from 'fs';
 import { join } from 'path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { sanitizeName } from './tmux-session.js';
 import { atomicWriteJson, validateResolvedPath, ensureDirWithMode } from './fs-utils.js';
 import { isProcessAlive } from '../platform/index.js';
@@ -145,10 +145,10 @@ function canonicalTasksDir(teamName, cwd) {
 }
 /**
  * Returns the legacy tasks directory for a team.
- * Used only for read-fallback: ~/.claude/tasks/{teamName}/
+ * Used only for read-fallback: ~/.codebuddy/tasks/{teamName}/
  */
 function legacyTasksDir(teamName) {
-    const claudeConfigDir = getClaudeConfigDir();
+    const claudeConfigDir = getCodebuddyConfigDir();
     const dir = getLegacyTaskStoragePath(claudeConfigDir, sanitizeName(teamName));
     validateResolvedPath(dir, join(claudeConfigDir, 'tasks'));
     return dir;

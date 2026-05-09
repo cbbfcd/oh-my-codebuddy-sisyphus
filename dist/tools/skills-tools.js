@@ -4,10 +4,10 @@
  * MCP tools for loading and listing OMC learned skills
  * from local (.omc/skills/) and global (~/.omc/skills/) directories.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { resolve, normalize, sep } from 'path';
 import { homedir } from 'os';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { loadAllSkills } from '../hooks/learner/loader.js';
 import { MAX_SKILL_CONTENT_LENGTH } from '../hooks/learner/constants.js';
 /** Allowed boundary directories for projectRoot validation */
@@ -106,7 +106,7 @@ export const loadLocalTool = {
 // Tool 2: load_omc_skills_global
 export const loadGlobalTool = {
     name: 'load_omc_skills_global',
-    description: 'Load and list skills from global user directories (~/.omc/skills/ and [$CLAUDE_CONFIG_DIR|~/.claude]/skills/omc-learned/). Returns skill metadata for all discovered user-scoped skills.',
+    description: 'Load and list skills from global user directories (~/.omc/skills/ and [$CODEBUDDY_CONFIG_DIR|~/.codebuddy]/skills/omc-learned/). Returns skill metadata for all discovered user-scoped skills.',
     schema: loadGlobalSchema,
     handler: async (_args) => {
         const allSkills = loadAllSkills(null);
@@ -137,7 +137,7 @@ export const listSkillsTool = {
             output += `### User Skills (${userSkills.length})\n\n${formatSkillOutput(userSkills)}`;
         }
         if (skills.length === 0) {
-            output = `## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .omc/skills/\n- Global: ~/.omc/skills/\n- Claude config: ${getClaudeConfigDir()}/skills/omc-learned/`;
+            output = `## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .omc/skills/\n- Global: ~/.omc/skills/\n- Claude config: ${getCodebuddyConfigDir()}/skills/omc-learned/`;
         }
         return {
             content: [{

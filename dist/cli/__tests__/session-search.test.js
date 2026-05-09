@@ -17,7 +17,7 @@ describe('session search cli command', () => {
     beforeEach(() => {
         tempRoot = mkdtempSync(join(tmpdir(), 'omc-session-search-cli-'));
         claudeDir = join(tempRoot, 'claude');
-        process.env.CLAUDE_CONFIG_DIR = claudeDir;
+        process.env.CODEBUDDY_CONFIG_DIR = claudeDir;
         process.env.OMC_STATE_DIR = join(tempRoot, 'omc-state');
         writeTranscript(join(claudeDir, 'projects', encodeProjectPath(repoRoot), 'session-current.jsonl'), [
             {
@@ -30,7 +30,7 @@ describe('session search cli command', () => {
         ]);
     });
     afterEach(() => {
-        delete process.env.CLAUDE_CONFIG_DIR;
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         delete process.env.OMC_STATE_DIR;
         rmSync(tempRoot, { recursive: true, force: true });
     });

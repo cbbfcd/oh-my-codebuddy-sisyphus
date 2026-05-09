@@ -2,12 +2,12 @@ export interface WorkerCadenceContext {
     teamName: string;
     workerName: string;
     worktreePath: string;
-    agentType: 'claude' | 'codex' | 'gemini' | 'cursor';
+    agentType: 'claude' | 'codex' | 'gemini' | 'cursor' | 'codebuddy';
     enabled: boolean;
 }
 export type CadenceMethod = 'hook' | 'fallback-poll' | 'none';
 /**
- * Writes `{worktreePath}/.claude/settings.json` containing a PostToolUse hook
+ * Writes `{worktreePath}/.codebuddy/settings.json` containing a PostToolUse hook
  * that auto-commits after every Write/Edit/MultiEdit.
  *
  * Skips installation if the .hook-paused sentinel is present.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Oh-My-ClaudeCode CLI
+ * Oh-My-Codebuddy CLI
  *
  * Command-line interface for the OMC multi-agent system.
  *
@@ -13,7 +13,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { join } from 'path';
 import { writeFileSync, existsSync } from 'fs';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { OMC_PLUGIN_ROOT_ENV } from '../lib/env-vars.js';
 import { loadConfig, getConfigPaths, } from '../config/loader.js';
 import { createOmcSession } from '../index.js';
@@ -77,7 +77,7 @@ async function defaultAction() {
 }
 program
     .name('omc')
-    .description('Multi-agent orchestration system for Claude Agent SDK')
+    .description('Multi-agent orchestration system for CodeBuddy Agent SDK')
     .version(version)
     .allowUnknownOption()
     .action(defaultAction);
@@ -86,7 +86,7 @@ program
  */
 program
     .command('launch [args...]')
-    .description('Launch Claude Code with native tmux shell integration')
+    .description('Launch CodeBuddy with native tmux shell integration')
     .allowUnknownOption()
     .addHelpText('after', `
 Examples:
@@ -113,11 +113,11 @@ Environment:
  */
 program
     .command('interop')
-    .description('Launch split-pane tmux session with Claude Code (OMC) and Codex (OMX)')
+    .description('Launch split-pane tmux session with CodeBuddy (OMC) and Codex (OMX)')
     .addHelpText('after', `
 Requirements:
   - Must be running inside a tmux session
-  - Claude CLI must be installed
+  - codebuddy CLI must be installed
   - Codex CLI recommended (graceful fallback if missing)`)
     .action(() => {
     interopCommand();
@@ -220,7 +220,7 @@ Profile types (use with --profile):
   webhook      Generic webhook (POST with JSON body)
 
 Examples:
-  $ omc config-stop-callback file --enable --path ${join(getClaudeConfigDir(), 'logs/{date}.md')}
+  $ omc config-stop-callback file --enable --path ${join(getCodebuddyConfigDir(), 'logs/{date}.md')}
   $ omc config-stop-callback telegram --enable --token <token> --chat <id>
   $ omc config-stop-callback discord --enable --webhook <url>
   $ omc config-stop-callback file --disable
@@ -232,7 +232,7 @@ Examples:
   $ omc config-stop-callback discord-bot --profile ops --enable --token <tk> --channel-id <id>
 
   # Select profile at launch:
-  $ OMC_NOTIFY_PROFILE=work claude`)
+  $ OMC_NOTIFY_PROFILE=work codebuddy`)
     .action(async (type, options) => {
     // When --profile is used, route to profile-based config
     if (options.profile) {
@@ -427,7 +427,7 @@ Examples:
             const current = config.stopHookCallbacks.file;
             config.stopHookCallbacks.file = {
                 enabled: enabled ?? current?.enabled ?? false,
-                path: options.path ?? current?.path ?? join(getClaudeConfigDir(), 'session-logs/{session_id}.md'),
+                path: options.path ?? current?.path ?? join(getCodebuddyConfigDir(), 'session-logs/{session_id}.md'),
                 format: options.format ?? current?.format ?? 'markdown',
             };
             break;
@@ -510,7 +510,7 @@ Examples:
   $ omc config-stop-callback discord --profile work --enable --webhook <url>
 
   # Select profile at launch:
-  $ OMC_NOTIFY_PROFILE=work claude`)
+  $ OMC_NOTIFY_PROFILE=work codebuddy`)
     .action(async (name, options) => {
     const config = getOMCConfig();
     const profiles = config.notificationProfiles || {};
@@ -588,7 +588,7 @@ Examples:
   $ omc info                     Show agents, features, and MCP servers`)
     .action(async () => {
     const session = createOmcSession();
-    console.log(chalk.blue.bold('\nOh-My-ClaudeCode System Information\n'));
+    console.log(chalk.blue.bold('\nOh-My-Codebuddy System Information\n'));
     console.log(chalk.gray('━'.repeat(50)));
     console.log(chalk.blue('\nAvailable Agents:'));
     const agents = session.queryOptions.options.agents;
@@ -658,7 +658,7 @@ Examples:
   $ omc update --standalone      Force npm update in plugin context`)
     .action(async (options) => {
     if (!options.quiet) {
-        console.log(chalk.blue('Oh-My-ClaudeCode Update\n'));
+        console.log(chalk.blue('Oh-My-Codebuddy Update\n'));
     }
     try {
         // Show current version
@@ -755,7 +755,7 @@ Examples:
   $ omc version                  Show version, install method, and commit hash`)
     .action(async () => {
     const installed = getInstalledVersion();
-    console.log(chalk.blue.bold('\nOh-My-ClaudeCode Version Information\n'));
+    console.log(chalk.blue.bold('\nOh-My-Codebuddy Version Information\n'));
     console.log(chalk.gray('━'.repeat(50)));
     console.log(`\n  Package version:   ${chalk.green(version)}`);
     if (installed) {
@@ -774,27 +774,27 @@ Examples:
         console.log(chalk.gray('  (Run the install script to create version metadata)'));
     }
     console.log(chalk.gray('\n━'.repeat(50)));
-    console.log(chalk.gray('\nTo check for updates, run: oh-my-claudecode update --check'));
+    console.log(chalk.gray('\nTo check for updates, run: oh-my-codebuddy update --check'));
 });
 /**
- * Install command - Install agents and commands (default: ~/.claude/)
+ * Install command - Install agents and commands (default: ~/.codebuddy/)
  */
 program
     .command('install')
-    .description('Install OMC agents and commands to Claude Code config directory (default: ~/.claude/)')
+    .description('Install OMC agents and commands to Claude Code config directory (default: ~/.codebuddy/)')
     .option('-f, --force', 'Overwrite existing files')
     .option('-q, --quiet', 'Suppress output except for errors')
     .option('--skip-claude-check', 'Skip checking if Claude Code is installed')
     .addHelpText('after', `
 Examples:
-  $ omc install                  Install to config directory (default: ~/.claude/)
+  $ omc install                  Install to config directory (default: ~/.codebuddy/)
   $ omc install --force          Reinstall, overwriting existing files
   $ omc install --quiet          Silent install for scripts
-  $ CLAUDE_CONFIG_DIR=$HOME/.claude-isolated-workspace omc install  Isolated config directory`)
+  $ CODEBUDDY_CONFIG_DIR=$HOME/.codebuddy-isolated-workspace omc install  Isolated config directory`)
     .action(async (options) => {
     if (!options.quiet) {
         console.log(chalk.blue('╔═══════════════════════════════════════════════════════════╗'));
-        console.log(chalk.blue('║         Oh-My-ClaudeCode Installer                        ║'));
+        console.log(chalk.blue('║         Oh-My-Codebuddy Installer                        ║'));
         console.log(chalk.blue('║   Multi-Agent Orchestration for Claude Code               ║'));
         console.log(chalk.blue('╚═══════════════════════════════════════════════════════════╝'));
         console.log('');
@@ -825,10 +825,10 @@ Examples:
             console.log(chalk.green('║         Installation Complete!                            ║'));
             console.log(chalk.green('╚═══════════════════════════════════════════════════════════╝'));
             console.log('');
-            console.log(chalk.gray(`Installed to: ${getClaudeConfigDir()}`));
+            console.log(chalk.gray(`Installed to: ${getCodebuddyConfigDir()}`));
             console.log('');
             console.log(chalk.yellow('Usage:'));
-            console.log('  claude                        # Start Claude Code normally');
+            console.log('  codebuddy                     # Start CodeBuddy normally');
             console.log('');
             console.log(chalk.yellow('Slash Commands:'));
             console.log('  /omc <task>              # Activate OMC orchestration mode');
@@ -864,11 +864,11 @@ Examples:
             console.log('');
             console.log(chalk.yellow('After Updates:'));
             console.log('  Run \'/omc-default\' (project) or \'/omc-default-global\' (global)');
-            console.log('  to download the latest CLAUDE.md configuration.');
+            console.log('  to download the latest CODEBUDDY.md configuration.');
             console.log('  This ensures you get the newest features and agent behaviors.');
             console.log('');
             console.log(chalk.blue('Quick Start:'));
-            console.log('  1. Run \'claude\' to start Claude Code');
+            console.log('  1. Run \'codebuddy\' to start CodeBuddy');
             console.log('  2. Type \'/omc-default\' for project or \'/omc-default-global\' for global');
             console.log('  3. Or use \'/omc <task>\' for one-time activation');
         }
@@ -1123,7 +1123,7 @@ program
     .option('-f, --force', 'Force reinstall even if already up to date')
     .option('-q, --quiet', 'Suppress output except for errors')
     .option('--no-plugin', 'Install bundled skills from the current package instead of relying on plugin-provided skills')
-    .option('--plugin-dir-mode', 'Treat OMC as launched via --plugin-dir at runtime (skip agent/skill copy; HUD + hooks + CLAUDE.md still installed)')
+    .option('--plugin-dir-mode', 'Treat OMC as launched via --plugin-dir at runtime (skip agent/skill copy; HUD + hooks + CODEBUDDY.md still installed)')
     .option('--skip-hooks', 'Skip hook installation')
     .option('--force-hooks', 'Force reinstall hooks even if unchanged')
     .addHelpText('after', `
@@ -1137,7 +1137,7 @@ Examples:
   $ omc setup --force-hooks       Force reinstall hooks`)
     .action(async (options) => {
     if (!options.quiet) {
-        console.log(chalk.blue('Oh-My-ClaudeCode Setup\n'));
+        console.log(chalk.blue('Oh-My-Codebuddy Setup\n'));
     }
     // Step 1: Run installation (which handles hooks, agents, skills)
     if (!options.quiet) {
@@ -1211,7 +1211,7 @@ Examples:
         if (reportedVersion !== version) {
             console.log(chalk.gray(`CLI package version: ${version}`));
         }
-        console.log(chalk.gray('Start Claude Code and use /oh-my-claudecode:omc-setup for interactive setup.'));
+        console.log(chalk.gray('Start Claude Code and use /oh-my-codebuddy:omc-setup for interactive setup.'));
     }
 });
 /**
@@ -1228,14 +1228,14 @@ program
         skipClaudeCheck: true
     });
     if (result.success) {
-        console.log(chalk.green('✓ Oh-My-ClaudeCode installed successfully!'));
-        console.log(chalk.gray('  Run "oh-my-claudecode info" to see available agents.'));
+        console.log(chalk.green('✓ Oh-My-Codebuddy installed successfully!'));
+        console.log(chalk.gray('  Run "oh-my-codebuddy info" to see available agents.'));
         console.log(chalk.yellow('  Run "/omc-default" (project) or "/omc-default-global" (global) in Claude Code.'));
     }
     else {
         // Don't fail the npm install, just warn
         console.warn(chalk.yellow('⚠ Could not complete OMC setup:'), result.message);
-        console.warn(chalk.gray('  Run "oh-my-claudecode install" manually to complete setup.'));
+        console.warn(chalk.gray('  Run "oh-my-codebuddy install" manually to complete setup.'));
     }
 });
 /**

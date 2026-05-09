@@ -603,7 +603,7 @@ function configFromManifest(manifest) {
   return {
     name: manifest.name,
     task: manifest.task,
-    agent_type: "claude",
+    agent_type: "codebuddy",
     policy: manifest.policy,
     governance: manifest.governance,
     worker_launch_mode: manifest.policy.worker_launch_mode,
@@ -2088,7 +2088,7 @@ async function createTeamSession(teamName, workerCount, cwd, options = {}) {
   }
   if (useDedicatedWindow) {
     const targetSession = sessionAndWindow.split(":")[0] ?? sessionAndWindow;
-    const windowName = `omc-${sanitizeName(teamName)}`.slice(0, 32);
+    const windowName = `omcb-${sanitizeName(teamName)}`.slice(0, 32);
     const newWindowResult = await tmuxExecAsync([
       "new-window",
       "-d",
@@ -2470,7 +2470,7 @@ var init_tmux_session = __esm({
     init_team_name();
     init_tmux_utils();
     sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    TMUX_SESSION_PREFIX = "omc-team";
+    TMUX_SESSION_PREFIX = "omcb-team";
     SUPPORTED_POSIX_SHELLS = /* @__PURE__ */ new Set(["sh", "bash", "zsh", "fish", "ksh"]);
     ZSH_CANDIDATES = ["/bin/zsh", "/usr/bin/zsh", "/usr/local/bin/zsh", "/opt/homebrew/bin/zsh"];
     BASH_CANDIDATES = ["/bin/bash", "/usr/bin/bash"];
@@ -2998,7 +2998,7 @@ function getDefaultTierModels() {
     HIGH: getDefaultModelHigh()
   };
 }
-function resolveClaudeFamily(modelId) {
+function resolveCodebuddyFamily(modelId) {
   const lower = modelId.toLowerCase();
   if (!lower.includes("claude")) return null;
   if (lower.includes("sonnet")) return "SONNET";
@@ -3018,7 +3018,7 @@ function hasBedrockModelId(modelIds) {
   return false;
 }
 function isBedrock() {
-  if (process.env.CLAUDE_CODE_USE_BEDROCK === "1") {
+  if (process.env.CODEBUDDY_CODE_USE_BEDROCK === "1") {
     return true;
   }
   return hasBedrockModelId(getProviderDetectionModelEnvValues());
@@ -3036,7 +3036,7 @@ function isProviderSpecificModelId(modelId) {
   return false;
 }
 function isVertexAI() {
-  if (process.env.CLAUDE_CODE_USE_VERTEX === "1") {
+  if (process.env.CODEBUDDY_CODE_USE_VERTEX === "1") {
     return true;
   }
   return hasVertexModelId(getProviderDetectionModelEnvValues());
@@ -3047,7 +3047,7 @@ function hasVertexModelId(modelIds) {
 function hasNonClaudeModelId(modelIds) {
   for (const modelId of modelIds) {
     const lower = modelId.toLowerCase();
-    if (!lower.includes("claude") && !CLAUDE_TIER_ALIASES.has(lower)) {
+    if (!lower.includes("claude") && !CODEBUDDY_TIER_ALIASES.has(lower)) {
       return true;
     }
   }
@@ -3057,10 +3057,10 @@ function shouldAutoForceInherit() {
   if (process.env.OMC_ROUTING_FORCE_INHERIT === "true") {
     return true;
   }
-  if (process.env.CLAUDE_CODE_USE_BEDROCK === "1") {
+  if (process.env.CODEBUDDY_CODE_USE_BEDROCK === "1") {
     return true;
   }
-  if (process.env.CLAUDE_CODE_USE_VERTEX === "1") {
+  if (process.env.CODEBUDDY_CODE_USE_VERTEX === "1") {
     return true;
   }
   const directModelValues = getDirectProviderDetectionModelEnvValues();
@@ -3080,45 +3080,45 @@ function shouldAutoForceInherit() {
   }
   return false;
 }
-var DIRECT_MODEL_ENV_KEYS, INHERIT_TIER_PRIORITY, CLAUDE_TIER_ALIASES, TIER_ENV_KEYS, CLAUDE_FAMILY_DEFAULTS, BUILTIN_TIER_MODEL_DEFAULTS, CLAUDE_FAMILY_HIGH_VARIANTS, BUILTIN_EXTERNAL_MODEL_DEFAULTS;
+var DIRECT_MODEL_ENV_KEYS, INHERIT_TIER_PRIORITY, CODEBUDDY_TIER_ALIASES, TIER_ENV_KEYS, CODEBUDDY_FAMILY_DEFAULTS, BUILTIN_TIER_MODEL_DEFAULTS, CODEBUDDY_FAMILY_HIGH_VARIANTS, BUILTIN_EXTERNAL_MODEL_DEFAULTS;
 var init_models = __esm({
   "src/config/models.ts"() {
     "use strict";
     init_ssrf_guard();
     DIRECT_MODEL_ENV_KEYS = ["CLAUDE_MODEL", "ANTHROPIC_MODEL"];
     INHERIT_TIER_PRIORITY = ["MEDIUM", "HIGH", "LOW"];
-    CLAUDE_TIER_ALIASES = /* @__PURE__ */ new Set(["sonnet", "opus", "haiku"]);
+    CODEBUDDY_TIER_ALIASES = /* @__PURE__ */ new Set(["sonnet", "opus", "haiku"]);
     TIER_ENV_KEYS = {
       LOW: [
         "OMC_MODEL_LOW",
-        "CLAUDE_CODE_BEDROCK_HAIKU_MODEL",
+        "CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL"
       ],
       MEDIUM: [
         "OMC_MODEL_MEDIUM",
-        "CLAUDE_CODE_BEDROCK_SONNET_MODEL",
+        "CODEBUDDY_CODE_BEDROCK_SONNET_MODEL",
         "ANTHROPIC_DEFAULT_SONNET_MODEL"
       ],
       HIGH: [
         "OMC_MODEL_HIGH",
-        "CLAUDE_CODE_BEDROCK_OPUS_MODEL",
+        "CODEBUDDY_CODE_BEDROCK_OPUS_MODEL",
         "ANTHROPIC_DEFAULT_OPUS_MODEL"
       ]
     };
-    CLAUDE_FAMILY_DEFAULTS = {
+    CODEBUDDY_FAMILY_DEFAULTS = {
       HAIKU: "claude-haiku-4-5",
       SONNET: "claude-sonnet-4-6",
       OPUS: "claude-opus-4-7"
     };
     BUILTIN_TIER_MODEL_DEFAULTS = {
-      LOW: CLAUDE_FAMILY_DEFAULTS.HAIKU,
-      MEDIUM: CLAUDE_FAMILY_DEFAULTS.SONNET,
-      HIGH: CLAUDE_FAMILY_DEFAULTS.OPUS
+      LOW: CODEBUDDY_FAMILY_DEFAULTS.HAIKU,
+      MEDIUM: CODEBUDDY_FAMILY_DEFAULTS.SONNET,
+      HIGH: CODEBUDDY_FAMILY_DEFAULTS.OPUS
     };
-    CLAUDE_FAMILY_HIGH_VARIANTS = {
-      HAIKU: `${CLAUDE_FAMILY_DEFAULTS.HAIKU}-high`,
-      SONNET: `${CLAUDE_FAMILY_DEFAULTS.SONNET}-high`,
-      OPUS: `${CLAUDE_FAMILY_DEFAULTS.OPUS}-high`
+    CODEBUDDY_FAMILY_HIGH_VARIANTS = {
+      HAIKU: `${CODEBUDDY_FAMILY_DEFAULTS.HAIKU}-high`,
+      SONNET: `${CODEBUDDY_FAMILY_DEFAULTS.SONNET}-high`,
+      OPUS: `${CODEBUDDY_FAMILY_DEFAULTS.OPUS}-high`
     };
     BUILTIN_EXTERNAL_MODEL_DEFAULTS = {
       codexModel: "gpt-5.3-codex",
@@ -3319,7 +3319,7 @@ function getConfigPaths() {
   const userConfigDir = getConfigDir();
   return {
     user: join11(userConfigDir, "claude-omc", "config.jsonc"),
-    project: join11(process.cwd(), ".claude", "omc.jsonc")
+    project: join11(process.cwd(), ".codebuddy", "omc.jsonc")
   };
 }
 function loadJsoncFile(path4) {
@@ -4245,7 +4245,7 @@ function normalizeToCcAlias(model) {
   if (isProviderSpecificModelId(model)) {
     return model;
   }
-  const family = resolveClaudeFamily(model);
+  const family = resolveCodebuddyFamily(model);
   return family ? FAMILY_TO_ALIAS[family] ?? model : model;
 }
 var FAMILY_TO_ALIAS;
@@ -4269,7 +4269,7 @@ import { existsSync as existsSync8, readFileSync as readFileSync4 } from "fs";
 import { join as join12 } from "path";
 function loadSecurityFromConfigFiles() {
   const paths = [
-    join12(process.cwd(), ".claude", "omc.jsonc"),
+    join12(process.cwd(), ".codebuddy", "omc.jsonc"),
     join12(getConfigDir(), "claude-omc", "config.jsonc")
   ];
   for (const configPath of paths) {
@@ -4410,7 +4410,7 @@ function getContract(agentType) {
   if (!contract) {
     throw new Error(`Unknown agent type: ${agentType}. Supported: ${Object.keys(CONTRACTS).join(", ")}`);
   }
-  if (agentType !== "claude" && isExternalLLMDisabled()) {
+  if (agentType !== "codebuddy" && agentType !== "claude" && isExternalLLMDisabled()) {
     throw new Error(
       `External LLM provider "${agentType}" is blocked by security policy (disableExternalLLM). Only Claude workers are allowed in the current security configuration.`
     );
@@ -4484,7 +4484,7 @@ function resolveClaudeWorkerModel(env = process.env) {
   if (directModel) {
     return directModel;
   }
-  const bedrockModel = env.CLAUDE_CODE_BEDROCK_SONNET_MODEL || env.ANTHROPIC_DEFAULT_SONNET_MODEL || "";
+  const bedrockModel = env.CODEBUDDY_CODE_BEDROCK_SONNET_MODEL || env.ANTHROPIC_DEFAULT_SONNET_MODEL || "";
   if (bedrockModel) {
     return bedrockModel;
   }
@@ -4598,17 +4598,36 @@ var init_model_contract = __esm({
         parseOutput(rawOutput) {
           return rawOutput.trim();
         }
+      },
+      codebuddy: {
+        agentType: "codebuddy",
+        binary: "codebuddy",
+        installInstructions: "Install CodeBuddy Code: see https://codebuddy.com/download",
+        buildLaunchArgs(model, extraFlags = []) {
+          const args = ["--dangerously-skip-permissions"];
+          if (shouldUseClaudeBareMode() && !extraFlags.includes("--bare")) {
+            args.push("--bare");
+          }
+          if (model) {
+            const resolved = isProviderSpecificModelId(model) ? model : normalizeToCcAlias(model);
+            args.push("--model", resolved);
+          }
+          return [...args, ...extraFlags];
+        },
+        parseOutput(rawOutput) {
+          return rawOutput.trim();
+        }
       }
     };
     WORKER_MODEL_ENV_ALLOWLIST = [
       "ANTHROPIC_MODEL",
       "CLAUDE_MODEL",
       "ANTHROPIC_BASE_URL",
-      "CLAUDE_CODE_USE_BEDROCK",
-      "CLAUDE_CODE_USE_VERTEX",
-      "CLAUDE_CODE_BEDROCK_OPUS_MODEL",
-      "CLAUDE_CODE_BEDROCK_SONNET_MODEL",
-      "CLAUDE_CODE_BEDROCK_HAIKU_MODEL",
+      "CODEBUDDY_CODE_USE_BEDROCK",
+      "CODEBUDDY_CODE_USE_VERTEX",
+      "CODEBUDDY_CODE_BEDROCK_OPUS_MODEL",
+      "CODEBUDDY_CODE_BEDROCK_SONNET_MODEL",
+      "CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL",
       "ANTHROPIC_DEFAULT_OPUS_MODEL",
       "ANTHROPIC_DEFAULT_SONNET_MODEL",
       "ANTHROPIC_DEFAULT_HAIKU_MODEL",
@@ -4679,6 +4698,12 @@ function agentTypeGuidance(agentType) {
         "- You are an interactive REPL (cursor-agent), not a one-shot CLI. Stay in the session; the leader will continue to send prompts via mailbox.",
         `- You MUST run \`${claimTaskCommand}\` before starting work and \`${transitionTaskStatusCommand}\` when done. Then keep waiting for the next mailbox message; do NOT type \`/exit\` unless the leader sends an explicit shutdown.`,
         "- Reviewer/critic/security-review roles are NOT supported for cursor workers \u2014 those require a verdict-file write-and-exit which the REPL does not perform. Take only executor-style tasks."
+      ].join("\n");
+    case "codebuddy":
+      return [
+        "### Agent-Type Guidance (codebuddy)",
+        "- Keep reasoning focused on assigned task IDs and send concise progress acks to leader-fixed.",
+        "- Before any risky command, send a blocker/proposal message to leader-fixed and wait for updated inbox instructions."
       ].join("\n");
     case "claude":
     default:
@@ -5637,7 +5662,7 @@ function configFromManifest2(manifest) {
   return {
     name: manifest.name,
     task: manifest.task,
-    agent_type: "claude",
+    agent_type: "codebuddy",
     policy: manifest.policy,
     governance: manifest.governance,
     worker_launch_mode: manifest.policy.worker_launch_mode,
@@ -5934,7 +5959,7 @@ function resolveTierToModelId(tier, cfg) {
   if (typeof fromCfg === "string" && fromCfg.length > 0) return fromCfg;
   return getDefaultTierModels()[tier];
 }
-function resolveClaudeModel(role, raw, cfg) {
+function resolveCodebuddyModel(role, raw, cfg) {
   if (typeof raw === "string" && raw.length > 0) {
     return isTier(raw) ? resolveTierToModelId(raw, cfg) : raw;
   }
@@ -5956,8 +5981,8 @@ function resolveRoleAssignment(role, cfg) {
   const roleRouting = cfg.team?.roleRouting;
   const spec = getRoleRoutingSpec(roleRouting, canonical);
   const isOrchestrator = canonical === "orchestrator";
-  const provider = isOrchestrator ? "claude" : spec?.provider ?? "claude";
-  const model = provider === "claude" ? resolveClaudeModel(canonical, spec?.model, cfg) : resolveExternalModel(provider, spec?.model, cfg);
+  const provider = isOrchestrator ? "codebuddy" : spec?.provider ?? "codebuddy";
+  const model = provider === "codebuddy" ? resolveCodebuddyModel(canonical, spec?.model, cfg) : resolveExternalModel(provider, spec?.model, cfg);
   const agent = spec?.agent ?? ROLE_TO_AGENT[canonical];
   return { provider, model, agent };
 }
@@ -5970,11 +5995,11 @@ function buildResolvedRoutingSnapshot(cfg) {
   for (const role of CANONICAL_TEAM_ROLES) {
     const primary = resolveRoleAssignment(role, cfg);
     const spec = getRoleRoutingSpec(roleRouting, role);
-    const isExternalPrimary = primary.provider !== "claude";
+    const isExternalPrimary = primary.provider !== "codebuddy";
     const fallbackModelInput = isExternalPrimary && spec?.model && !isTier(spec.model) ? void 0 : spec?.model;
     const fallback = {
-      provider: "claude",
-      model: resolveClaudeModel(role, fallbackModelInput, cfg),
+      provider: "codebuddy",
+      model: resolveCodebuddyModel(role, fallbackModelInput, cfg),
       agent: primary.agent
     };
     out[role] = { primary, fallback };
@@ -6214,7 +6239,7 @@ var init_role_router = __esm({
 // src/team/cli-worker-contract.ts
 function shouldInjectContract(role, provider) {
   if (!role || !provider) return false;
-  if (provider === "claude" || provider === "cursor") return false;
+  if (provider === "claude" || provider === "cursor" || provider === "codebuddy") return false;
   return CONTRACT_ROLES.has(role);
 }
 function renderCliWorkerOutputContract(role, output_file) {
@@ -6357,25 +6382,30 @@ function validateBranchName(branch) {
 function checkMergeConflicts(workerBranch, baseBranch, repoRoot) {
   validateBranchName(workerBranch);
   validateBranchName(baseBranch);
+  const cLocaleEnv = { ...process.env, LC_ALL: "C", LANG: "C" };
   try {
     execFileSync4(
       "git",
       ["merge-tree", "--write-tree", baseBranch, workerBranch],
-      { cwd: repoRoot, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] }
+      { cwd: repoRoot, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"], env: cLocaleEnv }
     );
     return [];
   } catch (err) {
     const error = err;
     if (error.status === 1 && typeof error.stdout === "string") {
-      const lines = error.stdout.split("\n");
-      const conflicts = [];
-      for (const line of lines) {
-        const match = line.match(/^CONFLICT\s.*?:\s+.*?\s+in\s+(.+)$/);
-        if (match) {
-          conflicts.push(match[1].trim());
+      const conflicts = /* @__PURE__ */ new Set();
+      for (const line of error.stdout.split("\n")) {
+        const machine = line.match(/^\d{6} [0-9a-f]+ ([1-3])\t(.+)$/);
+        if (machine) {
+          conflicts.add(machine[2]);
+          continue;
+        }
+        const human = line.match(/^CONFLICT\s.*?:\s+.*?\s+in\s+(.+)$/);
+        if (human) {
+          conflicts.add(human[1].trim());
         }
       }
-      return conflicts.length > 0 ? conflicts : ["(merge-tree reported conflicts)"];
+      return conflicts.size > 0 ? Array.from(conflicts) : ["(merge-tree reported conflicts)"];
     }
   }
   const mergeBase = execFileSync4(
@@ -6612,7 +6642,7 @@ async function installPostToolUseHook(worktreePath, workerName) {
   if (isHookPaused(worktreePath)) {
     return;
   }
-  const claudeDir = join19(worktreePath, ".claude");
+  const claudeDir = join19(worktreePath, ".codebuddy");
   await mkdir8(claudeDir, { recursive: true });
   const settingsPath = join19(claudeDir, "settings.json");
   const hookCommand = buildHookCommand(workerName);
@@ -6676,15 +6706,15 @@ async function installCommitCadence(ctx) {
   if (!ctx.enabled) {
     return { method: "none" };
   }
-  if (ctx.agentType === "claude") {
+  if (ctx.agentType === "claude" || ctx.agentType === "codebuddy") {
     await installPostToolUseHook(ctx.worktreePath, ctx.workerName);
     return { method: "hook" };
   }
   return { method: "fallback-poll" };
 }
 async function uninstallCommitCadence(ctx) {
-  if (ctx.agentType !== "claude") return;
-  const settingsPath = join19(ctx.worktreePath, ".claude", "settings.json");
+  if (ctx.agentType !== "claude" && ctx.agentType !== "codebuddy") return;
+  const settingsPath = join19(ctx.worktreePath, ".codebuddy", "settings.json");
   try {
     const raw = await readFile9(settingsPath, "utf-8");
     const parsed = JSON.parse(raw);
@@ -7816,9 +7846,9 @@ async function startTeamV2(config) {
       missingBinaryReasons.push({ agentType: provider, reason });
     }
   }
-  if (!resolvedBinaryPaths.claude) {
+  if (!resolvedBinaryPaths.codebuddy) {
     try {
-      resolvedBinaryPaths.claude = resolveValidatedBinaryPath("claude");
+      resolvedBinaryPaths.codebuddy = resolveValidatedBinaryPath("codebuddy");
     } catch {
     }
   }
@@ -7830,7 +7860,7 @@ async function startTeamV2(config) {
   );
   for (const { agentType, reason } of missingBinaryReasons) {
     process.stderr.write(
-      `[team/runtime-v2] cli_binary_missing:${agentType}: ${reason} \u2014 falling back to claude snapshot (AC-8)
+      `[team/runtime-v2] cli_binary_missing:${agentType}: ${reason} \u2014 falling back to codebuddy snapshot (AC-8)
 `
     );
     await appendTeamEvent(sanitized, {
@@ -7889,7 +7919,7 @@ async function startTeamV2(config) {
     }));
     const allocationWorkers = workerNames.map((name, i) => ({
       name,
-      role: config.workerRoles?.[i] ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "claude"),
+      role: config.workerRoles?.[i] ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "codebuddy"),
       currentLoad: 0
     }));
     for (const r of allocateTasksToWorkers(allocationTasks, allocationWorkers)) {
@@ -7899,7 +7929,7 @@ async function startTeamV2(config) {
   try {
     for (let i = 0; i < workerNames.length; i++) {
       const wName = workerNames[i];
-      const agentType = agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "claude";
+      const agentType = agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "codebuddy";
       await ensureWorkerStateDir(sanitized, wName, leaderCwd);
       const overlayPath = await writeWorkerOverlay({
         teamName: sanitized,
@@ -7942,7 +7972,7 @@ async function startTeamV2(config) {
     return {
       name: wName,
       index: i + 1,
-      role: config.workerRoles?.[i] ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "claude"),
+      role: config.workerRoles?.[i] ?? (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? "codebuddy"),
       assigned_tasks: [],
       working_dir: worktree?.path ?? leaderCwd,
       team_state_root: teamStateRoot(leaderCwd, sanitized),
@@ -7958,7 +7988,7 @@ async function startTeamV2(config) {
   const teamConfig = {
     name: sanitized,
     task: config.tasks.map((t) => t.subject).join("; "),
-    agent_type: agentTypes[0] || "claude",
+    agent_type: agentTypes[0] || "codebuddy",
     worker_launch_mode: "interactive",
     policy: DEFAULT_TEAM_TRANSPORT_POLICY,
     governance: DEFAULT_TEAM_GOVERNANCE,
@@ -8054,7 +8084,7 @@ async function startTeamV2(config) {
       const taskId = String(decision.taskIndex + 1);
       const task = config.tasks[decision.taskIndex];
       if (!task || workerIndex < 0) continue;
-      const fallbackAgent = agentTypes[workerIndex % agentTypes.length] ?? agentTypes[0] ?? "claude";
+      const fallbackAgent = agentTypes[workerIndex % agentTypes.length] ?? agentTypes[0] ?? "codebuddy";
       const assignment = resolveTaskAssignment(
         task,
         resolvedRouting,
@@ -8775,7 +8805,7 @@ async function resumeTeamV2(teamName, cwd) {
   const config = await readTeamConfig(sanitized, cwd);
   if (!config) return null;
   try {
-    const sessionName2 = config.tmux_session || `omc-team-${sanitized}`;
+    const sessionName2 = config.tmux_session || `omcb-team-${sanitized}`;
     await tmuxExecAsync(["has-session", "-t", sessionName2.split(":")[0]]);
     return {
       teamName: sanitized,
@@ -8844,6 +8874,9 @@ var init_runtime_v2 = __esm({
         this.cwd = cwd;
         this.threshold = threshold;
       }
+      teamName;
+      cwd;
+      threshold;
       consecutiveFailures = 0;
       tripped = false;
       recordSuccess() {
@@ -9017,7 +9050,7 @@ async function shutdownTeam(teamName, sessionName2, cwd, timeoutMs = 3e4, worker
     teamName
   });
   const configData = await readJsonSafe2(join17(root, "config.json"));
-  const CLI_AGENT_TYPES = /* @__PURE__ */ new Set(["claude", "codex", "gemini"]);
+  const CLI_AGENT_TYPES = /* @__PURE__ */ new Set(["codebuddy", "claude", "codex", "gemini"]);
   const agentTypes = configData?.agentTypes ?? [];
   const isCliWorkerTeam = agentTypes.length > 0 && agentTypes.every((t) => CLI_AGENT_TYPES.has(t));
   if (!isCliWorkerTeam) {

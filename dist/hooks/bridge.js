@@ -9,8 +9,18 @@
  * ```bash
  * #!/bin/bash
  * INPUT=$(cat)
- * echo "$INPUT" | node ~/.claude/omc/hook-bridge.mjs --hook=keyword-detector
+ * echo "$INPUT" | node ~/.codebuddy/omc/hook-bridge.mjs --hook=keyword-detector
  * ```
+ */
+/**
+ * CodeBuddy Code Hook Compatibility
+ *
+ * CodeBuddy supports 9 events (vs Claude Code's 14).
+ * Missing events are handled as follows:
+ * - PostToolUseFailure: merged into PostToolUse (check tool_response for errors)
+ * - SubagentStart: inferred from PreToolUse when tool_name === 'Agent'
+ * - PermissionRequest: not applicable (CodeBuddy handles differently)
+ * - WorktreeCreate/Remove: handled via Bash hooks if needed
  */
 import { pathToFileURL } from "url";
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmdirSync, unlinkSync, writeFileSync, } from "fs";
@@ -811,7 +821,7 @@ function getPromptText(input) {
     return "";
 }
 function isExplicitAskSlashInvocation(promptText) {
-    return /^\s*\/(?:oh-my-claudecode:)?ask\s+(?:claude|codex|gemini)\b/i.test(promptText);
+    return /^\s*\/(?:oh-my-codebuddy:)?ask\s+(?:claude|codex|gemini)\b/i.test(promptText);
 }
 function activateRalplanStartupState(directory, sessionId) {
     const now = new Date().toISOString();
@@ -843,7 +853,7 @@ function resolveWorkflowSlotModeStatePath(directory, skillName, sessionId) {
 function seedWorkflowSlotForSkill(directory, skillName, sessionId, source, parentSkill) {
     if (!isCanonicalWorkflowSkill(skillName))
         return false;
-    const normalized = skillName.toLowerCase().replace(/^oh-my-claudecode:/, "");
+    const normalized = skillName.toLowerCase().replace(/^oh-my-codebuddy:/, "");
     try {
         const current = readSkillActiveStateNormalized(directory, sessionId);
         const pruned = pruneExpiredWorkflowSkillTombstones(current);
@@ -879,7 +889,7 @@ function seedWorkflowSlotForSkill(directory, skillName, sessionId, source, paren
 function confirmWorkflowSlot(directory, skillName, sessionId) {
     if (!isCanonicalWorkflowSkill(skillName))
         return false;
-    const normalized = skillName.toLowerCase().replace(/^oh-my-claudecode:/, "");
+    const normalized = skillName.toLowerCase().replace(/^oh-my-codebuddy:/, "");
     try {
         const current = readSkillActiveStateNormalized(directory, sessionId);
         const slot = current.active_skills[normalized];
@@ -902,7 +912,7 @@ function confirmWorkflowSlot(directory, skillName, sessionId) {
 function tombstoneWorkflowSlot(directory, skillName, sessionId) {
     if (!isCanonicalWorkflowSkill(skillName))
         return false;
-    const normalized = skillName.toLowerCase().replace(/^oh-my-claudecode:/, "");
+    const normalized = skillName.toLowerCase().replace(/^oh-my-codebuddy:/, "");
     try {
         const current = readSkillActiveStateNormalized(directory, sessionId);
         if (!current.active_skills[normalized])
@@ -1527,7 +1537,7 @@ Please continue working on these tasks.
 `);
     }
     // Bedrock/Vertex/proxy override: tell the LLM not to pass model on Task calls.
-    // This prevents the LLM from following the static CLAUDE.md instruction
+    // This prevents the LLM from following the static CODEBUDDY.md instruction
     // "Pass model on Task calls: haiku, sonnet, opus" which produces invalid
     // model IDs on non-standard providers. (issues #1135, #1201)
     try {
@@ -1540,7 +1550,7 @@ Please continue working on these tasks.
 This environment uses a non-standard model provider (AWS Bedrock, Google Vertex AI, or a proxy such as CC Switch / LiteLLM).
 
 How to pass \`model\` on Task/Agent calls:
-- Prefer a tier alias: \`model: "sonnet"\`, \`model: "opus"\`, or \`model: "haiku"\`. OMC's pre-tool enforcer resolves these to provider-safe IDs when one of these env vars is set: \`ANTHROPIC_DEFAULT_SONNET_MODEL\` (and sibling \`ANTHROPIC_DEFAULT_OPUS_MODEL\` / \`ANTHROPIC_DEFAULT_HAIKU_MODEL\`), \`CLAUDE_CODE_BEDROCK_SONNET_MODEL\` (and sibling \`CLAUDE_CODE_BEDROCK_OPUS_MODEL\` / \`CLAUDE_CODE_BEDROCK_HAIKU_MODEL\`), or \`OMC_SUBAGENT_MODEL\`.
+- Prefer a tier alias: \`model: "sonnet"\`, \`model: "opus"\`, or \`model: "haiku"\`. OMC's pre-tool enforcer resolves these to provider-safe IDs when one of these env vars is set: \`ANTHROPIC_DEFAULT_SONNET_MODEL\` (and sibling \`ANTHROPIC_DEFAULT_OPUS_MODEL\` / \`ANTHROPIC_DEFAULT_HAIKU_MODEL\`), \`CODEBUDDY_CODE_BEDROCK_SONNET_MODEL\` (and sibling \`CODEBUDDY_CODE_BEDROCK_OPUS_MODEL\` / \`CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL\`), or \`OMC_SUBAGENT_MODEL\`.
 - If none of those env vars are configured, the enforcer will deny the tier alias with an env-var configuration hint — set one of them in your \`settings.json\` env or shell profile.
 - The enforcer denies tier aliases it cannot resolve. It also denies provider-specific IDs that carry a \`[1m]\` context-window suffix or otherwise fail subagent-safe validation (sub-agents cannot inherit \`[1m]\`). Valid provider-specific IDs without extended-context suffixes are allowed.
 
@@ -1548,7 +1558,7 @@ When the session model carries a \`[1m]\` suffix, passing an explicit \`model\` 
 
 When the session model has no \`[1m]\` suffix, omitting \`model\` is safe UNLESS a custom sub-agent definition pins a bare Anthropic model ID (e.g. \`model: claude-sonnet-4-6\` in agent frontmatter). When resolver env vars are configured, the enforcer will deny that call with tier-alias guidance; when they are absent, the call is not denied by the enforcer but will fail at the provider. Either way, custom sub-agents should pin tier aliases (not bare Anthropic IDs) in their frontmatter. Shipped OMC agents already do this and are unaffected.
 
-The CLAUDE.md instruction "Pass model on Task calls: haiku, sonnet, opus" applies here — subject to the resolution prerequisites above.
+The CODEBUDDY.md instruction "Pass model on Task calls: haiku, sonnet, opus" applies here — subject to the resolution prerequisites above.
 
 </system-reminder>`);
         }
@@ -1930,9 +1940,9 @@ function getInvokedSkillName(toolInput) {
 }
 /**
  * Extract the raw (un-normalized) skill name from Skill tool input.
- * Used to distinguish OMC built-in skills (prefixed with 'oh-my-claudecode:')
+ * Used to distinguish OMC built-in skills (prefixed with 'oh-my-codebuddy:')
  * from project custom skills or other plugin skills with the same bare name.
- * See: https://github.com/Yeachan-Heo/oh-my-claudecode/issues/1581
+ * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/1581
  */
 function getRawSkillName(toolInput) {
     if (!toolInput || typeof toolInput !== "object")
@@ -1945,7 +1955,7 @@ async function processPostToolUse(input) {
     const directory = resolveToWorktreeRoot(input.directory);
     const messages = [];
     // Ensure mode state activation also works when execution starts via Skill tool
-    // (e.g., ralplan consensus handoff into Skill("oh-my-claudecode:ralph")).
+    // (e.g., ralplan consensus handoff into Skill("oh-my-codebuddy:ralph")).
     const toolName = (input.toolName || "").toLowerCase();
     if (toolName === "skill") {
         const skillName = getInvokedSkillName(input.toolInput);
@@ -1970,7 +1980,7 @@ async function processPostToolUse(input) {
         const currentState = readSkillActiveState(directory, input.sessionId);
         const completingSkill = (getInvokedSkillName(input.toolInput) ?? "")
             .toLowerCase()
-            .replace(/^oh-my-claudecode:/, "");
+            .replace(/^oh-my-codebuddy:/, "");
         if (!currentState || !currentState.active || currentState.skill_name === completingSkill) {
             clearSkillActiveState(directory, input.sessionId);
         }

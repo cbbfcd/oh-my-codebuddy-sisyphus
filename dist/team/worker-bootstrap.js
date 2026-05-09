@@ -60,6 +60,12 @@ function agentTypeGuidance(agentType) {
                 `- You MUST run \`${claimTaskCommand}\` before starting work and \`${transitionTaskStatusCommand}\` when done. Then keep waiting for the next mailbox message; do NOT type \`/exit\` unless the leader sends an explicit shutdown.`,
                 '- Reviewer/critic/security-review roles are NOT supported for cursor workers — those require a verdict-file write-and-exit which the REPL does not perform. Take only executor-style tasks.',
             ].join('\n');
+        case 'codebuddy':
+            return [
+                '### Agent-Type Guidance (codebuddy)',
+                '- Keep reasoning focused on assigned task IDs and send concise progress acks to leader-fixed.',
+                '- Before any risky command, send a blocker/proposal message to leader-fixed and wait for updated inbox instructions.',
+            ].join('\n');
         case 'claude':
         default:
             return [

@@ -4,7 +4,7 @@
  * This module exports all custom tools and provides helpers
  * for creating MCP servers with the Claude Agent SDK.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { lspTools } from './lsp-tools.js';
 import { astTools } from './ast-tools.js';
 import { pythonReplTool } from './python-repl/index.js';

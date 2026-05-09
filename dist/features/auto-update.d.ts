@@ -14,16 +14,16 @@ import type { NotificationConfig } from '../notifications/types.js';
 /** GitHub repository information */
 export declare const REPO_OWNER = "anthropic-ai";
 export declare const REPO_NAME = "oh-my-codebuddy";
-export declare const GITHUB_API_URL = "https://api.github.com/repos/cbbfcd/oh-my-codebuddy";
-export declare const GITHUB_RAW_URL = "https://raw.githubusercontent.com/cbbfcd/oh-my-codebuddy";
+export declare const GITHUB_API_URL = "https://api.github.com/repos/anthropic-ai/oh-my-codebuddy";
+export declare const GITHUB_RAW_URL = "https://raw.githubusercontent.com/anthropic-ai/oh-my-codebuddy";
 export declare function shouldBlockStandaloneUpdateInCurrentSession(): boolean;
 export declare function syncPluginCache(verbose?: boolean): {
     synced: boolean;
     skipped: boolean;
     errors: string[];
 };
-/** Installation paths (respects CLAUDE_CONFIG_DIR env var) */
-export declare const CLAUDE_CONFIG_DIR: string;
+/** Installation paths (respects CODEBUDDY_CONFIG_DIR env var) */
+export declare const CODEBUDDY_CONFIG_DIR: string;
 export declare const VERSION_FILE: string;
 export declare const CONFIG_FILE: string;
 /**
@@ -131,7 +131,7 @@ export declare function isAutoUpgradePromptEnabled(): boolean;
 /**
  * Check if team feature is enabled
  * Returns false by default - requires explicit opt-in
- * Checks ~/.claude/settings.json first, then env var fallback
+ * Checks ~/.codebuddy/settings.json first, then env var fallback
  */
 export declare function isTeamEnabled(): boolean;
 /**

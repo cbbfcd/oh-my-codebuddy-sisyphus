@@ -12,7 +12,7 @@
  *
  * @module python-repl/tool
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { PythonReplInput } from './types.js';
 /**
  * Input schema for the Python REPL tool.

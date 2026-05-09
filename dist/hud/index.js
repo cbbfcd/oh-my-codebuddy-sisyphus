@@ -2,7 +2,7 @@
 /**
  * OMC HUD - Main Entry Point
  *
- * Statusline command that visualizes oh-my-claudecode state.
+ * Statusline command that visualizes oh-my-codebuddy state.
  * Receives stdin JSON from Claude Code and outputs formatted statusline.
  */
 import { readStdin, writeStdinCache, readStdinCache, getContextPercent, getModelName, getRateLimitsFromStdin, stabilizeContextPercent, } from "./stdin.js";
@@ -25,7 +25,7 @@ import { homedir } from "os";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { getOmcRoot } from "../lib/worktree-paths.js";
-import { getClaudeConfigDir } from "../utils/config-dir.js";
+import { getCodebuddyConfigDir } from "../utils/config-dir.js";
 /**
  * Extract session ID (UUID) from a transcript path.
  */
@@ -153,7 +153,7 @@ async function calculateSessionHealth(sessionStart, contextPercent) {
  */
 function showDiagnostic() {
     const version = getRuntimePackageVersion();
-    const configDir = getClaudeConfigDir();
+    const configDir = getCodebuddyConfigDir();
     const hudScript = join(configDir, "hud", "omc-hud.mjs");
     const settingsFile = join(configDir, "settings.json");
     const hudExists = existsSync(hudScript);
@@ -177,7 +177,7 @@ function showDiagnostic() {
     console.log(`  HUD script:  ${hudExists ? "installed" : "MISSING"}`);
     console.log(`  statusLine:  ${statusLineOk ? "configured" : "NOT configured"}`);
     if (!hudExists || !statusLineOk) {
-        console.log("  Run /oh-my-claudecode:hud setup to fix.");
+        console.log("  Run /oh-my-codebuddy:hud setup to fix.");
     }
     else {
         console.log("  HUD renders automatically inside Claude Code sessions.");
@@ -383,8 +383,8 @@ async function main(watchMode = false, skipInit = false) {
                 : null,
             subscriptionType: subscriptionInfo.subscriptionType,
             rateLimitTier: subscriptionInfo.rateLimitTier,
-            profileName: process.env.CLAUDE_CONFIG_DIR
-                ? basename(process.env.CLAUDE_CONFIG_DIR).replace(/^\./, "")
+            profileName: process.env.CODEBUDDY_CONFIG_DIR
+                ? basename(process.env.CODEBUDDY_CONFIG_DIR).replace(/^\./, "")
                 : null,
             sessionSummary,
             lastToolName: transcriptData.lastToolName,

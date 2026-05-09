@@ -15,7 +15,7 @@
 import { getAgentDefinitions } from '../agents/definitions.js';
 import { normalizeDelegationRole } from './delegation-routing/types.js';
 import { loadConfig } from '../config/loader.js';
-import { isProviderSpecificModelId, resolveClaudeFamily } from '../config/models.js';
+import { isProviderSpecificModelId, resolveCodebuddyFamily } from '../config/models.js';
 // ---------------------------------------------------------------------------
 // Config cache — avoids repeated disk reads on every enforceModel() call (F10)
 //
@@ -31,8 +31,8 @@ const CONFIG_ENV_KEYS = [
     'ANTHROPIC_BASE_URL',
     'CLAUDE_MODEL',
     'ANTHROPIC_MODEL',
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
     // explicit routing overrides
     'OMC_ROUTING_FORCE_INHERIT',
     'OMC_ROUTING_ENABLED',
@@ -46,9 +46,9 @@ const CONFIG_ENV_KEYS = [
     'OMC_MODEL_HIGH',
     'OMC_MODEL_MEDIUM',
     'OMC_MODEL_LOW',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
@@ -82,7 +82,7 @@ export function normalizeToCcAlias(model) {
     if (isProviderSpecificModelId(model)) {
         return model;
     }
-    const family = resolveClaudeFamily(model);
+    const family = resolveCodebuddyFamily(model);
     return family ? (FAMILY_TO_ALIAS[family] ?? model) : model;
 }
 function isDelegationToolName(toolName) {
@@ -90,10 +90,10 @@ function isDelegationToolName(toolName) {
     return normalizedToolName === 'agent' || normalizedToolName === 'task';
 }
 function canonicalizeSubagentType(subagentType) {
-    const hasPrefix = subagentType.startsWith('oh-my-claudecode:');
-    const rawAgentType = subagentType.replace(/^oh-my-claudecode:/, '');
+    const hasPrefix = subagentType.startsWith('oh-my-codebuddy:');
+    const rawAgentType = subagentType.replace(/^oh-my-codebuddy:/, '');
     const canonicalAgentType = normalizeDelegationRole(rawAgentType);
-    return hasPrefix ? `oh-my-claudecode:${canonicalAgentType}` : canonicalAgentType;
+    return hasPrefix ? `oh-my-codebuddy:${canonicalAgentType}` : canonicalAgentType;
 }
 /**
  * Enforce model parameter for an agent delegation call
@@ -132,7 +132,7 @@ export function enforceModel(agentInput) {
             model: normalizedModel,
         };
     }
-    const agentType = canonicalSubagentType.replace(/^oh-my-claudecode:/, '');
+    const agentType = canonicalSubagentType.replace(/^oh-my-codebuddy:/, '');
     const agentDefs = getAgentDefinitions({ config });
     const agentDef = agentDefs[agentType];
     if (!agentDef) {
@@ -225,7 +225,7 @@ export function processPreToolUse(toolName, toolInput) {
  * Get model for an agent type (for testing/debugging)
  */
 export function getModelForAgent(agentType) {
-    const normalizedType = normalizeDelegationRole(agentType.replace(/^oh-my-claudecode:/, ''));
+    const normalizedType = normalizeDelegationRole(agentType.replace(/^oh-my-codebuddy:/, ''));
     const agentDefs = getAgentDefinitions({ config: getCachedConfig() });
     const agentDef = agentDefs[normalizedType];
     if (!agentDef) {

@@ -101,7 +101,7 @@ function loadSecurityPolicy() {
     const root = getWorktreeRoot() || process.cwd();
     const policyPaths = [
         join(getOmcRoot(root), "config", "live-data-policy.json"),
-        join(root, ".claude", "live-data-policy.json"),
+        join(root, ".codebuddy", "live-data-policy.json"),
     ];
     for (const p of policyPaths) {
         if (p === policyLoadedFrom && cachedPolicy)

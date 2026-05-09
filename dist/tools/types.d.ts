@@ -4,7 +4,7 @@
  * Common interfaces for MCP tool definitions used across
  * state-tools, notepad-tools, memory-tools, and lsp-tools.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { ToolCategory } from '../constants/index.js';
 /**
  * Tool Definition interface for MCP tools.

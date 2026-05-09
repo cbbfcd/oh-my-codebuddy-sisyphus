@@ -33,7 +33,7 @@ function makeProjectRoot(dir) {
 function ruleContent(body) {
     return `---\nalwaysApply: true\n---\n${body}`;
 }
-function addRule(projectDir, name, content, subdir = '.claude/rules') {
+function addRule(projectDir, name, content, subdir = '.codebuddy/rules') {
     const rulesDir = join(projectDir, subdir);
     mkdirSync(rulesDir, { recursive: true });
     writeFileSync(join(rulesDir, name), content);
@@ -121,10 +121,10 @@ describe('Bug 3 – nested worktree isolation: only worktree rules are injected'
     beforeEach(() => {
         // Layout:
         //   base/               ← main repo (.git/ directory)
-        //     .claude/rules/main.md
+        //     .codebuddy/rules/main.md
         //     src/main.ts
         //     feature/          ← nested git worktree (.git FILE)
-        //       .claude/rules/feature.md
+        //       .codebuddy/rules/feature.md
         //       src/feature.ts
         base = tmpDir();
         mainRepo = base;
@@ -145,7 +145,7 @@ describe('Bug 3 – nested worktree isolation: only worktree rules are injected'
         clearInjectedRules(sessionId);
     });
     it('injects only worktree rules when accessing a worktree file, even when cwd=mainRepo', () => {
-        // Claude was started from mainRepo (data.cwd = mainRepo) but accesses a
+        // Codebuddy was started from mainRepo (data.cwd = mainRepo) but accesses a
         // worktree file.  findProjectRoot(file) finds worktree/.git FILE first.
         const hook = createRulesInjectorHook(mainRepo);
         const result = hook.processToolExecution('read', join(worktree, 'src', 'feature.ts'), sessionId);

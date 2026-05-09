@@ -58,7 +58,7 @@ World`);
             const result = sanitizeForKeywordDetection(`Investigate why this pasted transcript branched sessions:
 
 [MAGIC KEYWORD: RALPH]
-Skill: oh-my-claudecode:ralph
+Skill: oh-my-codebuddy:ralph
 User request:
 ralph fix parser
 
@@ -66,7 +66,7 @@ Summarize the failure mode only.`);
             expect(result).toContain('Investigate why this pasted transcript branched sessions:');
             expect(result).toContain('Summarize the failure mode only.');
             expect(result).not.toContain('[MAGIC KEYWORD: RALPH]');
-            expect(result).not.toContain('Skill: oh-my-claudecode:ralph');
+            expect(result).not.toContain('Skill: oh-my-codebuddy:ralph');
             expect(result).not.toContain('ralph fix parser');
         });
         it('should strip pasted git diff hunks that mention execution keywords', () => {
@@ -88,13 +88,13 @@ What actually caused the regression?`);
             const result = sanitizeForKeywordDetection(`Please explain this transcript:
 <assistant>
 [MAGIC KEYWORD: AUTOPILOT]
-Skill: oh-my-claudecode:autopilot
+Skill: oh-my-codebuddy:autopilot
 </assistant>
 Why did this happen?`);
             expect(result).toContain('Please explain this transcript:');
             expect(result).toContain('Why did this happen?');
             expect(result).not.toContain('AUTOPILOT');
-            expect(result).not.toContain('Skill: oh-my-claudecode:autopilot');
+            expect(result).not.toContain('Skill: oh-my-codebuddy:autopilot');
         });
         it('should strip XML tag blocks', () => {
             const result = sanitizeForKeywordDetection('<system-reminder>ralph</system-reminder>');
@@ -405,7 +405,7 @@ OMC Ultrawork = "특수부대 작전 반"
                 const result = detectKeywordsWithType(`Investigate why this pasted transcript branched sessions:
 
 [MAGIC KEYWORD: RALPH]
-Skill: oh-my-claudecode:ralph
+Skill: oh-my-codebuddy:ralph
 User request:
 ralph fix parser`);
                 expect(result).toEqual([]);
@@ -1715,8 +1715,8 @@ This article argues that fake popularity signals damage trust in open source.`;
             const result = detectKeywordsWithType('use `/ralph` to start the loop');
             expect(result.find((r) => r.type === 'ralph')).toBeUndefined();
         });
-        it('inline backtick `/oh-my-claudecode:ralph` does NOT detect ralph', () => {
-            const result = detectKeywordsWithType('run `/oh-my-claudecode:ralph` if needed');
+        it('inline backtick `/oh-my-codebuddy:ralph` does NOT detect ralph', () => {
+            const result = detectKeywordsWithType('run `/oh-my-codebuddy:ralph` if needed');
             expect(result.find((r) => r.type === 'ralph')).toBeUndefined();
         });
         it('file path /autopilot-runs/log.txt does NOT detect autopilot', () => {
@@ -1729,16 +1729,16 @@ This article argues that fake popularity signals damage trust in open source.`;
         });
     });
     // -------------------------------------------------------------------------
-    // Unified prefix detector (spec g) — /skill, /omc:skill, /oh-my-claudecode:skill
+    // Unified prefix detector (spec g) — /skill, /omc:skill, /oh-my-codebuddy:skill
     // all seed the same canonical state (T3 implementation required)
     // -------------------------------------------------------------------------
-    describe('unified prefix detector: /omc: and /oh-my-claudecode: forms (spec g)', () => {
+    describe('unified prefix detector: /omc: and /oh-my-codebuddy: forms (spec g)', () => {
         it('/omc:ralph fix auth detects ralph', () => {
             const result = detectKeywordsWithType('/omc:ralph fix auth');
             expect(result.find((r) => r.type === 'ralph')).toBeDefined();
         });
-        it('/oh-my-claudecode:ralph fix auth detects ralph', () => {
-            const result = detectKeywordsWithType('/oh-my-claudecode:ralph fix auth');
+        it('/oh-my-codebuddy:ralph fix auth detects ralph', () => {
+            const result = detectKeywordsWithType('/oh-my-codebuddy:ralph fix auth');
             expect(result.find((r) => r.type === 'ralph')).toBeDefined();
         });
         it('/omc:autopilot implement feature detects autopilot', () => {
@@ -1796,8 +1796,8 @@ This article argues that fake popularity signals damage trust in open source.`;
             expect(result).not.toBeNull();
             expect(result.skill).toBe('ralph');
         });
-        it('parses /oh-my-claudecode:ralph and normalizes skill name', () => {
-            const result = parseExplicitWorkflowSlashInvocation('/oh-my-claudecode:ralph debug this');
+        it('parses /oh-my-codebuddy:ralph and normalizes skill name', () => {
+            const result = parseExplicitWorkflowSlashInvocation('/oh-my-codebuddy:ralph debug this');
             expect(result).not.toBeNull();
             expect(result.skill).toBe('ralph');
         });
@@ -1840,7 +1840,7 @@ This article argues that fake popularity signals damage trust in open source.`;
         it('all three prefix forms produce the same skill name for autopilot', () => {
             const bare = parseExplicitWorkflowSlashInvocation('/autopilot go');
             const omc = parseExplicitWorkflowSlashInvocation('/omc:autopilot go');
-            const full = parseExplicitWorkflowSlashInvocation('/oh-my-claudecode:autopilot go');
+            const full = parseExplicitWorkflowSlashInvocation('/oh-my-codebuddy:autopilot go');
             expect(bare.skill).toBe('autopilot');
             expect(omc.skill).toBe('autopilot');
             expect(full.skill).toBe('autopilot');

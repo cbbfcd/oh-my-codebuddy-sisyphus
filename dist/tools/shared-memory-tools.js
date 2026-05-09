@@ -7,18 +7,18 @@
  * session group or pipeline run.
  *
  * Storage: .omc/state/shared-memory/{namespace}/{key}.json
- * Config gate: agents.sharedMemory.enabled in ~/.claude/.omc-config.json
+ * Config gate: agents.sharedMemory.enabled in ~/.codebuddy/.omc-config.json
  *
- * @see https://github.com/anthropics/oh-my-claudecode/issues/1119
+ * @see https://github.com/anthropics/oh-my-codebuddy/issues/1119
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { validateWorkingDirectory } from '../lib/worktree-paths.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { isSharedMemoryEnabled, writeEntry, readEntry, listEntries, deleteEntry, cleanupExpired, listNamespaces, } from '../lib/shared-memory.js';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-const DISABLED_MSG = `Shared memory is disabled. Set agents.sharedMemory.enabled = true in ${getClaudeConfigDir()}/.omc-config.json to enable.`;
+const DISABLED_MSG = `Shared memory is disabled. Set agents.sharedMemory.enabled = true in ${getCodebuddyConfigDir()}/.omc-config.json to enable.`;
 function disabledResponse() {
     return {
         content: [{ type: 'text', text: DISABLED_MSG }],

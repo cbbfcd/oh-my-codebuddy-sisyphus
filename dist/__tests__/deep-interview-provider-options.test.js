@@ -10,17 +10,17 @@ vi.mock('../team/model-contract.js', () => ({
 import { clearSkillsCache, getBuiltinSkill } from '../features/builtin-skills/skills.js';
 import { renderSkillRuntimeGuidance } from '../features/builtin-skills/runtime-guidance.js';
 describe('deep-interview provider-aware execution recommendations', () => {
-    const originalPluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+    const originalPluginRoot = process.env.CODEBUDDY_PLUGIN_ROOT;
     const originalPath = process.env.PATH;
     beforeEach(() => {
         availability.claude = true;
         availability.codex = false;
         availability.gemini = false;
         if (originalPluginRoot === undefined) {
-            delete process.env.CLAUDE_PLUGIN_ROOT;
+            delete process.env.CODEBUDDY_PLUGIN_ROOT;
         }
         else {
-            process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
+            process.env.CODEBUDDY_PLUGIN_ROOT = originalPluginRoot;
         }
         if (originalPath === undefined) {
             delete process.env.PATH;
@@ -32,10 +32,10 @@ describe('deep-interview provider-aware execution recommendations', () => {
     });
     afterEach(() => {
         if (originalPluginRoot === undefined) {
-            delete process.env.CLAUDE_PLUGIN_ROOT;
+            delete process.env.CODEBUDDY_PLUGIN_ROOT;
         }
         else {
-            process.env.CLAUDE_PLUGIN_ROOT = originalPluginRoot;
+            process.env.CODEBUDDY_PLUGIN_ROOT = originalPluginRoot;
         }
         if (originalPath === undefined) {
             delete process.env.PATH;

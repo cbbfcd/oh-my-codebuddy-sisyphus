@@ -15,7 +15,7 @@ const SKIP_DIRS = new Set([
     '__pycache__', '.mypy_cache', '.pytest_cache', '.ruff_cache',
     'target', '.gradle', 'vendor',
     '.venv', 'venv', 'env',
-    '.omc', '.claude',
+    '.omc', '.codebuddy',
     'tmp', 'temp',
 ]);
 // File extensions considered source/config files
@@ -37,7 +37,7 @@ const SKIP_FILE_SUFFIXES = ['-lock.json', '.lock', '-lock.yaml', '-lock.toml'];
 const IMPORTANT_FILES = new Set([
     'package.json', 'tsconfig.json', 'tsconfig.base.json',
     'pyproject.toml', 'Cargo.toml', 'go.mod', 'go.sum',
-    'CLAUDE.md', 'AGENTS.md', 'README.md', 'CONTRIBUTING.md',
+    'CODEBUDDY.md', 'AGENTS.md', 'README.md', 'CONTRIBUTING.md',
     '.eslintrc.json', 'vitest.config.ts', 'jest.config.ts', 'jest.config.js',
     'Makefile', 'Dockerfile', '.gitignore',
 ]);

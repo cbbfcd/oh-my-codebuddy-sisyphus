@@ -3,7 +3,7 @@
  *
  * Provides tools for reading and writing project memory.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 export declare const projectMemoryReadTool: ToolDefinition<{
     section: z.ZodOptional<z.ZodEnum<['all', 'techStack', 'build', 'conventions', 'structure', 'notes', 'directives']>>;

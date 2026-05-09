@@ -4,7 +4,7 @@
  * Verifies that the installer removes stale OMC-created files from the config
  * directory while preserving user-created files.
  *
- * Contract: setup must clean up ~/.claude/agents and ~/.claude/skills that were
+ * Contract: setup must clean up ~/.codebuddy/agents and ~/.codebuddy/skills that were
  * created by OMC in previous versions but are no longer shipped.
  */
 export {};

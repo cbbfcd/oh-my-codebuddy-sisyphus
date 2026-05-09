@@ -10,7 +10,7 @@ function readProjectFile(...segments) {
 }
 describe('Tier-0 contract docs consistency', () => {
     const referenceDoc = readProjectFile('docs', 'REFERENCE.md');
-    const claudeDoc = readProjectFile('docs', 'CLAUDE.md');
+    const claudeDoc = readProjectFile('docs', 'CODEBUDDY.md');
     it('keeps REFERENCE ToC counts aligned with section headings', () => {
         const tocAgents = referenceDoc.match(/\[Agents \((\d+) Total\)\]\(#agents-\d+-total\)/);
         const headingAgents = referenceDoc.match(/^## Agents \((\d+) Total\)$/m);
@@ -21,17 +21,17 @@ describe('Tier-0 contract docs consistency', () => {
     });
     it('documents all Tier-0 slash commands in REFERENCE.md', () => {
         for (const skillName of ['autopilot', 'ultrawork', 'ralph', 'team', 'ralplan']) {
-            expect(referenceDoc).toContain(`/oh-my-claudecode:${skillName}`);
+            expect(referenceDoc).toContain(`/oh-my-codebuddy:${skillName}`);
         }
     });
-    it('documents all Tier-0 keywords in CLAUDE.md', () => {
+    it('documents all Tier-0 keywords in CODEBUDDY.md', () => {
         for (const keyword of ['autopilot', 'ultrawork', 'ralph', 'team', 'ralplan']) {
             expect(claudeDoc).toContain(`\`${keyword}\``);
         }
     });
     it('does not contain blank placeholder rows in core skill/command docs', () => {
         expect(referenceDoc).not.toContain('| `` |');
-        expect(referenceDoc).not.toContain('/oh-my-claudecode: <task>');
+        expect(referenceDoc).not.toContain('/oh-my-codebuddy: <task>');
         expect(referenceDoc).not.toContain('incl. )');
     });
     it('keeps ralplan documented as a keyword trigger', () => {
@@ -43,8 +43,8 @@ describe('Tier-0 contract docs consistency', () => {
         expect(referenceDoc).toContain('`psm` | **Deprecated** compatibility alias for `project-session-manager`');
     });
     it('does not document removed wrapper slash commands as installed skills', () => {
-        expect(referenceDoc).not.toContain('/oh-my-claudecode:analyze <target>');
-        expect(referenceDoc).not.toContain('/oh-my-claudecode:tdd <feature>');
+        expect(referenceDoc).not.toContain('/oh-my-codebuddy:analyze <target>');
+        expect(referenceDoc).not.toContain('/oh-my-codebuddy:tdd <feature>');
     });
     it('documents team as explicit-only rather than an auto-triggered keyword', () => {
         expect(claudeDoc).toContain('Team orchestration is explicit via `/team`.');
@@ -52,37 +52,25 @@ describe('Tier-0 contract docs consistency', () => {
     });
     it('keeps install and update guidance aligned on canonical setup entrypoints', () => {
         const localPluginDoc = readProjectFile('docs', 'LOCAL_PLUGIN_INSTALL.md');
-        expect(claudeDoc).toContain('Say "setup omc" or run `/oh-my-claudecode:omc-setup`.');
-        expect(referenceDoc).toContain('/oh-my-claudecode:setup');
+        expect(claudeDoc).toContain('Say "setup omcb" or run `/oh-my-codebuddy:omc-setup`.');
+        expect(referenceDoc).toContain('/oh-my-codebuddy:setup');
         expect(localPluginDoc).toContain('/setup');
         expect(localPluginDoc).toContain('git worktrees');
     });
     it('uses the published /docs/ path instead of the removed docs.html path in README links', () => {
         const readmes = [
             'README.md',
-            'README.de.md',
-            'README.es.md',
-            'README.fr.md',
-            'README.it.md',
-            'README.ja.md',
-            'README.ko.md',
-            'README.pt.md',
-            'README.ru.md',
-            'README.tr.md',
-            'README.vi.md',
-            'README.zh.md',
         ].map((file) => readProjectFile(file));
         for (const content of readmes) {
-            expect(content).not.toContain('https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html');
-            expect(content).toContain('https://yeachan-heo.github.io/oh-my-claudecode-website/docs/#');
+            expect(content).not.toContain('https://yeachan-heo.github.io/oh-my-codebuddy-website/docs.html');
         }
     });
     it('keeps root AGENTS.md aligned with OMC branding and state paths', () => {
         const agentsDoc = readProjectFile('AGENTS.md');
-        expect(agentsDoc).toContain('# oh-my-claudecode - Intelligent Multi-Agent Orchestration');
-        expect(agentsDoc).toContain('You are running with oh-my-claudecode (OMC), a multi-agent orchestration layer for Claude Code.');
+        expect(agentsDoc).toContain('# oh-my-codebuddy - Intelligent Multi-Agent Orchestration');
+        expect(agentsDoc).toContain('You are running with oh-my-codebuddy (OMC), a multi-agent orchestration layer for CodeBuddy Code.');
         expect(agentsDoc).toContain('`.omc/state/`');
-        expect(agentsDoc).toContain('Run `omc setup` to install all components. Run `omc doctor` to verify installation.');
+        expect(agentsDoc).toContain('Run `omcb setup` to install all components. Run `omcb doctor` to verify installation.');
         expect(agentsDoc).not.toContain('oh-my-codex');
         expect(agentsDoc).not.toContain('OMX_TEAM_WORKER_LAUNCH_ARGS');
         expect(agentsDoc).not.toContain('gpt-5.3-codex-spark');

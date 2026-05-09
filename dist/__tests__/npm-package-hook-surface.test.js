@@ -6,7 +6,7 @@ const PACKAGE_ROOT = process.cwd();
 const HOOKS_JSON_PATH = join(PACKAGE_ROOT, 'hooks', 'hooks.json');
 const SCRIPTS_ROOT = join(PACKAGE_ROOT, 'scripts');
 const LOCAL_IMPORT_RE = /(?:import\s+(?:[^'"()]+?\s+from\s+)?|import\s*\(|export\s+\*\s+from\s+|export\s+\{[^}]*\}\s+from\s+|require\s*\()\s*['"](\.[^'"]+)['"]/g;
-const PLUGIN_SCRIPT_RE = /"\$CLAUDE_PLUGIN_ROOT"\/(scripts\/[^\s"]+)/g;
+const PLUGIN_SCRIPT_RE = /"\$CODEBUDDY_PLUGIN_ROOT"\/(scripts\/[^\s"]+)/g;
 function listHookScriptEntries() {
     const hooksJson = JSON.parse(readFileSync(HOOKS_JSON_PATH, 'utf-8'));
     const entries = new Set(['scripts/run.cjs']);

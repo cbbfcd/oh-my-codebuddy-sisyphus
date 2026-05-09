@@ -7,7 +7,7 @@
  * - MCP workers: appends to worker's inbox JSONL file
  */
 import { join } from 'node:path';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { appendFileWithMode, ensureDirWithMode, validateResolvedPath } from './fs-utils.js';
 import { getTeamMembers } from './unified-team.js';
 import { sanitizeName } from './tmux-session.js';
@@ -32,7 +32,7 @@ export function routeMessage(teamName, recipientName, content, workingDirectory)
         };
     }
     // MCP worker: write to inbox
-    const teamsBase = join(getClaudeConfigDir(), 'teams');
+    const teamsBase = join(getCodebuddyConfigDir(), 'teams');
     const inboxDir = join(teamsBase, sanitizeName(teamName), 'inbox');
     ensureDirWithMode(inboxDir);
     const inboxPath = join(inboxDir, `${sanitizeName(recipientName)}.jsonl`);
@@ -63,7 +63,7 @@ export function broadcastToTeam(teamName, content, workingDirectory) {
         }
         else {
             // Write to each MCP worker's inbox
-            const teamsBase = join(getClaudeConfigDir(), 'teams');
+            const teamsBase = join(getCodebuddyConfigDir(), 'teams');
             const inboxDir = join(teamsBase, sanitizeName(teamName), 'inbox');
             ensureDirWithMode(inboxDir);
             const inboxPath = join(inboxDir, `${sanitizeName(member.name)}.jsonl`);

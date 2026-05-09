@@ -66,7 +66,7 @@ describe('keyword-detector packaged artifacts', () => {
             const result = runKeywordHook(scriptPath, 'ralph execute and code review this change');
             const context = JSON.stringify(result);
             expect(context).toContain('[MAGIC KEYWORD: RALPH]');
-            expect(context).toContain('Preferred invocation: /oh-my-claudecode:ralph');
+            expect(context).toContain('Preferred invocation: /oh-my-codebuddy:ralph');
             expect(context).toContain('Read fallback:');
             expect(context).not.toContain('name: ralph');
             expect(context).not.toContain('[RALPH + ULTRAWORK');

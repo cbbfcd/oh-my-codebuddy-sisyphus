@@ -1,22 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { isBedrock, isVertexAI, isNonClaudeProvider, isProviderSpecificModelId, resolveClaudeFamily, hasExtendedContextSuffix, isSubagentSafeModelId, resolveInheritedModelFromEnv, shouldAutoForceInherit, } from '../models.js';
+import { isBedrock, isVertexAI, isNonClaudeProvider, isProviderSpecificModelId, resolveCodebuddyFamily, hasExtendedContextSuffix, isSubagentSafeModelId, resolveInheritedModelFromEnv, shouldAutoForceInherit, } from '../models.js';
 import { saveAndClear, restore } from './test-helpers.js';
 const TIER_MODEL_ENV_KEYS = [
     'OMC_MODEL_HIGH',
     'OMC_MODEL_MEDIUM',
     'OMC_MODEL_LOW',
-    'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
-    'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
-    'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
+    'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
     'ANTHROPIC_DEFAULT_OPUS_MODEL',
     'ANTHROPIC_DEFAULT_SONNET_MODEL',
     'ANTHROPIC_DEFAULT_HAIKU_MODEL',
 ];
-const BEDROCK_KEYS = ['CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL', ...TIER_MODEL_ENV_KEYS];
-const VERTEX_KEYS = ['CLAUDE_CODE_USE_VERTEX', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL', ...TIER_MODEL_ENV_KEYS];
+const BEDROCK_KEYS = ['CODEBUDDY_CODE_USE_BEDROCK', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL', ...TIER_MODEL_ENV_KEYS];
+const VERTEX_KEYS = ['CODEBUDDY_CODE_USE_VERTEX', 'CLAUDE_MODEL', 'ANTHROPIC_MODEL', ...TIER_MODEL_ENV_KEYS];
 const ALL_KEYS = [
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_VERTEX',
+    'CODEBUDDY_CODE_USE_BEDROCK',
+    'CODEBUDDY_CODE_USE_VERTEX',
     'CLAUDE_MODEL',
     'ANTHROPIC_MODEL',
     'ANTHROPIC_BASE_URL',
@@ -30,12 +30,12 @@ describe('isBedrock()', () => {
     let saved;
     beforeEach(() => { saved = saveAndClear(BEDROCK_KEYS); });
     afterEach(() => { restore(saved); });
-    it('returns true when CLAUDE_CODE_USE_BEDROCK=1', () => {
-        process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+    it('returns true when CODEBUDDY_CODE_USE_BEDROCK=1', () => {
+        process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
         expect(isBedrock()).toBe(true);
     });
-    it('returns false when CLAUDE_CODE_USE_BEDROCK=0', () => {
-        process.env.CLAUDE_CODE_USE_BEDROCK = '0';
+    it('returns false when CODEBUDDY_CODE_USE_BEDROCK=0', () => {
+        process.env.CODEBUDDY_CODE_USE_BEDROCK = '0';
         expect(isBedrock()).toBe(false);
     });
     // --- ANTHROPIC_MODEL pattern detection ---
@@ -94,8 +94,8 @@ describe('isVertexAI()', () => {
     let saved;
     beforeEach(() => { saved = saveAndClear(VERTEX_KEYS); });
     afterEach(() => { restore(saved); });
-    it('returns true when CLAUDE_CODE_USE_VERTEX=1', () => {
-        process.env.CLAUDE_CODE_USE_VERTEX = '1';
+    it('returns true when CODEBUDDY_CODE_USE_VERTEX=1', () => {
+        process.env.CODEBUDDY_CODE_USE_VERTEX = '1';
         expect(isVertexAI()).toBe(true);
     });
     it('detects vertex_ai/ prefix in ANTHROPIC_MODEL', () => {
@@ -110,8 +110,8 @@ describe('isVertexAI()', () => {
         process.env.ANTHROPIC_MODEL = 'global.anthropic.claude-sonnet-4-6[1m]';
         expect(isVertexAI()).toBe(false);
     });
-    it('returns false when CLAUDE_CODE_USE_VERTEX=0', () => {
-        process.env.CLAUDE_CODE_USE_VERTEX = '0';
+    it('returns false when CODEBUDDY_CODE_USE_VERTEX=0', () => {
+        process.env.CODEBUDDY_CODE_USE_VERTEX = '0';
         expect(isVertexAI()).toBe(false);
     });
     it('returns false when no relevant env var is set', () => {
@@ -133,12 +133,12 @@ describe('isNonClaudeProvider()', () => {
         process.env.ANTHROPIC_MODEL = 'arn:aws:bedrock:us-east-2:123456789012:inference-profile/global.anthropic.claude-opus-4-6-v1:0';
         expect(isNonClaudeProvider()).toBe(true);
     });
-    it('returns true when CLAUDE_CODE_USE_BEDROCK=1', () => {
-        process.env.CLAUDE_CODE_USE_BEDROCK = '1';
+    it('returns true when CODEBUDDY_CODE_USE_BEDROCK=1', () => {
+        process.env.CODEBUDDY_CODE_USE_BEDROCK = '1';
         expect(isNonClaudeProvider()).toBe(true);
     });
-    it('returns true when CLAUDE_CODE_USE_VERTEX=1', () => {
-        process.env.CLAUDE_CODE_USE_VERTEX = '1';
+    it('returns true when CODEBUDDY_CODE_USE_VERTEX=1', () => {
+        process.env.CODEBUDDY_CODE_USE_VERTEX = '1';
         expect(isNonClaudeProvider()).toBe(true);
     });
     it('returns true when OMC_ROUTING_FORCE_INHERIT=true', () => {
@@ -251,26 +251,26 @@ describe('isProviderSpecificModelId()', () => {
     });
 });
 // ---------------------------------------------------------------------------
-// resolveClaudeFamily() — ensure Bedrock profile IDs map to correct families
+// resolveCodebuddyFamily() — ensure Bedrock profile IDs map to correct families
 // ---------------------------------------------------------------------------
-describe('resolveClaudeFamily() — Bedrock inference profile IDs', () => {
+describe('resolveCodebuddyFamily() — Bedrock inference profile IDs', () => {
     it('resolves global. sonnet [1m] profile to SONNET', () => {
-        expect(resolveClaudeFamily('global.anthropic.claude-sonnet-4-6[1m]')).toBe('SONNET');
+        expect(resolveCodebuddyFamily('global.anthropic.claude-sonnet-4-6[1m]')).toBe('SONNET');
     });
     it('resolves us. opus profile to OPUS', () => {
-        expect(resolveClaudeFamily('us.anthropic.claude-opus-4-6-v1')).toBe('OPUS');
+        expect(resolveCodebuddyFamily('us.anthropic.claude-opus-4-6-v1')).toBe('OPUS');
     });
     it('resolves eu. haiku profile to HAIKU', () => {
-        expect(resolveClaudeFamily('eu.anthropic.claude-haiku-4-5-v1:0')).toBe('HAIKU');
+        expect(resolveCodebuddyFamily('eu.anthropic.claude-haiku-4-5-v1:0')).toBe('HAIKU');
     });
     it('resolves bare Anthropic model IDs', () => {
-        expect(resolveClaudeFamily('claude-sonnet-4-6')).toBe('SONNET');
-        expect(resolveClaudeFamily('claude-opus-4-6')).toBe('OPUS');
-        expect(resolveClaudeFamily('claude-haiku-4-5')).toBe('HAIKU');
+        expect(resolveCodebuddyFamily('claude-sonnet-4-6')).toBe('SONNET');
+        expect(resolveCodebuddyFamily('claude-opus-4-6')).toBe('OPUS');
+        expect(resolveCodebuddyFamily('claude-haiku-4-5')).toBe('HAIKU');
     });
     it('returns null for non-Claude model IDs', () => {
-        expect(resolveClaudeFamily('gpt-4o')).toBeNull();
-        expect(resolveClaudeFamily('gemini-1.5-pro')).toBeNull();
+        expect(resolveCodebuddyFamily('gpt-4o')).toBeNull();
+        expect(resolveCodebuddyFamily('gemini-1.5-pro')).toBeNull();
     });
 });
 // ---------------------------------------------------------------------------

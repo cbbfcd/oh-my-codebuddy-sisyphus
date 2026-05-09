@@ -3,7 +3,7 @@
 // PostToolUse hook installer + fs-watch fallback poller for worker auto-commit cadence.
 //
 // Two commit-cadence mechanisms:
-//   hook   — writes {worktreePath}/.claude/settings.json with a PostToolUse hook that
+//   hook   — writes {worktreePath}/.codebuddy/settings.json with a PostToolUse hook that
 //             auto-commits after every Write/Edit/MultiEdit tool use (Claude Code only).
 //   fallback-poll — uses node:fs.watch with a 3 s debounce to detect filesystem changes
 //             and auto-commit (for codex/gemini workers that lack PostToolUse support).
@@ -96,7 +96,7 @@ async function mergeSettingsWithHook(settingsPath, hookCommand) {
 // installPostToolUseHook
 // ---------------------------------------------------------------------------
 /**
- * Writes `{worktreePath}/.claude/settings.json` containing a PostToolUse hook
+ * Writes `{worktreePath}/.codebuddy/settings.json` containing a PostToolUse hook
  * that auto-commits after every Write/Edit/MultiEdit.
  *
  * Skips installation if the .hook-paused sentinel is present.
@@ -108,7 +108,7 @@ export async function installPostToolUseHook(worktreePath, workerName) {
     if (isHookPaused(worktreePath)) {
         return;
     }
-    const claudeDir = join(worktreePath, '.claude');
+    const claudeDir = join(worktreePath, '.codebuddy');
     await mkdir(claudeDir, { recursive: true });
     const settingsPath = join(claudeDir, 'settings.json');
     const hookCommand = buildHookCommand(workerName);
@@ -222,7 +222,7 @@ export async function installCommitCadence(ctx) {
     if (!ctx.enabled) {
         return { method: 'none' };
     }
-    if (ctx.agentType === 'claude') {
+    if (ctx.agentType === 'claude' || ctx.agentType === 'codebuddy') {
         await installPostToolUseHook(ctx.worktreePath, ctx.workerName);
         return { method: 'hook' };
     }
@@ -234,9 +234,9 @@ export async function installCommitCadence(ctx) {
  * For fallback-poll workers the caller is responsible for stopping the poller handle.
  */
 export async function uninstallCommitCadence(ctx) {
-    if (ctx.agentType !== 'claude')
+    if (ctx.agentType !== 'claude' && ctx.agentType !== 'codebuddy')
         return;
-    const settingsPath = join(ctx.worktreePath, '.claude', 'settings.json');
+    const settingsPath = join(ctx.worktreePath, '.codebuddy', 'settings.json');
     try {
         const raw = await readFile(settingsPath, 'utf-8');
         const parsed = JSON.parse(raw);

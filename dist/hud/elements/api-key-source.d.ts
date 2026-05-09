@@ -3,7 +3,7 @@
  *
  * Detects and renders where the active ANTHROPIC_API_KEY comes from:
  * - 'project': set in .claude/settings.local.json (project-level)
- * - 'global': set in ~/.claude/settings.json (user-level)
+ * - 'global': set in ~/.codebuddy/settings.json (user-level)
  * - 'env': present only as an environment variable
  *
  * Never displays the actual key value.
@@ -14,7 +14,7 @@ export type ApiKeySource = 'project' | 'global' | 'env';
  *
  * Priority:
  * 1. Project-level: .claude/settings.local.json in cwd
- * 2. Global-level: ~/.claude/settings.json
+ * 2. Global-level: ~/.codebuddy/settings.json
  * 3. Environment variable
  *
  * @param cwd - Current working directory (project root)

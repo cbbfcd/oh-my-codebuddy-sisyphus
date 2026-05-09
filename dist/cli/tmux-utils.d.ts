@@ -49,9 +49,13 @@ export interface TmuxPaneSnapshot {
  */
 export declare function isTmuxAvailable(): boolean;
 /**
- * Check if claude CLI is available on the system
+ * Check if codebuddy CLI is available on the system
  */
-export declare function isClaudeAvailable(): boolean;
+export declare function isCodebuddyAvailable(): boolean;
+/**
+ * @deprecated Use isCodebuddyAvailable() instead
+ */
+export declare const isClaudeAvailable: typeof isCodebuddyAvailable;
 /**
  * Options for `resolveLaunchPolicy`. `requireTmux=true` makes
  * CMUX_SURFACE_ID stop demoting to 'direct'. The caller is responsible for

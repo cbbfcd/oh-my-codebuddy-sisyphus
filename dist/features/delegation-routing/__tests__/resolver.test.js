@@ -17,7 +17,7 @@ describe('resolveDelegation', () => {
                 roles: { explore: { provider: 'gemini', tool: 'Task', model: 'gemini-3-flash' } }
             }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('gemini-3-flash');
         expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('deprecated'));
@@ -28,7 +28,7 @@ describe('resolveDelegation', () => {
             agentRole: 'explore',
             config: { enabled: false, roles: { explore: { provider: 'gemini', tool: 'Task', model: 'flash' } } }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
     });
     // Test 4: Unknown roles with deprecated codex defaultProvider fall back to claude
@@ -37,7 +37,7 @@ describe('resolveDelegation', () => {
             agentRole: 'unknown-role',
             config: { enabled: true, defaultProvider: 'codex' }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('unknown-role');
         expect(result.reason).toContain('Fallback to Claude Task');
@@ -46,7 +46,7 @@ describe('resolveDelegation', () => {
     // Test 5: Empty config uses defaults
     it('should use defaults when config is empty', () => {
         const result = resolveDelegation({ agentRole: 'architect' });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('architect');
     });
@@ -56,7 +56,7 @@ describe('resolveDelegation', () => {
             agentRole: 'architect',
             explicitTool: 'Task'
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('architect');
     });
@@ -66,7 +66,7 @@ describe('resolveDelegation', () => {
             agentRole: 'executor',
             config: { enabled: true, roles: {} }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('executor');
         expect(result.reason).toContain('Default heuristic');
@@ -78,7 +78,7 @@ describe('resolveDelegation', () => {
             config: {
                 enabled: true,
                 roles: {
-                    'custom-role': { provider: 'claude', tool: 'Task', agentType: 'explore' }
+                    'custom-role': { provider: 'codebuddy', tool: 'Task', agentType: 'explore' }
                 }
             }
         });
@@ -95,17 +95,17 @@ describe('resolveDelegation', () => {
                         provider: 'gemini',
                         tool: 'Task',
                         model: 'gemini-2.5-pro',
-                        fallback: ['claude:explore', 'codex:gpt-5']
+                        fallback: ['codebuddy:explore', 'codex:gpt-5']
                     }
                 }
             }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('gemini-2.5-pro');
         expect(result.reason).toContain('Configured routing');
         expect(result.reason).toContain('deprecated');
-        expect(result.fallbackChain).toEqual(['claude:explore', 'codex:gpt-5']);
+        expect(result.fallbackChain).toEqual(['codebuddy:explore', 'codex:gpt-5']);
         expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('deprecated'));
     });
     // Test 14: defaultProvider set to gemini falls back to claude (deprecated)
@@ -114,7 +114,7 @@ describe('resolveDelegation', () => {
             agentRole: 'unknown-role',
             config: { enabled: true, defaultProvider: 'gemini' }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('unknown-role');
         expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('deprecated'));
@@ -128,7 +128,7 @@ describe('resolveDelegation', () => {
                 roles: { explore: { provider: 'gemini', tool: 'Task', model: 'flash' } }
             }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('nonexistent-role');
         expect(result.reason).toContain('Fallback to Claude Task');
@@ -142,7 +142,7 @@ describe('resolveDelegation', () => {
             }
         });
         // When enabled is undefined, isDelegationEnabled returns false
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('explore');
         expect(result.reason).toContain('Default heuristic');
@@ -153,7 +153,7 @@ describe('resolveDelegation', () => {
             agentRole: 'architect',
             config: { enabled: true, roles: {} }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('architect');
         expect(result.reason).toContain('Default heuristic');
@@ -184,7 +184,7 @@ describe('resolveDelegation', () => {
     ])('should map role %s to default agent %s', (role, expectedAgent) => {
         const result = resolveDelegation({ agentRole: role });
         expect(result.agentOrModel).toBe(expectedAgent);
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
     });
     // Test 19: Undefined config
     it('should handle undefined config gracefully', () => {
@@ -192,7 +192,7 @@ describe('resolveDelegation', () => {
             agentRole: 'explore',
             config: undefined
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
     });
     // Test 20: Config with model and agentType - model takes precedence
@@ -203,7 +203,7 @@ describe('resolveDelegation', () => {
                 enabled: true,
                 roles: {
                     'custom-role': {
-                        provider: 'claude',
+                        provider: 'codebuddy',
                         tool: 'Task',
                         model: 'custom-model',
                         agentType: 'explore'
@@ -219,7 +219,7 @@ describe('resolveDelegation', () => {
             agentRole: 'totally-unknown-role',
             config: { enabled: true, defaultProvider: 'gemini' }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('totally-unknown-role');
         expect(result.reason).toContain('Fallback to Claude Task');
@@ -232,7 +232,7 @@ describe('resolveDelegation', () => {
             agentRole: 'totally-unknown-role',
             config: { enabled: true, defaultProvider: 'codex' }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('totally-unknown-role');
         expect(result.reason).toContain('Fallback to Claude Task');
@@ -245,7 +245,7 @@ describe('resolveDelegation', () => {
             agentRole: 'totally-unknown-role',
             config: { enabled: true, defaultProvider: 'claude' }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('totally-unknown-role');
         expect(result.reason).toContain('Fallback to Claude Task');
@@ -258,7 +258,7 @@ describe('resolveDelegation', () => {
             config: { enabled: true, defaultProvider: 'gemini' }
         });
         // architect is in ROLE_CATEGORY_DEFAULTS, so should use Claude subagent
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
         expect(result.agentOrModel).toBe('architect');
         expect(result.reason).toContain('Default heuristic');
@@ -266,9 +266,9 @@ describe('resolveDelegation', () => {
 });
 describe('parseFallbackChain', () => {
     it('should parse valid fallback strings', () => {
-        const result = parseFallbackChain(['claude:explore', 'codex:gpt-5']);
+        const result = parseFallbackChain(['codebuddy:explore', 'codex:gpt-5']);
         expect(result).toHaveLength(2);
-        expect(result[0]).toEqual({ provider: 'claude', agentOrModel: 'explore' });
+        expect(result[0]).toEqual({ provider: 'codebuddy', agentOrModel: 'explore' });
         expect(result[1]).toEqual({ provider: 'codex', agentOrModel: 'gpt-5' });
     });
     it('should return empty array for undefined input', () => {
@@ -284,9 +284,9 @@ describe('parseFallbackChain', () => {
         expect(result[1]).toEqual({ provider: 'gemini', agentOrModel: 'gemini-2.5-pro' });
     });
     it('should skip invalid entries without colon', () => {
-        const result = parseFallbackChain(['claude:explore', 'invalid-entry', 'codex:gpt-5']);
+        const result = parseFallbackChain(['codebuddy:explore', 'invalid-entry', 'codex:gpt-5']);
         expect(result).toHaveLength(2);
-        expect(result[0]).toEqual({ provider: 'claude', agentOrModel: 'explore' });
+        expect(result[0]).toEqual({ provider: 'codebuddy', agentOrModel: 'explore' });
         expect(result[1]).toEqual({ provider: 'codex', agentOrModel: 'gpt-5' });
     });
     it('should skip entries with empty provider', () => {
@@ -295,7 +295,7 @@ describe('parseFallbackChain', () => {
         expect(result[0]).toEqual({ provider: 'codex', agentOrModel: 'gpt-5' });
     });
     it('should skip entries with empty agent/model', () => {
-        const result = parseFallbackChain(['claude:', 'codex:gpt-5']);
+        const result = parseFallbackChain(['codebuddy:', 'codex:gpt-5']);
         expect(result).toHaveLength(1);
         expect(result[0]).toEqual({ provider: 'codex', agentOrModel: 'gpt-5' });
     });
@@ -309,20 +309,20 @@ describe('parseFallbackChain', () => {
         expect(result).toEqual([]);
     });
     it('should preserve case sensitivity', () => {
-        const result = parseFallbackChain(['Claude:Explore', 'CODEX:GPT-5']);
+        const result = parseFallbackChain(['Codebuddy:Explore', 'CODEX:GPT-5']);
         expect(result).toHaveLength(2);
-        expect(result[0]).toEqual({ provider: 'Claude', agentOrModel: 'Explore' });
+        expect(result[0]).toEqual({ provider: 'Codebuddy', agentOrModel: 'Explore' });
         expect(result[1]).toEqual({ provider: 'CODEX', agentOrModel: 'GPT-5' });
     });
     it('should handle entries with extra whitespace in model name', () => {
-        const result = parseFallbackChain(['claude: explore with spaces']);
+        const result = parseFallbackChain(['codebuddy: explore with spaces']);
         expect(result).toHaveLength(1);
-        expect(result[0]).toEqual({ provider: 'claude', agentOrModel: 'explore with spaces' });
+        expect(result[0]).toEqual({ provider: 'codebuddy', agentOrModel: 'explore with spaces' });
     });
     it('should trim whitespace from fallback entries', () => {
-        const result = parseFallbackChain(['  claude  :  explore  ', '  codex  :  gpt-5  ']);
+        const result = parseFallbackChain(['  codebuddy  :  explore  ', '  codex  :  gpt-5  ']);
         expect(result).toHaveLength(2);
-        expect(result[0]).toEqual({ provider: 'claude', agentOrModel: 'explore' });
+        expect(result[0]).toEqual({ provider: 'codebuddy', agentOrModel: 'explore' });
         expect(result[1]).toEqual({ provider: 'codex', agentOrModel: 'gpt-5' });
     });
 });
@@ -335,11 +335,11 @@ describe('resolveDelegation provider/tool mismatch correction', () => {
             config: {
                 enabled: true,
                 roles: {
-                    'test-role': { provider: 'claude', tool: 'Task', model: 'test' }
+                    'test-role': { provider: 'codebuddy', tool: 'Task', model: 'test' }
                 }
             }
         });
-        expect(result.provider).toBe('claude');
+        expect(result.provider).toBe('codebuddy');
         expect(result.tool).toBe('Task');
     });
 });

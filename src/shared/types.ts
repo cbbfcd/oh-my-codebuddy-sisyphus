@@ -337,6 +337,7 @@ export interface ResolveOptions {
  * Provider type for delegation routing
  */
 export type DelegationProvider =
+  | "codebuddy"
   | "claude"
   /** Use /team to coordinate Codex CLI workers in tmux panes. */
   | "codex"

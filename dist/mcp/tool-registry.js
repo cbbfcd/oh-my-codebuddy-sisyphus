@@ -26,7 +26,7 @@ import { sharedMemoryTools } from '../tools/shared-memory-tools.js';
 import { deepinitManifestTool } from '../tools/deepinit-manifest.js';
 import { wikiTools } from '../tools/wiki-tools.js';
 import { skillsTools } from '../tools/skills-tools.js';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 /** All tools exposed by the standalone server, in registration order. */
 export const allTools = [
     ...lspTools,

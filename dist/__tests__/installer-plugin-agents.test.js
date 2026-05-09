@@ -7,9 +7,9 @@ vi.mock('fs', async () => {
     const { join: pathJoin } = await import('path');
     const repoRoot = process.cwd();
     const sourceAgentsDir = pathJoin(repoRoot, 'src', 'agents');
-    const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CLAUDE.md');
+    const sourceClaudeMdPath = pathJoin(repoRoot, 'src', 'docs', 'CODEBUDDY.md');
     const realAgentsDir = pathJoin(repoRoot, 'agents');
-    const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CLAUDE.md');
+    const realClaudeMdPath = pathJoin(repoRoot, 'docs', 'CODEBUDDY.md');
     const withRedirect = (pathLike) => {
         const normalized = String(pathLike).replace(/\\/g, '/');
         const normalizedSourceAgentsDir = sourceAgentsDir.replace(/\\/g, '/');
@@ -34,7 +34,7 @@ vi.mock('fs', async () => {
 });
 async function loadInstallerWithEnv(claudeConfigDir, homeDir) {
     vi.resetModules();
-    process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+    process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
     process.env.HOME = homeDir;
     return import('../installer/index.js');
 }
@@ -47,18 +47,18 @@ describe('installer legacy agent sync gating (issue #1502)', () => {
     beforeEach(() => {
         tempRoot = mkdtempSync(join(tmpdir(), 'omc-installer-plugin-agents-'));
         homeDir = join(tempRoot, 'home');
-        claudeConfigDir = join(homeDir, '.claude');
+        claudeConfigDir = join(homeDir, '.codebuddy');
         mkdirSync(homeDir, { recursive: true });
         mkdirSync(claudeConfigDir, { recursive: true });
-        originalClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR;
+        originalClaudeConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
         originalHome = process.env.HOME;
     });
     afterEach(() => {
         if (originalClaudeConfigDir === undefined) {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
         else {
-            process.env.CLAUDE_CONFIG_DIR = originalClaudeConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = originalClaudeConfigDir;
         }
         if (originalHome === undefined) {
             delete process.env.HOME;
@@ -69,8 +69,8 @@ describe('installer legacy agent sync gating (issue #1502)', () => {
         rmSync(tempRoot, { recursive: true, force: true });
         vi.resetModules();
     });
-    it('skips recreating ~/.claude/agents when installed plugin agent files already exist', async () => {
-        const pluginInstallPath = join(claudeConfigDir, 'plugins', 'cache', 'omc', 'oh-my-claudecode', '9.9.9');
+    it('skips recreating ~/.codebuddy/agents when installed plugin agent files already exist', async () => {
+        const pluginInstallPath = join(claudeConfigDir, 'plugins', 'cache', 'omc', 'oh-my-codebuddy', '9.9.9');
         const pluginAgentsDir = join(pluginInstallPath, 'agents');
         mkdirSync(pluginAgentsDir, { recursive: true });
         writeFileSync(join(pluginAgentsDir, 'executor.md'), '---\nname: executor\ndescription: test\n---\n');
@@ -78,7 +78,7 @@ describe('installer legacy agent sync gating (issue #1502)', () => {
         mkdirSync(join(claudeConfigDir, 'plugins'), { recursive: true });
         writeFileSync(installedPluginsPath, JSON.stringify({
             plugins: {
-                'oh-my-claudecode@omc': [
+                'oh-my-codebuddy@omc': [
                     { installPath: pluginInstallPath }
                 ]
             }

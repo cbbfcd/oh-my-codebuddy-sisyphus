@@ -252,7 +252,7 @@ export async function startTeam(config) {
     for (let i = 0; i < tasks.length; i++) {
         const wName = workerName(i);
         workerNames.push(wName);
-        const agentType = agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'claude';
+        const agentType = agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'codebuddy';
         await ensureWorkerStateDir(teamName, wName, cwd);
         await writeWorkerOverlay({
             teamName, workerName: wName, agentType,
@@ -540,7 +540,7 @@ export async function spawnWorkerForTask(runtime, workerNameValue, taskIndex) {
     const workerIndex = parseWorkerIndex(workerNameValue);
     const agentType = runtime.config.agentTypes[workerIndex % runtime.config.agentTypes.length]
         ?? runtime.config.agentTypes[0]
-        ?? 'claude';
+        ?? 'codebuddy';
     const usePromptMode = isPromptModeAgent(agentType);
     // Build the initial task instruction and write inbox before spawn.
     // For prompt-mode agents the instruction is passed via CLI flag;
@@ -713,7 +713,7 @@ export async function shutdownTeam(teamName, sessionName, cwd, timeoutMs = 30_00
     // Polling for ACK files on CLI worker teams wastes the full timeoutMs on every shutdown.
     // Detect CLI worker teams by checking if all agent types are known CLI types, and skip
     // ACK polling — the tmux kill below handles process cleanup instead.
-    const CLI_AGENT_TYPES = new Set(['claude', 'codex', 'gemini']);
+    const CLI_AGENT_TYPES = new Set(['codebuddy', 'claude', 'codex', 'gemini']);
     const agentTypes = configData?.agentTypes ?? [];
     const isCliWorkerTeam = agentTypes.length > 0 && agentTypes.every(t => CLI_AGENT_TYPES.has(t));
     if (!isCliWorkerTeam) {

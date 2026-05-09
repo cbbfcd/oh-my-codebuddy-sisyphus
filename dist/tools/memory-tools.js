@@ -3,7 +3,7 @@
  *
  * Provides tools for reading and writing project memory.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { getWorktreeProjectMemoryPath, ensureOmcDir, validateWorkingDirectory, } from '../lib/worktree-paths.js';
 import { loadProjectMemory, saveProjectMemory, addCustomNote, addDirective, } from '../hooks/project-memory/index.js';
 import { mergeProjectMemory } from '../lib/project-memory-merge.js';

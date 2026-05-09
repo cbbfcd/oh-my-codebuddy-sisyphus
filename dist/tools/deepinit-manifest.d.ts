@@ -12,7 +12,7 @@
  *
  * @see https://github.com/cbbfcd/oh-my-codebuddy/issues/1719
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import type { ToolDefinition } from './types.js';
 /** Sorted file list for a single directory */
 interface DirectoryEntry {

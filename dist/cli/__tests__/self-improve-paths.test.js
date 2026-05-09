@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -11,7 +11,7 @@ function readJson(command, args) {
 describe('self-improve path scoping helpers', () => {
     let root;
     beforeEach(() => {
-        root = mkdtempSync(join(tmpdir(), 'omc-self-improve-paths-'));
+        root = realpathSync(mkdtempSync(join(tmpdir(), 'omc-self-improve-paths-')));
     });
     afterEach(() => {
         rmSync(root, { recursive: true, force: true });

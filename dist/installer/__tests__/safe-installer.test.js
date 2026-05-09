@@ -28,47 +28,47 @@ const TEST_CLAUDE_DIR = join(homedir(), '.claude-test-safe-installer');
 const TEST_SETTINGS_FILE = join(TEST_CLAUDE_DIR, 'settings.json');
 describe('isOmcHook', () => {
     it('returns true for commands containing "omc"', () => {
-        expect(isOmcHook('node ~/.claude/hooks/omc-hook.mjs')).toBe(true);
-        expect(isOmcHook('bash $HOME/.claude/hooks/omc-detector.sh')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/omc-hook.mjs')).toBe(true);
+        expect(isOmcHook('bash $HOME/.codebuddy/hooks/omc-detector.sh')).toBe(true);
         expect(isOmcHook('/usr/bin/omc-tool')).toBe(true);
     });
-    it('returns true for commands containing "oh-my-claudecode"', () => {
-        expect(isOmcHook('node ~/.claude/hooks/oh-my-claudecode-hook.mjs')).toBe(true);
-        expect(isOmcHook('bash $HOME/.claude/hooks/oh-my-claudecode.sh')).toBe(true);
+    it('returns true for commands containing "oh-my-codebuddy"', () => {
+        expect(isOmcHook('node ~/.codebuddy/hooks/oh-my-codebuddy-hook.mjs')).toBe(true);
+        expect(isOmcHook('bash $HOME/.codebuddy/hooks/oh-my-codebuddy.sh')).toBe(true);
     });
-    it('returns false for commands not containing omc or oh-my-claudecode', () => {
-        expect(isOmcHook('node ~/.claude/hooks/other-plugin.mjs')).toBe(false);
-        expect(isOmcHook('bash $HOME/.claude/hooks/beads-hook.sh')).toBe(false);
+    it('returns false for commands not containing omc or oh-my-codebuddy', () => {
+        expect(isOmcHook('node ~/.codebuddy/hooks/other-plugin.mjs')).toBe(false);
+        expect(isOmcHook('bash $HOME/.codebuddy/hooks/beads-hook.sh')).toBe(false);
         expect(isOmcHook('python /usr/bin/custom-hook.py')).toBe(false);
     });
     it('is case-insensitive', () => {
-        expect(isOmcHook('node ~/.claude/hooks/OMC-hook.mjs')).toBe(true);
-        expect(isOmcHook('bash $HOME/.claude/hooks/OH-MY-CLAUDECODE.sh')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/OMC-hook.mjs')).toBe(true);
+        expect(isOmcHook('bash $HOME/.codebuddy/hooks/OH-MY-CODEBUDDY.sh')).toBe(true);
     });
 });
 describe('isOmcHook detection', () => {
     it('detects real OMC hooks correctly', () => {
-        expect(isOmcHook('node ~/.claude/hooks/omc-hook.mjs')).toBe(true);
-        expect(isOmcHook('node ~/.claude/hooks/oh-my-claudecode-hook.mjs')).toBe(true);
-        expect(isOmcHook('node ~/.claude/hooks/omc-pre-tool-use.mjs')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/omc-hook.mjs')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/oh-my-codebuddy-hook.mjs')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/omc-pre-tool-use.mjs')).toBe(true);
         expect(isOmcHook('/usr/local/bin/omc')).toBe(true);
     });
     it('detects actual OMC hook commands from settings.json (issue #606)', () => {
         // These are the real commands OMC installs into settings.json
-        expect(isOmcHook('node "$HOME/.claude/hooks/keyword-detector.mjs"')).toBe(true);
-        expect(isOmcHook('node "$HOME/.claude/hooks/session-start.mjs"')).toBe(true);
-        expect(isOmcHook('node "$HOME/.claude/hooks/pre-tool-use.mjs"')).toBe(true);
-        expect(isOmcHook('node "$HOME/.claude/hooks/post-tool-use.mjs"')).toBe(true);
-        expect(isOmcHook('node "$HOME/.claude/hooks/post-tool-use-failure.mjs"')).toBe(true);
-        expect(isOmcHook('node "$HOME/.claude/hooks/persistent-mode.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/keyword-detector.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/session-start.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/post-tool-use.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/post-tool-use-failure.mjs"')).toBe(true);
+        expect(isOmcHook('node "$HOME/.codebuddy/hooks/persistent-mode.mjs"')).toBe(true);
     });
     it('detects custom-profile OMC hook commands by hook filename', () => {
         expect(isOmcHook('node "/tmp/custom-claude/hooks/keyword-detector.mjs"')).toBe(true);
     });
-    it('detects CLAUDE_CONFIG_DIR-aware hook commands', () => {
-        expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/keyword-detector.mjs"')).toBe(true);
-        expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/pre-tool-use.mjs"')).toBe(true);
-        expect(isOmcHook('node "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/persistent-mode.mjs"')).toBe(true);
+    it('detects CODEBUDDY_CONFIG_DIR-aware hook commands', () => {
+        expect(isOmcHook('node "${CODEBUDDY_CONFIG_DIR:-$HOME/.claude}/hooks/keyword-detector.mjs"')).toBe(true);
+        expect(isOmcHook('node "${CODEBUDDY_CONFIG_DIR:-$HOME/.claude}/hooks/pre-tool-use.mjs"')).toBe(true);
+        expect(isOmcHook('node "${CODEBUDDY_CONFIG_DIR:-$HOME/.claude}/hooks/persistent-mode.mjs"')).toBe(true);
     });
     it('detects Windows-style OMC hook commands (issue #606)', () => {
         expect(isOmcHook('node "%USERPROFILE%\\.claude\\hooks\\keyword-detector.mjs"')).toBe(true);
@@ -81,8 +81,8 @@ describe('isOmcHook detection', () => {
         expect(isOmcHook('node ~/other-plugin/hooks/detector.mjs')).toBe(false);
     });
     it('uses case-insensitive matching', () => {
-        expect(isOmcHook('node ~/.claude/hooks/OMC-hook.mjs')).toBe(true);
-        expect(isOmcHook('OH-MY-CLAUDECODE-detector.sh')).toBe(true);
+        expect(isOmcHook('node ~/.codebuddy/hooks/OMC-hook.mjs')).toBe(true);
+        expect(isOmcHook('OH-MY-CODEBUDDY-detector.sh')).toBe(true);
     });
 });
 describe('Safe Installer - Hook Conflict Detection', () => {
@@ -92,15 +92,15 @@ describe('Safe Installer - Hook Conflict Detection', () => {
             rmSync(TEST_CLAUDE_DIR, { recursive: true, force: true });
         }
         mkdirSync(TEST_CLAUDE_DIR, { recursive: true });
-        // Mock CLAUDE_CONFIG_DIR for testing
-        process.env.TEST_CLAUDE_CONFIG_DIR = TEST_CLAUDE_DIR;
+        // Mock CODEBUDDY_CONFIG_DIR for testing
+        process.env.TEST_CODEBUDDY_CONFIG_DIR = TEST_CLAUDE_DIR;
     });
     afterEach(() => {
         // Clean up
         if (existsSync(TEST_CLAUDE_DIR)) {
             rmSync(TEST_CLAUDE_DIR, { recursive: true, force: true });
         }
-        delete process.env.TEST_CLAUDE_CONFIG_DIR;
+        delete process.env.TEST_CODEBUDDY_CONFIG_DIR;
     });
     it('detects conflict when PreToolUse is owned by another plugin', () => {
         // Create settings.json with non-OMC hook
@@ -111,7 +111,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
                         hooks: [
                             {
                                 type: 'command',
-                                command: 'node ~/.claude/hooks/beads-hook.mjs'
+                                command: 'node ~/.codebuddy/hooks/beads-hook.mjs'
                             }
                         ]
                     }
@@ -128,7 +128,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
         const conflicts = detectConflicts(existingSettings.hooks);
         expect(conflicts).toHaveLength(1);
         expect(conflicts[0].eventType).toBe('PreToolUse');
-        expect(conflicts[0].existingCommand).toBe('node ~/.claude/hooks/beads-hook.mjs');
+        expect(conflicts[0].existingCommand).toBe('node ~/.codebuddy/hooks/beads-hook.mjs');
     });
     it('does not detect conflict when hook is OMC-owned', () => {
         const existingSettings = {
@@ -138,7 +138,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
                         hooks: [
                             {
                                 type: 'command',
-                                command: 'node "$HOME/.claude/hooks/pre-tool-use.mjs"'
+                                command: 'node "$HOME/.codebuddy/hooks/pre-tool-use.mjs"'
                             }
                         ]
                     }
@@ -156,7 +156,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
                         hooks: [
                             {
                                 type: 'command',
-                                command: 'node ~/.claude/hooks/beads-pre-tool-use.mjs'
+                                command: 'node ~/.codebuddy/hooks/beads-pre-tool-use.mjs'
                             }
                         ]
                     }
@@ -166,7 +166,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
                         hooks: [
                             {
                                 type: 'command',
-                                command: 'python ~/.claude/hooks/custom-post-tool.py'
+                                command: 'python ~/.codebuddy/hooks/custom-post-tool.py'
                             }
                         ]
                     }
@@ -176,7 +176,7 @@ describe('Safe Installer - Hook Conflict Detection', () => {
                         hooks: [
                             {
                                 type: 'command',
-                                command: 'node "$HOME/.claude/hooks/keyword-detector.mjs"'
+                                command: 'node "$HOME/.codebuddy/hooks/keyword-detector.mjs"'
                             }
                         ]
                     }

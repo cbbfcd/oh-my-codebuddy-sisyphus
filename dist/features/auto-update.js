@@ -1,7 +1,7 @@
 /**
  * Auto-Update System
  *
- * Provides version checking and auto-update functionality for oh-my-claudecode.
+ * Provides version checking and auto-update functionality for oh-my-codebuddy.
  *
  * Features:
  * - Check for new versions from GitHub releases
@@ -13,23 +13,23 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { execSync, execFileSync } from 'child_process';
 import { install as installOmc, HOOKS_DIR, isProjectScopedPlugin, isRunningAsPlugin, copyPluginSyncPayload, syncInstalledPluginPayload, } from '../installer/index.js';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { purgeStalePluginCacheVersions } from '../utils/paths.js';
 import { isAutoUpdateDisabled } from '../lib/security-config.js';
 import { OMC_CONFIG_FILE_REL } from '../lib/paths.js';
 /** GitHub repository information */
-export const REPO_OWNER = 'Yeachan-Heo';
-export const REPO_NAME = 'oh-my-claudecode';
+export const REPO_OWNER = 'anthropic-ai';
+export const REPO_NAME = 'oh-my-codebuddy';
 export const GITHUB_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 export const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}`;
 /**
  * Best-effort sync of the Claude Code marketplace clone.
- * The marketplace clone at ~/.claude/plugins/marketplaces/omc/ is used by
+ * The marketplace clone at ~/.codebuddy/plugins/marketplaces/omc/ is used by
  * Claude Code to populate the plugin cache. If it's stale, `/plugin install`
  * and cache rebuilds reinstall old versions. (See #506)
  */
 function syncMarketplaceClone(verbose = false) {
-    const marketplacePath = join(getClaudeConfigDir(), 'plugins', 'marketplaces', 'omc');
+    const marketplacePath = join(getCodebuddyConfigDir(), 'plugins', 'marketplaces', 'omc');
     if (!existsSync(marketplacePath)) {
         return { ok: true, message: 'Marketplace clone not found; skipping' };
     }
@@ -124,7 +124,7 @@ export function shouldBlockStandaloneUpdateInCurrentSession() {
     return false;
 }
 export function syncPluginCache(verbose = false) {
-    const pluginCacheRoot = join(getClaudeConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
+    const pluginCacheRoot = join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
     if (!existsSync(pluginCacheRoot)) {
         return { synced: false, skipped: true, errors: [] };
     }
@@ -138,7 +138,7 @@ export function syncPluginCache(verbose = false) {
         if (!npmRoot) {
             throw new Error('npm root -g returned an empty path');
         }
-        const sourceRoot = join(npmRoot, 'oh-my-claude-sisyphus');
+        const sourceRoot = join(npmRoot, 'oh-my-codebuddy-sisyphus');
         const packageJsonPath = join(sourceRoot, 'package.json');
         const packageJsonRaw = String(readFileSync(packageJsonPath, 'utf-8') ?? '');
         const packageMetadata = JSON.parse(packageJsonRaw);
@@ -170,10 +170,10 @@ export function syncPluginCache(verbose = false) {
         return { synced: false, skipped: false, errors: [message] };
     }
 }
-/** Installation paths (respects CLAUDE_CONFIG_DIR env var) */
-export const CLAUDE_CONFIG_DIR = getClaudeConfigDir();
-export const VERSION_FILE = join(CLAUDE_CONFIG_DIR, '.omc-version.json');
-export const CONFIG_FILE = join(CLAUDE_CONFIG_DIR, OMC_CONFIG_FILE_REL);
+/** Installation paths (respects CODEBUDDY_CONFIG_DIR env var) */
+export const CODEBUDDY_CONFIG_DIR = getCodebuddyConfigDir();
+export const VERSION_FILE = join(CODEBUDDY_CONFIG_DIR, '.omc-version.json');
+export const CONFIG_FILE = join(CODEBUDDY_CONFIG_DIR, OMC_CONFIG_FILE_REL);
 /**
  * Read the OMC configuration
  */
@@ -224,11 +224,11 @@ export function isAutoUpgradePromptEnabled() {
 /**
  * Check if team feature is enabled
  * Returns false by default - requires explicit opt-in
- * Checks ~/.claude/settings.json first, then env var fallback
+ * Checks ~/.codebuddy/settings.json first, then env var fallback
  */
 export function isTeamEnabled() {
     try {
-        const settingsPath = join(CLAUDE_CONFIG_DIR, 'settings.json');
+        const settingsPath = join(CODEBUDDY_CONFIG_DIR, 'settings.json');
         if (existsSync(settingsPath)) {
             const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
             const val = settings.env?.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS;
@@ -251,15 +251,15 @@ export function getInstalledVersion() {
         // Try to detect version from package.json if installed via npm
         try {
             // Check if we can find the package in node_modules
-            const result = execSync('npm list -g oh-my-claude-sisyphus --json', {
+            const result = execSync('npm list -g oh-my-codebuddy-sisyphus --json', {
                 encoding: 'utf-8',
                 timeout: 5000,
                 stdio: 'pipe'
             });
             const data = JSON.parse(result);
-            if (data.dependencies?.['oh-my-claude-sisyphus']?.version) {
+            if (data.dependencies?.['oh-my-codebuddy-sisyphus']?.version) {
                 return {
-                    version: data.dependencies['oh-my-claude-sisyphus'].version,
+                    version: data.dependencies['oh-my-codebuddy-sisyphus'].version,
                     installedAt: new Date().toISOString(),
                     installMethod: 'npm'
                 };
@@ -306,14 +306,14 @@ export async function fetchLatestRelease() {
     const response = await fetch(`${GITHUB_API_URL}/releases/latest`, {
         headers: {
             'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'oh-my-claudecode-updater'
+            'User-Agent': 'oh-my-codebuddy-updater'
         }
     });
     if (response.status === 404) {
         // No releases found - try to get version from package.json in repo
         const pkgResponse = await fetch(`${GITHUB_RAW_URL}/main/package.json`, {
             headers: {
-                'User-Agent': 'oh-my-claudecode-updater'
+                'User-Agent': 'oh-my-codebuddy-updater'
             }
         });
         if (pkgResponse.ok) {
@@ -386,9 +386,9 @@ export function reconcileUpdateRuntime(options) {
     const projectScopedPlugin = isProjectScopedPlugin();
     // Plugin installs execute hooks from <pluginRoot>/hooks/hooks.json. Re-running
     // the standalone settings.json hook merge during `omc update` re-injects the
-    // legacy ~/.claude/hooks/* entries and causes duplicate hook execution.
+    // legacy ~/.codebuddy/hooks/* entries and causes duplicate hook execution.
     //
-    // Reconciliation should still refresh shared installer artifacts (CLAUDE.md,
+    // Reconciliation should still refresh shared installer artifacts (CODEBUDDY.md,
     // HUD, MCP registry, statusLine, etc.), but it must leave settings.json hook
     // ownership alone for plugin installs so the plugin hook manifest remains the
     // single source of truth.
@@ -500,7 +500,7 @@ export async function performUpdate(options) {
                 success: false,
                 previousVersion,
                 newVersion: 'unknown',
-                message: 'Running inside an active Claude Code plugin session. Use "/plugin install oh-my-claudecode" to update, or pass --standalone to force npm update.',
+                message: 'Running inside an active Claude Code plugin session. Use "/plugin install oh-my-codebuddy" to update, or pass --standalone to force npm update.',
             };
         }
         // Fetch the latest release to get the version
@@ -508,7 +508,7 @@ export async function performUpdate(options) {
         const newVersion = release.tag_name.replace(/^v/, '');
         // Use npm for updates on all platforms (install.sh was removed)
         try {
-            execSync('npm install -g oh-my-claude-sisyphus@latest', {
+            execSync('npm install -g oh-my-codebuddy-sisyphus@latest', {
                 encoding: 'utf-8',
                 stdio: options?.verbose ? 'inherit' : 'pipe',
                 timeout: 120000, // 2 minute timeout for npm
@@ -583,8 +583,8 @@ export async function performUpdate(options) {
         }
         catch (npmError) {
             throw new Error('Auto-update via npm failed. Please run manually:\n' +
-                '  npm install -g oh-my-claude-sisyphus@latest\n' +
-                'Or use: /plugin install oh-my-claudecode\n' +
+                '  npm install -g oh-my-codebuddy-sisyphus@latest\n' +
+                'Or use: /plugin install oh-my-codebuddy\n' +
                 `Error: ${npmError instanceof Error ? npmError.message : npmError}`);
         }
     }
@@ -604,18 +604,18 @@ export async function performUpdate(options) {
  */
 export function formatUpdateNotification(checkResult) {
     if (!checkResult.updateAvailable) {
-        return `oh-my-claudecode is up to date (v${checkResult.currentVersion ?? 'unknown'})`;
+        return `oh-my-codebuddy is up to date (v${checkResult.currentVersion ?? 'unknown'})`;
     }
     const lines = [
         '╔═══════════════════════════════════════════════════════════╗',
-        '║           oh-my-claudecode Update Available!              ║',
+        '║           oh-my-codebuddy Update Available!              ║',
         '╚═══════════════════════════════════════════════════════════╝',
         '',
         `  Current version: ${checkResult.currentVersion ?? 'unknown'}`,
         `  Latest version:  ${checkResult.latestVersion}`,
         '',
         '  To update, run: /update',
-        '  Or reinstall via: /plugin install oh-my-claudecode',
+        '  Or reinstall via: /plugin install oh-my-codebuddy',
         ''
     ];
     // Add truncated release notes if available
@@ -700,7 +700,7 @@ export async function interactiveUpdate() {
     }
 }
 /** State file for tracking silent update status */
-const SILENT_UPDATE_STATE_FILE = join(CLAUDE_CONFIG_DIR, '.omc-silent-update.json');
+const SILENT_UPDATE_STATE_FILE = join(CODEBUDDY_CONFIG_DIR, '.omc-silent-update.json');
 /**
  * Read silent update state
  */
@@ -761,7 +761,7 @@ function silentLog(message, logFile) {
  * @returns Promise resolving to update result or null if skipped
  */
 export async function silentAutoUpdate(config = {}) {
-    const { checkIntervalHours = 24, autoApply = true, logFile = join(CLAUDE_CONFIG_DIR, '.omc-update.log'), maxRetries = 3 } = config;
+    const { checkIntervalHours = 24, autoApply = true, logFile = join(CODEBUDDY_CONFIG_DIR, '.omc-update.log'), maxRetries = 3 } = config;
     // SECURITY: Check if silent auto-update is enabled in configuration
     // Default is disabled - users must explicitly opt-in during installation
     if (!isSilentAutoUpdateEnabled()) {

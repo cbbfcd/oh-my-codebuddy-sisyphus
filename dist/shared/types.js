@@ -1,5 +1,5 @@
 /**
- * Shared types for Oh-My-ClaudeCode
+ * Shared types for Oh-My-Codebuddy
  */
 // ---------------------------------------------------------------------------
 // /team role routing (Option E — /team-scoped per-role provider & model)

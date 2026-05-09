@@ -5,7 +5,7 @@
  */
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import { DEBUG_ENABLED } from './constants.js';
 const DEFAULT_CONFIG = {
     enabled: true,
@@ -25,7 +25,7 @@ const DEFAULT_CONFIG = {
         pruneDays: 90,
     },
 };
-const CONFIG_PATH = join(getClaudeConfigDir(), 'omc', 'learner.json');
+const CONFIG_PATH = join(getCodebuddyConfigDir(), 'omc', 'learner.json');
 /**
  * Load configuration from disk.
  */
@@ -51,7 +51,7 @@ export function loadConfig() {
 export function saveConfig(config) {
     const merged = mergeConfig(DEFAULT_CONFIG, config);
     try {
-        const dir = join(getClaudeConfigDir(), 'omc');
+        const dir = join(getCodebuddyConfigDir(), 'omc');
         if (!existsSync(dir)) {
             mkdirSync(dir, { recursive: true });
         }

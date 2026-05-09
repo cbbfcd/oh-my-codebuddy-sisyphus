@@ -8,8 +8,8 @@
  */
 /**
  * TERMINOLOGY:
- * - "Task" (capitalized): New Claude Code Task system (~/.claude/tasks/)
- * - "todo" (lowercase): Legacy todo system (~/.claude/todos/)
+ * - "Task" (capitalized): New Claude Code Task system (~/.codebuddy/tasks/)
+ * - "todo" (lowercase): Legacy todo system (~/.codebuddy/todos/)
  * - "item": Generic term for either Task or todo
  */
 /**
@@ -25,7 +25,7 @@ function debugLog(message, ...args) {
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { getOmcRoot } from '../../lib/worktree-paths.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 /**
  * Validates that a session ID is safe to use in file paths.
  * Session IDs should be alphanumeric with optional hyphens and underscores.
@@ -112,7 +112,7 @@ export function isExplicitCancelCommand(context) {
         return false;
     const prompt = (context.prompt ?? '').trim();
     if (prompt) {
-        const slashCancelPattern = /^\/(?:oh-my-claudecode:)?cancel(?:\s+--force)?\s*$/i;
+        const slashCancelPattern = /^\/(?:oh-my-codebuddy:)?cancel(?:\s+--force)?\s*$/i;
         const keywordCancelPattern = /^(?:cancelomc|stopomc)\s*$/i;
         if (slashCancelPattern.test(prompt) || keywordCancelPattern.test(prompt)) {
             return true;
@@ -135,7 +135,7 @@ export function isExplicitCancelCommand(context) {
     const toolInput = (context.tool_input ?? context.toolInput);
     if (toolName.includes('skill') && toolInput && typeof toolInput.skill === 'string') {
         const skill = toolInput.skill.toLowerCase();
-        if (skill === 'oh-my-claudecode:cancel' || skill.endsWith(':cancel')) {
+        if (skill === 'oh-my-codebuddy:cancel' || skill.endsWith(':cancel')) {
             return true;
         }
     }
@@ -147,7 +147,7 @@ export function isExplicitCancelCommand(context) {
  * Blocking these stops causes a deadlock: can't compact because can't stop,
  * can't continue because context is full.
  *
- * See: https://github.com/Yeachan-Heo/oh-my-claudecode/issues/213
+ * See: https://github.com/cbbfcd/oh-my-codebuddy/issues/213
  */
 export function isContextLimitStop(context) {
     const contextPatterns = [
@@ -163,7 +163,7 @@ export function isContextLimitStop(context) {
  * injects a continuation prompt, Claude immediately hits the rate limit again,
  * stops again, and the cycle repeats indefinitely.
  *
- * Fix for: https://github.com/Yeachan-Heo/oh-my-claudecode/issues/777
+ * Fix for: https://github.com/cbbfcd/oh-my-codebuddy/issues/777
  */
 export function isRateLimitStop(context) {
     if (!context)
@@ -244,7 +244,7 @@ export function isAuthenticationError(context) {
  * Get possible todo file locations
  */
 function getTodoFilePaths(sessionId, directory) {
-    const claudeDir = getClaudeConfigDir();
+    const claudeDir = getCodebuddyConfigDir();
     const paths = [];
     // Session-specific todos
     if (sessionId) {
@@ -254,7 +254,7 @@ function getTodoFilePaths(sessionId, directory) {
     // Project-specific todos
     if (directory) {
         paths.push(join(getOmcRoot(directory), 'todos.json'));
-        paths.push(join(directory, '.claude', 'todos.json'));
+        paths.push(join(directory, '.codebuddy', 'todos.json'));
     }
     // NOTE: Global todos directory scan removed to prevent false positives.
     // Only session-specific and project-local todos are now checked.
@@ -298,7 +298,7 @@ function isIncomplete(todo) {
 /**
  * Get the Task directory for a session
  *
- * NOTE: This path (~/.claude/tasks/{sessionId}/) is inferred from Claude Code's
+ * NOTE: This path (~/.codebuddy/tasks/{sessionId}/) is inferred from Claude Code's
  * implementation. Anthropic has not officially documented this structure.
  * The Task files are created by Claude Code's TaskCreate tool.
  */
@@ -307,7 +307,7 @@ export function getTaskDirectory(sessionId) {
     if (!isValidSessionId(sessionId)) {
         return ''; // Return empty string for invalid sessions
     }
-    return join(getClaudeConfigDir(), 'tasks', sessionId);
+    return join(getCodebuddyConfigDir(), 'tasks', sessionId);
 }
 /**
  * Validates that a parsed JSON object is a valid Task.

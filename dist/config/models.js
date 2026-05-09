@@ -1,21 +1,21 @@
 import { validateAnthropicBaseUrl } from '../utils/ssrf-guard.js';
 const DIRECT_MODEL_ENV_KEYS = ['CLAUDE_MODEL', 'ANTHROPIC_MODEL'];
 const INHERIT_TIER_PRIORITY = ['MEDIUM', 'HIGH', 'LOW'];
-const CLAUDE_TIER_ALIASES = new Set(['sonnet', 'opus', 'haiku']);
+const CODEBUDDY_TIER_ALIASES = new Set(['sonnet', 'opus', 'haiku']);
 const TIER_ENV_KEYS = {
     LOW: [
         'OMC_MODEL_LOW',
-        'CLAUDE_CODE_BEDROCK_HAIKU_MODEL',
+        'CODEBUDDY_CODE_BEDROCK_HAIKU_MODEL',
         'ANTHROPIC_DEFAULT_HAIKU_MODEL',
     ],
     MEDIUM: [
         'OMC_MODEL_MEDIUM',
-        'CLAUDE_CODE_BEDROCK_SONNET_MODEL',
+        'CODEBUDDY_CODE_BEDROCK_SONNET_MODEL',
         'ANTHROPIC_DEFAULT_SONNET_MODEL',
     ],
     HIGH: [
         'OMC_MODEL_HIGH',
-        'CLAUDE_CODE_BEDROCK_OPUS_MODEL',
+        'CODEBUDDY_CODE_BEDROCK_OPUS_MODEL',
         'ANTHROPIC_DEFAULT_OPUS_MODEL',
     ],
 };
@@ -23,22 +23,22 @@ const TIER_ENV_KEYS = {
  * Canonical Claude family defaults.
  * Keep these date-less so version bumps are a one-line edit per family.
  */
-export const CLAUDE_FAMILY_DEFAULTS = {
+export const CODEBUDDY_FAMILY_DEFAULTS = {
     HAIKU: 'claude-haiku-4-5',
     SONNET: 'claude-sonnet-4-6',
     OPUS: 'claude-opus-4-7',
 };
 /** Canonical tier->model mapping used as built-in defaults */
 export const BUILTIN_TIER_MODEL_DEFAULTS = {
-    LOW: CLAUDE_FAMILY_DEFAULTS.HAIKU,
-    MEDIUM: CLAUDE_FAMILY_DEFAULTS.SONNET,
-    HIGH: CLAUDE_FAMILY_DEFAULTS.OPUS,
+    LOW: CODEBUDDY_FAMILY_DEFAULTS.HAIKU,
+    MEDIUM: CODEBUDDY_FAMILY_DEFAULTS.SONNET,
+    HIGH: CODEBUDDY_FAMILY_DEFAULTS.OPUS,
 };
 /** Canonical Claude high-reasoning variants by family */
-export const CLAUDE_FAMILY_HIGH_VARIANTS = {
-    HAIKU: `${CLAUDE_FAMILY_DEFAULTS.HAIKU}-high`,
-    SONNET: `${CLAUDE_FAMILY_DEFAULTS.SONNET}-high`,
-    OPUS: `${CLAUDE_FAMILY_DEFAULTS.OPUS}-high`,
+export const CODEBUDDY_FAMILY_HIGH_VARIANTS = {
+    HAIKU: `${CODEBUDDY_FAMILY_DEFAULTS.HAIKU}-high`,
+    SONNET: `${CODEBUDDY_FAMILY_DEFAULTS.SONNET}-high`,
+    OPUS: `${CODEBUDDY_FAMILY_DEFAULTS.OPUS}-high`,
 };
 /** Built-in defaults for external provider models */
 export const BUILTIN_EXTERNAL_MODEL_DEFAULTS = {
@@ -153,7 +153,7 @@ export function getDefaultTierModels() {
  * Resolve a Claude family from an arbitrary model ID.
  * Supports Anthropic IDs and provider-prefixed forms (e.g. vertex_ai/...).
  */
-export function resolveClaudeFamily(modelId) {
+export function resolveCodebuddyFamily(modelId) {
     const lower = modelId.toLowerCase();
     if (!lower.includes('claude'))
         return null;
@@ -169,9 +169,9 @@ export function resolveClaudeFamily(modelId) {
  * Resolve a canonical Claude high variant from a Claude model ID.
  * Returns null for non-Claude model IDs.
  */
-export function getClaudeHighVariantFromModel(modelId) {
-    const family = resolveClaudeFamily(modelId);
-    return family ? CLAUDE_FAMILY_HIGH_VARIANTS[family] : null;
+export function getCodebuddyHighVariantFromModel(modelId) {
+    const family = resolveCodebuddyFamily(modelId);
+    return family ? CODEBUDDY_FAMILY_HIGH_VARIANTS[family] : null;
 }
 /** Get built-in default model for an external provider */
 export function getBuiltinExternalDefaultModel(provider) {
@@ -195,7 +195,7 @@ function hasBedrockModelId(modelIds) {
 /**
  * Detect whether Claude Code is running on AWS Bedrock.
  *
- * Claude Code sets CLAUDE_CODE_USE_BEDROCK=1 when configured for Bedrock.
+ * Claude Code sets CODEBUDDY_CODE_USE_BEDROCK=1 when configured for Bedrock.
  * As a fallback, Bedrock model IDs use prefixed formats like:
  *   - us.anthropic.claude-sonnet-4-6-v1:0
  *   - global.anthropic.claude-sonnet-4-6-v1:0
@@ -207,7 +207,7 @@ function hasBedrockModelId(modelIds) {
  */
 export function isBedrock() {
     // Primary signal: Claude Code's own env var
-    if (process.env.CLAUDE_CODE_USE_BEDROCK === '1') {
+    if (process.env.CODEBUDDY_CODE_USE_BEDROCK === '1') {
         return true;
     }
     // Fallback: detect Bedrock model ID patterns in the active model env value.
@@ -270,14 +270,14 @@ export function isSubagentSafeModelId(modelId) {
 /**
  * Detect whether Claude Code is running on Google Vertex AI.
  *
- * Claude Code sets CLAUDE_CODE_USE_VERTEX=1 when configured for Vertex AI.
+ * Claude Code sets CODEBUDDY_CODE_USE_VERTEX=1 when configured for Vertex AI.
  * Vertex model IDs typically use a "vertex_ai/" prefix.
  *
  * On Vertex, passing bare tier names causes errors because the provider
  * expects full Vertex model paths.
  */
 export function isVertexAI() {
-    if (process.env.CLAUDE_CODE_USE_VERTEX === '1') {
+    if (process.env.CODEBUDDY_CODE_USE_VERTEX === '1') {
         return true;
     }
     // Fallback: detect vertex_ai/ prefix in the active model env value.
@@ -289,7 +289,7 @@ function hasVertexModelId(modelIds) {
 function hasNonClaudeModelId(modelIds) {
     for (const modelId of modelIds) {
         const lower = modelId.toLowerCase();
-        if (!lower.includes('claude') && !CLAUDE_TIER_ALIASES.has(lower)) {
+        if (!lower.includes('claude') && !CODEBUDDY_TIER_ALIASES.has(lower)) {
             return true;
         }
     }
@@ -353,10 +353,10 @@ export function shouldAutoForceInherit() {
     if (process.env.OMC_ROUTING_FORCE_INHERIT === 'true') {
         return true;
     }
-    if (process.env.CLAUDE_CODE_USE_BEDROCK === '1') {
+    if (process.env.CODEBUDDY_CODE_USE_BEDROCK === '1') {
         return true;
     }
-    if (process.env.CLAUDE_CODE_USE_VERTEX === '1') {
+    if (process.env.CODEBUDDY_CODE_USE_VERTEX === '1') {
         return true;
     }
     const directModelValues = getDirectProviderDetectionModelEnvValues();
@@ -377,5 +377,28 @@ export function shouldAutoForceInherit() {
         }
     }
     return false;
+}
+/**
+ * CodeBuddy Code model tier mapping.
+ * Maps OMC internal tier names to CodeBuddy model routing keys.
+ */
+export function mapToCodebuddyTier(tier) {
+    switch (tier) {
+        case 'haiku': return 'lite';
+        case 'sonnet': return 'default';
+        case 'opus': return 'reasoning';
+        default: return tier;
+    }
+}
+/**
+ * Reverse mapping: CodeBuddy model routing keys back to OMC internal tier names.
+ */
+export function mapFromCodebuddyTier(codeBuddyTier) {
+    switch (codeBuddyTier) {
+        case 'lite': return 'haiku';
+        case 'default': return 'sonnet';
+        case 'reasoning': return 'opus';
+        default: return codeBuddyTier;
+    }
 }
 //# sourceMappingURL=models.js.map

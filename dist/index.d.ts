@@ -1,5 +1,5 @@
 /**
- * Oh-My-ClaudeCode
+ * Oh-My-Codebuddy
  *
  * A multi-agent orchestration system for the Claude Agent SDK.
  * Inspired by oh-my-opencode, reimagined for Claude Code.
@@ -8,7 +8,7 @@
  * - OMC: Primary orchestrator that delegates to specialized subagents
  * - Parallel execution: Background agents run concurrently
  * - LSP/AST tools: IDE-like capabilities for agents
- * - Context management: Auto-injection from AGENTS.md/CLAUDE.md
+ * - Context management: Auto-injection from AGENTS.md/CODEBUDDY.md
  * - Continuation enforcement: Ensures tasks complete before stopping
  * - Magic keywords: Special triggers for enhanced behaviors
  */
@@ -22,7 +22,7 @@ export { lspTools, astTools, allCustomTools } from './tools/index.js';
 export { omcToolsServer, omcToolNames, getOmcToolNames } from './mcp/omc-tools-server.js';
 export { createMagicKeywordProcessor, detectMagicKeywords } from './features/magic-keywords.js';
 export { createBackgroundTaskManager, shouldRunInBackground, getBackgroundTaskGuidance, DEFAULT_MAX_BACKGROUND_TASKS, LONG_RUNNING_PATTERNS, BLOCKING_PATTERNS, type BackgroundTaskManager, type TaskExecutionDecision } from './features/background-tasks.js';
-export { type VersionMetadata, type ReleaseInfo, type UpdateCheckResult, type UpdateResult, REPO_OWNER, REPO_NAME, GITHUB_API_URL, CLAUDE_CONFIG_DIR, VERSION_FILE, getInstalledVersion, saveVersionMetadata, checkForUpdates, performUpdate, formatUpdateNotification, shouldCheckForUpdates, backgroundUpdateCheck, compareVersions } from './features/auto-update.js';
+export { type VersionMetadata, type ReleaseInfo, type UpdateCheckResult, type UpdateResult, REPO_OWNER, REPO_NAME, GITHUB_API_URL, CODEBUDDY_CONFIG_DIR, VERSION_FILE, getInstalledVersion, saveVersionMetadata, checkForUpdates, performUpdate, formatUpdateNotification, shouldCheckForUpdates, backgroundUpdateCheck, compareVersions } from './features/auto-update.js';
 export * from './shared/index.js';
 export * from './hooks/index.js';
 export { type BoulderState, type PlanProgress, type PlanSummary, BOULDER_DIR, BOULDER_FILE, BOULDER_STATE_PATH, NOTEPAD_DIR, NOTEPAD_BASE_PATH, PLANNER_PLANS_DIR, PLAN_EXTENSION, getBoulderFilePath, readBoulderState, writeBoulderState, appendSessionId, clearBoulderState, findPlannerPlans, getPlanProgress, getPlanName, createBoulderState, getPlanSummaries, hasBoulder, getActivePlanPath, ContextCollector, contextCollector, injectPendingContext, injectContextIntoText, createContextInjectorHook, type ContextSourceType, type ContextPriority, type ContextEntry, type RegisterContextOptions, type PendingContext, type MessageContext, type OutputPart, type InjectionStrategy, type InjectionResult } from './features/index.js';
@@ -31,7 +31,7 @@ export { type ModelType, type AgentCost, type AgentCategory, type DelegationTrig
 /** @deprecated Use documentSpecialistAgent instead */
 export { documentSpecialistAgent as researcherAgent } from './agents/document-specialist.js';
 export { expandCommand, expandCommandPrompt, getCommand, getAllCommands, listCommands, commandExists, expandCommands, getCommandsDir, type CommandInfo, type ExpandedCommand } from './commands/index.js';
-export { install, isInstalled, getInstallInfo, isClaudeInstalled, CLAUDE_CONFIG_DIR as INSTALLER_CLAUDE_CONFIG_DIR, AGENTS_DIR, COMMANDS_DIR, VERSION as INSTALLER_VERSION, type InstallResult, type InstallOptions } from './installer/index.js';
+export { install, isInstalled, getInstallInfo, isClaudeInstalled, CODEBUDDY_CONFIG_DIR as INSTALLER_CLAUDE_CONFIG_DIR, AGENTS_DIR, COMMANDS_DIR, VERSION as INSTALLER_VERSION, type InstallResult, type InstallOptions } from './installer/index.js';
 /**
  * Options for creating a OMC session
  */
@@ -93,7 +93,7 @@ export interface OmcSession {
  * @example
  * ```typescript
  * import { createOmcSession } from 'oh-my-codebuddy';
- * import { query } from '@anthropic-ai/claude-agent-sdk';
+ * import { query } from '@tencent-ai/agent-sdk';
  *
  * const session = createOmcSession();
  *

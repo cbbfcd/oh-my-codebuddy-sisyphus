@@ -17,7 +17,7 @@ import { parseSkillPipelineMetadata, renderSkillPipelineGuidance } from '../../u
 import { renderSkillResourcesGuidance } from '../../utils/skill-resources.js';
 import { renderSkillRuntimeGuidance } from './runtime-guidance.js';
 import { isSkininthegamebrosUser } from '../../utils/skininthegamebros-user.js';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 function getPackageDir() {
     if (typeof __dirname !== 'undefined' && __dirname) {
         const currentDirName = basename(__dirname);
@@ -101,8 +101,8 @@ function readDeepInterviewThresholdFromSettings(path) {
         : null;
 }
 function getDeepInterviewAmbiguityThreshold() {
-    const profileThreshold = readDeepInterviewThresholdFromSettings(join(getClaudeConfigDir(), 'settings.json'));
-    const projectThreshold = readDeepInterviewThresholdFromSettings(join(process.cwd(), '.claude', 'settings.json'));
+    const profileThreshold = readDeepInterviewThresholdFromSettings(join(getCodebuddyConfigDir(), 'settings.json'));
+    const projectThreshold = readDeepInterviewThresholdFromSettings(join(process.cwd(), '.codebuddy', 'settings.json'));
     return projectThreshold ?? profileThreshold ?? DEFAULT_DEEP_INTERVIEW_AMBIGUITY_THRESHOLD;
 }
 function formatThresholdPercent(threshold) {
@@ -117,7 +117,7 @@ function applyDeepInterviewRuntimeSettings(template) {
     const withRuntimeSettings = withResolvedPlaceholders.includes('3.5. **Load runtime settings**:')
         ? withResolvedPlaceholders
         : withResolvedPlaceholders.replace('4. **Initialize state** via `state_write(mode="deep-interview")`:', [
-            `3.5. **Load runtime settings** from \`~/.claude/settings.json\` and \`./.claude/settings.json\` before state init (project overrides profile). For this run, use \`ambiguityThreshold = ${threshold}\`.`,
+            `3.5. **Load runtime settings** from \`~/.codebuddy/settings.json\` and \`./.codebuddy/settings.json\` before state init (project overrides profile). For this run, use \`ambiguityThreshold = ${threshold}\`.`,
             '4. **Initialize state** via `state_write(mode="deep-interview")`:',
         ].join('\n'));
     return withRuntimeSettings

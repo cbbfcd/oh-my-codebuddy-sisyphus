@@ -1,7 +1,7 @@
 /**
  * OpenClaw Configuration Reader
  *
- * Reads OpenClaw config from ~/.claude/omc_config.openclaw.json.
+ * Reads OpenClaw config from ~/.codebuddy/omc_config.openclaw.json.
  * Config is cached after first read (env vars don't change during process lifetime).
  * Config file path can be overridden via OMC_OPENCLAW_CONFIG env var.
  */

@@ -8,7 +8,7 @@
 import { join } from 'path';
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync, rmSync, symlinkSync } from 'fs';
 import { homedir } from 'os';
-import { getClaudeConfigDir } from './config-dir.js';
+import { getCodebuddyConfigDir } from './config-dir.js';
 /**
  * Convert a path to use forward slashes (for JSON/config files)
  * This is necessary because settings.json commands are executed
@@ -141,13 +141,13 @@ export function getGlobalOmcStateCandidates(...segments) {
     ]);
 }
 /**
- * Get the plugin cache base directory for oh-my-claudecode.
+ * Get the plugin cache base directory for oh-my-codebuddy.
  * This is the directory containing version subdirectories.
  *
- * Structure: <configDir>/plugins/cache/omc/oh-my-claudecode/
+ * Structure: <configDir>/plugins/cache/omc/oh-my-codebuddy/
  */
 export function getPluginCacheBase() {
-    return join(getClaudeConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-claudecode');
+    return join(getCodebuddyConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-codebuddy');
 }
 /**
  * Safely delete a file, ignoring ENOENT errors.
@@ -217,7 +217,7 @@ function compareSemverDesc(a, b) {
 }
 export function purgeStalePluginCacheVersions(options) {
     const result = { removed: 0, removedPaths: [], symlinked: 0, symlinkPaths: [], errors: [] };
-    const configDir = getClaudeConfigDir();
+    const configDir = getCodebuddyConfigDir();
     const pluginsDir = join(configDir, 'plugins');
     const installedFile = join(pluginsDir, 'installed_plugins.json');
     const cacheDir = join(pluginsDir, 'cache');

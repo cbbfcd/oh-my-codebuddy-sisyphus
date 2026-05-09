@@ -4,7 +4,7 @@
  * MCP tools for loading and listing OMC learned skills
  * from local (.omc/skills/) and global (~/.omc/skills/) directories.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 export declare const loadLocalTool: {
     name: string;
     description: string;

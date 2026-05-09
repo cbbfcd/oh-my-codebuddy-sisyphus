@@ -4,7 +4,7 @@
  * Provides 7 tools for the LLM Wiki knowledge layer:
  * wiki_ingest, wiki_query, wiki_lint, wiki_add, wiki_list, wiki_read, wiki_delete
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ToolDefinition } from './types.js';
 declare const WIKI_CATEGORIES: [string, ...string[]];
 export declare const wikiIngestTool: ToolDefinition<{

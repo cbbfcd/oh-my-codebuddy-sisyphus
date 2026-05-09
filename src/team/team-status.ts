@@ -59,7 +59,7 @@ function peekRecentOutboxMessages(
 
 export interface WorkerStatus {
   workerName: string;
-  provider: 'codex' | 'gemini' | 'codebuddy';
+  provider: 'codex' | 'gemini' | 'claude' | 'codebuddy';
   heartbeat: HeartbeatData | null;
   isAlive: boolean;
   currentTask: TaskFile | null;

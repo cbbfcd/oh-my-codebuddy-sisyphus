@@ -1,5 +1,5 @@
 /**
- * Shared types for Oh-My-ClaudeCode
+ * Shared types for Oh-My-Codebuddy
  */
 export type ModelType = "sonnet" | "opus" | "haiku" | "inherit";
 export interface AgentConfig {
@@ -323,7 +323,7 @@ export interface ResolveOptions {
 /**
  * Provider type for delegation routing
  */
-export type DelegationProvider = "claude"
+export type DelegationProvider = "codebuddy" | "claude"
 /** Use /team to coordinate Codex CLI workers in tmux panes. */
  | "codex"
 /** Use /team to coordinate Gemini CLI workers in tmux panes. */
@@ -372,7 +372,7 @@ export interface ResolveDelegationOptions {
 export declare const CANONICAL_TEAM_ROLES: readonly ["orchestrator", "planner", "analyst", "architect", "executor", "debugger", "critic", "code-reviewer", "security-reviewer", "test-engineer", "designer", "writer", "code-simplifier", "explore", "document-specialist"];
 export type CanonicalTeamRole = typeof CANONICAL_TEAM_ROLES[number];
 /** Provider for /team role routing. */
-export type TeamRoleProvider = 'claude' | 'codex' | 'gemini';
+export type TeamRoleProvider = 'codebuddy' | 'codex' | 'gemini';
 /** Tier name accepted in role-assignment `model` field. */
 export type TeamRoleTier = 'HIGH' | 'MEDIUM' | 'LOW';
 /** Known agent names derived from `buildDefaultConfig().agents` keys in src/config/loader.ts. */

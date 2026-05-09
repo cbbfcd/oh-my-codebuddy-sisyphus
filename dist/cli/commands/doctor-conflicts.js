@@ -4,7 +4,7 @@
  */
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { getClaudeConfigDir } from '../../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../../utils/config-dir.js';
 import { isOmcHook } from '../../installer/index.js';
 import { colors } from '../utils/formatting.js';
 import { listBuiltinSkillNames } from '../../features/builtin-skills/skills.js';
@@ -50,15 +50,15 @@ function collectHooksFromSettings(settingsPath) {
     return conflicts;
 }
 /**
- * Check for hook conflicts in both profile-level (~/.claude/settings.json)
- * and project-level (./.claude/settings.json).
+ * Check for hook conflicts in both profile-level (~/.codebuddy/settings.json)
+ * and project-level (./.codebuddy/settings.json).
  *
  * Claude Code settings precedence: project > profile > defaults.
  * We check both levels so the diagnostic is complete.
  */
 export function checkHookConflicts() {
-    const profileSettingsPath = join(getClaudeConfigDir(), 'settings.json');
-    const projectSettingsPath = join(process.cwd(), '.claude', 'settings.json');
+    const profileSettingsPath = join(getCodebuddyConfigDir(), 'settings.json');
+    const projectSettingsPath = join(process.cwd(), '.codebuddy', 'settings.json');
     const profileHooks = collectHooksFromSettings(profileSettingsPath);
     const projectHooks = collectHooksFromSettings(projectSettingsPath);
     // Deduplicate by event+command (same hook in both levels should appear once)
@@ -105,7 +105,7 @@ function checkFileForOmcMarkers(filePath) {
 /**
  * Find companion CLAUDE-*.md files in the config directory.
  * These are files like CLAUDE-omc.md that users create as part of a
- * file-split pattern to keep OMC config separate from their own CLAUDE.md.
+ * file-split pattern to keep OMC config separate from their own CODEBUDDY.md.
  */
 function findCompanionClaudeMdFiles(configDir) {
     try {
@@ -118,18 +118,18 @@ function findCompanionClaudeMdFiles(configDir) {
     }
 }
 /**
- * Check CLAUDE.md for OMC markers and user content.
+ * Check CODEBUDDY.md for OMC markers and user content.
  * Also checks companion files (CLAUDE-omc.md, etc.) for the file-split pattern
  * where users keep OMC config in a separate file.
  */
 export function checkClaudeMdStatus() {
-    const configDir = getClaudeConfigDir();
-    const claudeMdPath = join(configDir, 'CLAUDE.md');
+    const configDir = getCodebuddyConfigDir();
+    const claudeMdPath = join(configDir, 'CODEBUDDY.md');
     if (!existsSync(claudeMdPath)) {
         return null;
     }
     try {
-        // Check the main CLAUDE.md first
+        // Check the main CODEBUDDY.md first
         const mainResult = checkFileForOmcMarkers(claudeMdPath);
         if (!mainResult)
             return null;
@@ -153,12 +153,12 @@ export function checkClaudeMdStatus() {
                 };
             }
         }
-        // No markers in main or companions - check if CLAUDE.md references a companion
+        // No markers in main or companions - check if CODEBUDDY.md references a companion
         const content = readFileSync(claudeMdPath, 'utf-8');
         const companionRefPattern = /CLAUDE-[^\s)]+\.md/i;
         const refMatch = content.match(companionRefPattern);
         if (refMatch) {
-            // CLAUDE.md references a companion file but it doesn't have markers yet
+            // CODEBUDDY.md references a companion file but it doesn't have markers yet
             return {
                 hasMarkers: false,
                 hasUserContent: mainResult.hasUserContent,
@@ -193,7 +193,7 @@ export function checkEnvFlags() {
  * false positives for user's custom skills.
  */
 export function checkLegacySkills() {
-    const legacySkillsDir = join(getClaudeConfigDir(), 'skills');
+    const legacySkillsDir = join(getCodebuddyConfigDir(), 'skills');
     if (!existsSync(legacySkillsDir))
         return [];
     const collisions = [];
@@ -218,7 +218,7 @@ export function checkLegacySkills() {
  */
 export function checkConfigIssues() {
     const unknownFields = [];
-    const configPath = join(getClaudeConfigDir(), '.omc-config.json');
+    const configPath = join(getCodebuddyConfigDir(), '.omc-config.json');
     if (!existsSync(configPath)) {
         return { unknownFields };
     }
@@ -314,7 +314,7 @@ export function formatReport(report, json) {
     // Human-readable format
     const lines = [];
     lines.push('');
-    lines.push(colors.bold('🔍 Oh-My-ClaudeCode Conflict Diagnostic'));
+    lines.push(colors.bold('🔍 Oh-My-Codebuddy Conflict Diagnostic'));
     lines.push(colors.gray('━'.repeat(60)));
     lines.push('');
     // Hook conflicts
@@ -333,9 +333,9 @@ export function formatReport(report, json) {
         lines.push(`  ${colors.gray('No hooks configured')}`);
         lines.push('');
     }
-    // CLAUDE.md status
+    // CODEBUDDY.md status
     if (report.claudeMdStatus) {
-        lines.push(colors.bold('📄 CLAUDE.md Status'));
+        lines.push(colors.bold('📄 CODEBUDDY.md Status'));
         lines.push('');
         if (report.claudeMdStatus.hasMarkers) {
             if (report.claudeMdStatus.companionFile) {
@@ -351,7 +351,7 @@ export function formatReport(report, json) {
         }
         else {
             lines.push(`  ${colors.yellow('⚠')} No OMC markers found`);
-            lines.push(`    ${colors.gray('Run /oh-my-claudecode:omc-setup to add markers')}`);
+            lines.push(`    ${colors.gray('Run /oh-my-codebuddy:omc-setup to add markers')}`);
             if (report.claudeMdStatus.hasUserContent) {
                 lines.push(`  ${colors.blue('ℹ')} User content present - will be preserved`);
             }
@@ -360,8 +360,8 @@ export function formatReport(report, json) {
         lines.push('');
     }
     else {
-        lines.push(colors.bold('📄 CLAUDE.md Status'));
-        lines.push(`  ${colors.gray('No CLAUDE.md found')}`);
+        lines.push(colors.bold('📄 CODEBUDDY.md Status'));
+        lines.push(`  ${colors.gray('No CODEBUDDY.md found')}`);
         lines.push('');
     }
     // Environment flags
@@ -441,7 +441,7 @@ export function formatReport(report, json) {
     lines.push(colors.gray('━'.repeat(60)));
     if (report.hasConflicts) {
         lines.push(`${colors.yellow('⚠')} Potential conflicts detected`);
-        lines.push(`${colors.gray('Review the issues above and run /oh-my-claudecode:omc-setup if needed')}`);
+        lines.push(`${colors.gray('Review the issues above and run /oh-my-codebuddy:omc-setup if needed')}`);
     }
     else {
         lines.push(`${colors.green('✓')} No conflicts detected`);

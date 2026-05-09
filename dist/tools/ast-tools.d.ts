@@ -6,7 +6,7 @@
  * - Code replacement while preserving structure
  * - Support for 25+ programming languages
  */
-import { z } from "zod";
+import { z } from "zod/v3";
 /**
  * Validate that a tool path is within the project root boundary.
  * Only enforced when OMC_RESTRICT_TOOL_PATHS=true.

@@ -35,11 +35,11 @@ let codexHome;
 let omcHome;
 async function loadInstaller() {
     vi.resetModules();
-    process.env.CLAUDE_CONFIG_DIR = claudeConfigDir;
+    process.env.CODEBUDDY_CONFIG_DIR = claudeConfigDir;
     process.env.HOME = homeDir;
     process.env.CODEX_HOME = codexHome;
     process.env.OMC_HOME = omcHome;
-    delete process.env.CLAUDE_PLUGIN_ROOT;
+    delete process.env.CODEBUDDY_PLUGIN_ROOT;
     delete process.env.OMC_PLUGIN_ROOT;
     return import('../index.js');
 }
@@ -47,7 +47,7 @@ describe('install() settings.json lost-update protection (issue #2584)', () => {
     beforeEach(() => {
         tempRoot = mkdtempSync(join(tmpdir(), 'omc-settings-race-'));
         homeDir = join(tempRoot, 'home');
-        claudeConfigDir = join(homeDir, '.claude');
+        claudeConfigDir = join(homeDir, '.codebuddy');
         codexHome = join(tempRoot, '.codex');
         omcHome = join(tempRoot, '.omc');
         mkdirSync(homeDir, { recursive: true });

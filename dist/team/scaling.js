@@ -24,7 +24,7 @@ import { writeWorkerOverlay } from './worker-bootstrap.js';
 import { ensureWorkerWorktree, installWorktreeRootAgents, prepareWorkerWorktreeForRemoval, removeWorkerWorktree, restoreWorktreeRootAgents, } from './git-worktree.js';
 // ── Environment gate ──────────────────────────────────────────────────────────
 const OMC_TEAM_SCALING_ENABLED_ENV = 'OMC_TEAM_SCALING_ENABLED';
-const CLI_AGENT_TYPES = new Set(['claude', 'codex', 'gemini']);
+const CLI_AGENT_TYPES = new Set(['codebuddy', 'claude', 'codex', 'gemini']);
 export function isScalingEnabled(env = process.env) {
     const raw = env[OMC_TEAM_SCALING_ENABLED_ENV];
     if (!raw)
@@ -227,7 +227,7 @@ export async function scaleUp(teamName, count, agentType, tasks, cwd, env = proc
                 const fallbackPair = routedPair?.fallback;
                 const fallbackProvider = fallbackPair
                     ? fallbackPair.provider
-                    : 'claude';
+                    : 'codebuddy';
                 const fallbackModel = fallbackPair?.model;
                 process.stderr.write(`[team/scaling] cli_binary_missing:${workerAgentType}: ${primaryReason} — falling back to ${fallbackProvider} (AC-8)\n`);
                 await teamAppendEvent(sanitized, {

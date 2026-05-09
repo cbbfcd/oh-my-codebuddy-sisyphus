@@ -4,7 +4,7 @@
  * Provides MCP tool definitions for communication between OMC and OMX.
  * Tools allow sending tasks and messages between the two systems.
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { addSharedTask, readSharedTasks, addSharedMessage, readSharedMessages, markMessageAsRead, } from './shared-state.js';
 import { listOmxTeams, readOmxTeamConfig, listOmxMailboxMessages, sendOmxDirectMessage, broadcastOmxMessage, listOmxTasks, } from './omx-team-state.js';
 export function getInteropMode(env = process.env) {

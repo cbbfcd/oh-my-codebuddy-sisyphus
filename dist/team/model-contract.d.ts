@@ -1,4 +1,4 @@
-export type CliAgentType = 'claude' | 'codex' | 'gemini' | 'cursor';
+export type CliAgentType = 'codebuddy' | 'claude' | 'codex' | 'gemini' | 'cursor';
 export interface CliAgentContract {
     agentType: CliAgentType;
     binary: string;
@@ -79,7 +79,7 @@ export declare function isPromptModeAgent(agentType: CliAgentType): boolean;
  *
  * Resolution order:
  *   1. ANTHROPIC_MODEL / CLAUDE_MODEL env vars (user's explicit setting)
- *   2. Provider tier-specific env vars (CLAUDE_CODE_BEDROCK_SONNET_MODEL, etc.)
+ *   2. Provider tier-specific env vars (CODEBUDDY_CODE_BEDROCK_SONNET_MODEL, etc.)
  *   3. undefined — let Claude Code handle its own default
  *
  * Returns undefined when not on Bedrock/Vertex (standard Anthropic API

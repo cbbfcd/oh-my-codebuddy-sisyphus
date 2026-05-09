@@ -6,13 +6,13 @@
  *
  * Authentication:
  * - macOS: Reads from Keychain "Claude Code-credentials"
- * - Linux/fallback: Reads from ~/.claude/.credentials.json
+ * - Linux/fallback: Reads from ~/.codebuddy/.credentials.json
  *
  * API: api.anthropic.com/api/oauth/usage
  * Response: { five_hour: { utilization }, seven_day: { utilization } }
  */
 import { existsSync, readFileSync, writeFileSync, renameSync, unlinkSync, mkdirSync } from 'fs';
-import { getClaudeConfigDir } from '../utils/config-dir.js';
+import { getCodebuddyConfigDir } from '../utils/config-dir.js';
 import { join, dirname } from 'path';
 import { execFileSync } from 'child_process';
 import { createHash } from 'crypto';
@@ -83,13 +83,13 @@ export function isMinimaxHost(urlString) {
  * Get the legacy (pre-split) cache file path
  */
 function getLegacyCachePath() {
-    return join(getClaudeConfigDir(), 'plugins', 'oh-my-claudecode', '.usage-cache.json');
+    return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-codebuddy', '.usage-cache.json');
 }
 /**
  * Get the provider-specific cache file path
  */
 function getCachePath(source) {
-    return join(getClaudeConfigDir(), 'plugins', 'oh-my-claudecode', `.usage-cache-${source}.json`);
+    return join(getCodebuddyConfigDir(), 'plugins', 'oh-my-codebuddy', `.usage-cache-${source}.json`);
 }
 /**
  * Migrate legacy single-file cache to provider-specific file.
@@ -268,12 +268,12 @@ function createRateLimitedCacheEntry(source, data, pollIntervalMs, previousCount
  * Get the Keychain service name for the current config directory.
  * Claude Code uses "Claude Code-credentials-{sha256(configDir)[:8]}" for
  * non-default dirs, where configDir is derived from the exact
- * CLAUDE_CONFIG_DIR value rather than the expanded filesystem path. Preserve
+ * CODEBUDDY_CONFIG_DIR value rather than the expanded filesystem path. Preserve
  * that behavior so ~-prefixed profiles keep matching Claude Code's own
  * Keychain entries.
  */
 function getKeychainServiceName() {
-    const configDir = process.env.CLAUDE_CONFIG_DIR;
+    const configDir = process.env.CODEBUDDY_CONFIG_DIR;
     if (configDir) {
         const hash = createHash('sha256').update(configDir).digest('hex').slice(0, 8);
         return `Claude Code-credentials-${hash}`;
@@ -348,7 +348,7 @@ function readKeychainCredentials() {
  */
 function readFileCredentials() {
     try {
-        const credPath = join(getClaudeConfigDir(), '.credentials.json');
+        const credPath = join(getCodebuddyConfigDir(), '.credentials.json');
         if (!existsSync(credPath))
             return null;
         const content = readFileSync(credPath, 'utf-8');
@@ -580,7 +580,7 @@ function fetchUsageFromZai() {
  */
 function writeBackCredentials(creds) {
     try {
-        const credPath = join(getClaudeConfigDir(), '.credentials.json');
+        const credPath = join(getCodebuddyConfigDir(), '.credentials.json');
         if (!existsSync(credPath))
             return;
         const content = readFileSync(credPath, 'utf-8');

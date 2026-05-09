@@ -212,10 +212,10 @@ function resolveSignalExitCode(signal: NodeJS.Signals | null): number {
 export async function askCommand(args: string[]): Promise<void> {
   const parsed = parseAskArgs(args);
 
-  if (parsed.provider !== 'claude' && isExternalLLMDisabled()) {
+  if (parsed.provider !== 'codebuddy' && isExternalLLMDisabled()) {
     throw new Error(
       `[ask] External LLM provider "${parsed.provider}" is blocked by security policy ` +
-      `(disableExternalLLM). Only "claude" is allowed in the current security configuration.`,
+      `(disableExternalLLM). Only "codebuddy" is allowed in the current security configuration.`,
     );
   }
 

@@ -41,21 +41,21 @@ import { existsSync, readFileSync } from 'fs';
 const mockExistsSync = vi.mocked(existsSync);
 const mockReadFileSync = vi.mocked(readFileSync);
 describe('delegation-enforcement-levels', () => {
-    const savedConfigDir = process.env.CLAUDE_CONFIG_DIR;
+    const savedConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
     beforeEach(() => {
         vi.clearAllMocks();
         clearEnforcementCache();
-        // Ensure tests use the mocked homedir, not a custom CLAUDE_CONFIG_DIR
-        delete process.env.CLAUDE_CONFIG_DIR;
+        // Ensure tests use the mocked homedir, not a custom CODEBUDDY_CONFIG_DIR
+        delete process.env.CODEBUDDY_CONFIG_DIR;
         // Default: no config files exist
         mockExistsSync.mockReturnValue(false);
     });
     afterEach(() => {
         if (savedConfigDir !== undefined) {
-            process.env.CLAUDE_CONFIG_DIR = savedConfigDir;
+            process.env.CODEBUDDY_CONFIG_DIR = savedConfigDir;
         }
         else {
-            delete process.env.CLAUDE_CONFIG_DIR;
+            delete process.env.CODEBUDDY_CONFIG_DIR;
         }
     });
     // ─── 1. suggestAgentForFile (tested indirectly via warning messages) ───
@@ -128,7 +128,7 @@ describe('delegation-enforcement-levels', () => {
                 const s = String(p);
                 if (/[\\/]tmp[\\/]test-project[\\/]\.omc[\\/]config\.json$/.test(s))
                     return true;
-                if (/[\\/]mock[\\/]home[\\/]\.claude[\\/]\.omc-config\.json$/.test(s))
+                if (/[\\/]mock[\\/]home[\\/]\.codebuddy[\\/]\.omc-config\.json$/.test(s))
                     return true;
                 return false;
             });
@@ -137,7 +137,7 @@ describe('delegation-enforcement-levels', () => {
                 if (/[\\/]tmp[\\/]test-project[\\/]\.omc[\\/]config\.json$/.test(s)) {
                     return JSON.stringify({ delegationEnforcementLevel: 'off' });
                 }
-                if (/[\\/]mock[\\/]home[\\/]\.claude[\\/]\.omc-config\.json$/.test(s)) {
+                if (/[\\/]mock[\\/]home[\\/]\.codebuddy[\\/]\.omc-config\.json$/.test(s)) {
                     return JSON.stringify({ delegationEnforcementLevel: 'strict' });
                 }
                 return '';
@@ -148,15 +148,17 @@ describe('delegation-enforcement-levels', () => {
             expect(result.message).toBeUndefined();
         });
         it('falls back to global config when no local config', () => {
+            // Set explicit config dir so getCodebuddyConfigDir() is deterministic regardless of homedir mock
+            process.env.CODEBUDDY_CONFIG_DIR = '/mock/home/.codebuddy';
             mockExistsSync.mockImplementation((p) => {
                 const s = String(p);
-                if (/[\\/]mock[\\/]home[\\/]\.claude[\\/]\.omc-config\.json$/.test(s))
+                if (/[\\/]mock[\\/]home[\\/]\.codebuddy[\\/]\.omc-config\.json$/.test(s))
                     return true;
                 return false;
             });
             mockReadFileSync.mockImplementation((p) => {
                 const s = String(p);
-                if (/[\\/]mock[\\/]home[\\/]\.claude[\\/]\.omc-config\.json$/.test(s)) {
+                if (/[\\/]mock[\\/]home[\\/]\.codebuddy[\\/]\.omc-config\.json$/.test(s)) {
                     return JSON.stringify({ delegationEnforcementLevel: 'strict' });
                 }
                 return '';
@@ -270,8 +272,8 @@ describe('delegation-enforcement-levels', () => {
         describe('allowed paths always continue', () => {
             const allowedPaths = [
                 '.omc/plans/test.md',
-                '.claude/settings.json',
-                'docs/CLAUDE.md',
+                '.codebuddy/settings.json',
+                'docs/CODEBUDDY.md',
                 'AGENTS.md',
             ];
             it.each(allowedPaths)('allows %s regardless of enforcement level', (filePath) => {
@@ -516,44 +518,44 @@ describe('delegation-enforcement-levels', () => {
         it('returns true for .omc/ paths', () => {
             expect(isAllowedPath('.omc/plans/test.md')).toBe(true);
         });
-        it('returns true for .claude/ paths', () => {
-            expect(isAllowedPath('.claude/settings.json')).toBe(true);
+        it('returns true for .codebuddy/ paths', () => {
+            expect(isAllowedPath('.codebuddy/settings.json')).toBe(true);
         });
-        it('returns true for absolute paths under CLAUDE_CONFIG_DIR', () => {
-            const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-            process.env.CLAUDE_CONFIG_DIR = '/custom/claude-config';
+        it('returns true for absolute paths under CODEBUDDY_CONFIG_DIR', () => {
+            const originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+            process.env.CODEBUDDY_CONFIG_DIR = '/custom/claude-config';
             try {
                 expect(isAllowedPath('/custom/claude-config/settings.json')).toBe(true);
                 expect(isAllowedPath('/custom/claude-config/agents/test.md')).toBe(true);
             }
             finally {
                 if (originalConfigDir === undefined) {
-                    delete process.env.CLAUDE_CONFIG_DIR;
+                    delete process.env.CODEBUDDY_CONFIG_DIR;
                 }
                 else {
-                    process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+                    process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
                 }
             }
         });
-        it('returns true for absolute paths under a ~-prefixed CLAUDE_CONFIG_DIR', () => {
-            const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-            process.env.CLAUDE_CONFIG_DIR = '~/.claude-alt';
+        it('returns true for absolute paths under a ~-prefixed CODEBUDDY_CONFIG_DIR', () => {
+            const originalConfigDir = process.env.CODEBUDDY_CONFIG_DIR;
+            process.env.CODEBUDDY_CONFIG_DIR = '~/.claude-alt';
             try {
                 expect(isAllowedPath(join('/mock/home', '.claude-alt', 'settings.json'))).toBe(true);
                 expect(isAllowedPath(join('/mock/home', '.claude-alt', 'agents', 'test.md'))).toBe(true);
             }
             finally {
                 if (originalConfigDir === undefined) {
-                    delete process.env.CLAUDE_CONFIG_DIR;
+                    delete process.env.CODEBUDDY_CONFIG_DIR;
                 }
                 else {
-                    process.env.CLAUDE_CONFIG_DIR = originalConfigDir;
+                    process.env.CODEBUDDY_CONFIG_DIR = originalConfigDir;
                 }
             }
         });
-        it('returns true for CLAUDE.md', () => {
-            expect(isAllowedPath('CLAUDE.md')).toBe(true);
-            expect(isAllowedPath('docs/CLAUDE.md')).toBe(true);
+        it('returns true for CODEBUDDY.md', () => {
+            expect(isAllowedPath('CODEBUDDY.md')).toBe(true);
+            expect(isAllowedPath('docs/CODEBUDDY.md')).toBe(true);
         });
         it('returns true for AGENTS.md', () => {
             expect(isAllowedPath('AGENTS.md')).toBe(true);

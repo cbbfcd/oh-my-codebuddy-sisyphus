@@ -1,5 +1,5 @@
 export declare const ASK_USAGE: string;
-declare const ASK_PROVIDERS: readonly ["claude", "codex", "gemini"];
+declare const ASK_PROVIDERS: readonly ["codebuddy", "codex", "gemini"];
 export type AskProvider = (typeof ASK_PROVIDERS)[number];
 export interface ParsedAskArgs {
     provider: AskProvider;
