@@ -276,8 +276,8 @@ export async function scaleUp(
           workerAgentType = primaryProvider;
           workerModel = primary.model;
         }
-      } else if (cliAgentType === 'claude') {
-        // Honor Bedrock/Vertex default-model resolution for non-routed claude workers.
+      } else if (cliAgentType === 'claude' || cliAgentType === 'codebuddy') {
+        // Honor Bedrock/Vertex default-model resolution for non-routed claude/codebuddy workers.
         workerModel = resolveClaudeWorkerModel(env);
       }
 

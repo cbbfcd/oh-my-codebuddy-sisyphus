@@ -7719,7 +7719,7 @@ async function spawnV2Worker(opts) {
       startupFailureReason: dispatchOutcome.reason
     };
   }
-  if (opts.agentType === "claude") {
+  if (opts.agentType === "claude" || opts.agentType === "codebuddy") {
     const settled = await waitForWorkerStartupEvidence(
       opts.teamName,
       opts.workerName,
@@ -10243,7 +10243,7 @@ function readApprovedExecutionLaunchHintOutcome(cwd, mode, options = {}) {
 
 // src/cli/team.ts
 var JOB_ID_PATTERN = /^omc-[a-z0-9]{1,16}$/;
-var VALID_CLI_AGENT_TYPES = /* @__PURE__ */ new Set(["claude", "codex", "gemini", "cursor"]);
+var VALID_CLI_AGENT_TYPES = /* @__PURE__ */ new Set(["codebuddy", "claude", "codex", "gemini", "cursor"]);
 var SUBCOMMANDS = /* @__PURE__ */ new Set(["start", "status", "wait", "cleanup", "resume", "shutdown", "api", "help", "--help", "-h"]);
 var SUPPORTED_API_OPERATIONS = /* @__PURE__ */ new Set([
   "send-message",

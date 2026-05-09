@@ -25,7 +25,7 @@ export function routeMessage(teamName, recipientName, content, workingDirectory)
             details: `Unknown recipient "${recipientName}". Use SendMessage tool to attempt delivery.`,
         };
     }
-    if (member.backend === 'claude-native') {
+    if (member.backend === 'codebuddy-native' || member.backend === 'claude-native') {
         return {
             method: 'native',
             details: `Use SendMessage tool to send to "${recipientName}".`,
@@ -58,7 +58,7 @@ export function broadcastToTeam(teamName, content, workingDirectory) {
     const nativeRecipients = [];
     const inboxRecipients = [];
     for (const member of members) {
-        if (member.backend === 'claude-native') {
+        if (member.backend === 'codebuddy-native' || member.backend === 'claude-native') {
             nativeRecipients.push(member.name);
         }
         else {

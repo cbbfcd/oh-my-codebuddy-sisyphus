@@ -7653,7 +7653,7 @@ async function spawnV2Worker(opts) {
       startupFailureReason: dispatchOutcome.reason
     };
   }
-  if (opts.agentType === "claude") {
+  if (opts.agentType === "claude" || opts.agentType === "codebuddy") {
     const settled = await waitForWorkerStartupEvidence(
       opts.teamName,
       opts.workerName,

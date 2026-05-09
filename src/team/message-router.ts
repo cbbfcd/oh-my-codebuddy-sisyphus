@@ -46,7 +46,7 @@ export function routeMessage(
     };
   }
 
-  if (member.backend === 'claude-native') {
+  if (member.backend === 'codebuddy-native' || member.backend === 'claude-native') {
     return {
       method: 'native',
       details: `Use SendMessage tool to send to "${recipientName}".`,
@@ -89,7 +89,7 @@ export function broadcastToTeam(
   const inboxRecipients: string[] = [];
 
   for (const member of members) {
-    if (member.backend === 'claude-native') {
+    if (member.backend === 'codebuddy-native' || member.backend === 'claude-native') {
       nativeRecipients.push(member.name);
     } else {
       // Write to each MCP worker's inbox

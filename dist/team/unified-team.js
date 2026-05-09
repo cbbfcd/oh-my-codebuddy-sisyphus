@@ -29,11 +29,11 @@ export function getTeamMembers(teamName, workingDirectory) {
                     members.push({
                         name: member.name || 'unknown',
                         agentId: member.agentId || '',
-                        backend: 'claude-native',
+                        backend: 'codebuddy-native',
                         model: member.model || 'unknown',
-                        capabilities: getDefaultCapabilities('claude-native'),
+                        capabilities: getDefaultCapabilities('codebuddy-native'),
                         joinedAt: member.joinedAt || 0,
-                        status: 'active', // Claude native members are managed by CC
+                        status: 'active', // Native members are managed by CodeBuddy
                         currentTaskId: null,
                     });
                 }
@@ -65,6 +65,8 @@ export function getTeamMembers(teamName, workingDirectory) {
             let backend;
             if (worker.agentType === 'mcp-gemini')
                 backend = 'mcp-gemini';
+            else if (worker.agentType === 'tmux-codebuddy')
+                backend = 'tmux-codebuddy';
             else if (worker.agentType === 'tmux-claude')
                 backend = 'tmux-claude';
             else if (worker.agentType === 'tmux-codex')

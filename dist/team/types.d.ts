@@ -120,7 +120,7 @@ export interface TaskFailureSidecar {
     lastFailedAt: string;
 }
 /** Worker backend type */
-export type WorkerBackend = 'claude-native' | 'mcp-codex' | 'mcp-gemini' | 'tmux-claude' | 'tmux-codex' | 'tmux-gemini' | 'tmux-cursor';
+export type WorkerBackend = 'codebuddy-native' | 'claude-native' | 'mcp-codex' | 'mcp-gemini' | 'tmux-codebuddy' | 'tmux-claude' | 'tmux-codex' | 'tmux-gemini' | 'tmux-cursor';
 /** Worker capability tag */
 export type WorkerCapability = 'code-edit' | 'code-review' | 'security-review' | 'architecture' | 'testing' | 'documentation' | 'ui-design' | 'refactoring' | 'research' | 'general';
 /** Team task with required version for optimistic concurrency */

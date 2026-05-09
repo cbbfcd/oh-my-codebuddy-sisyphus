@@ -1,9 +1,11 @@
 // src/team/capabilities.ts
 /** Default capabilities by worker backend */
 const DEFAULT_CAPABILITIES = {
+    'codebuddy-native': ['code-edit', 'testing', 'general'],
     'claude-native': ['code-edit', 'testing', 'general'],
     'mcp-codex': ['code-review', 'security-review', 'architecture', 'refactoring'],
     'mcp-gemini': ['ui-design', 'documentation', 'research', 'code-edit'],
+    'tmux-codebuddy': ['code-edit', 'testing', 'general'],
     'tmux-claude': ['code-edit', 'testing', 'general'],
     'tmux-codex': ['code-review', 'security-review', 'architecture', 'refactoring'],
     'tmux-gemini': ['ui-design', 'documentation', 'research', 'code-edit'],

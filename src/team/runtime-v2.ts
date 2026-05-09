@@ -774,7 +774,7 @@ async function spawnV2Worker(opts: SpawnV2WorkerOptions): Promise<SpawnV2WorkerR
     };
   }
 
-  if (opts.agentType === 'claude') {
+  if (opts.agentType === 'claude' || opts.agentType === 'codebuddy') {
     const settled = await waitForWorkerStartupEvidence(
       opts.teamName,
       opts.workerName,
