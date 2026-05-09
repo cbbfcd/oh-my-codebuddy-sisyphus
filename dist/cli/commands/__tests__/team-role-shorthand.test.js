@@ -49,7 +49,7 @@ describe('teamCommand role-only shorthand', () => {
         expect(agentUtilsMocks.loadAgentPrompt).toHaveBeenCalledWith('executor');
         expect(runtimeV2Mocks.startTeamV2).toHaveBeenCalledWith(expect.objectContaining({
             workerCount: 2,
-            agentTypes: ['claude', 'claude'],
+            agentTypes: ['codebuddy', 'codebuddy'],
             workerRoles: ['executor', 'executor'],
             roleName: 'executor',
             rolePrompt: 'prompt:executor',

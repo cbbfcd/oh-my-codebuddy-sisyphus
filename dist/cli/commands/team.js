@@ -14,7 +14,7 @@ const HELP_TOKENS = new Set(['--help', '-h', 'help']);
 const MIN_WORKER_COUNT = 1;
 const MAX_WORKER_COUNT = 20;
 const VALID_TEAM_CLI_AGENT_TYPES = new Set(['codebuddy', 'claude', 'codex', 'gemini']);
-const DEFAULT_TEAM_CLI_AGENT_TYPE = 'claude';
+const DEFAULT_TEAM_CLI_AGENT_TYPE = 'codebuddy';
 const TEAM_HELP = `
 Usage: omc team [N:agent-type[:role]] [--new-window] [--auto-merge] "<task description>"
        omc team status <team-name>
@@ -246,10 +246,10 @@ function normalizeWorkerSpecSegment(match) {
     if (VALID_TEAM_CLI_AGENT_TYPES.has(token)) {
         return { count, agentType: token };
     }
-    return { count, agentType: 'claude', role: token };
+    return { count, agentType: 'codebuddy', role: token };
 }
 /** @internal Exported for testing */
-export function parseTeamArgs(tokens, defaultAgentType = 'claude') {
+export function parseTeamArgs(tokens, defaultAgentType = 'codebuddy') {
     const args = [...tokens];
     let workerCount = 3;
     let agentTypes = [];

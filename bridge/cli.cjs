@@ -3841,7 +3841,7 @@ function buildDefaultConfig() {
     // Delegation routing configuration (opt-in feature for external model routing)
     delegationRouting: {
       enabled: false,
-      defaultProvider: "claude",
+      defaultProvider: "codebuddy",
       roles: {}
     },
     // /team role routing (Option E — /team-scoped per-role provider & model)
@@ -4031,7 +4031,7 @@ function loadEnvConfig() {
   }
   if (process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER) {
     const provider = process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER;
-    if (["claude", "codex", "gemini"].includes(provider)) {
+    if (["codebuddy", "claude", "codex", "gemini"].includes(provider)) {
       config.delegationRouting = {
         ...config.delegationRouting,
         defaultProvider: provider
@@ -4289,7 +4289,7 @@ var init_loader = __esm({
     DEFAULT_CONFIG = buildDefaultConfig();
     CANONICAL_TEAM_ROLE_SET = new Set(CANONICAL_TEAM_ROLES);
     KNOWN_AGENT_NAME_SET = new Set(KNOWN_AGENT_NAMES);
-    TEAM_ROLE_PROVIDERS = /* @__PURE__ */ new Set(["claude", "codex", "gemini"]);
+    TEAM_ROLE_PROVIDERS = /* @__PURE__ */ new Set(["codebuddy", "claude", "codex", "gemini"]);
     TEAM_ROLE_TIERS = /* @__PURE__ */ new Set(["HIGH", "MEDIUM", "LOW"]);
     OMC_STARTUP_COMPACTABLE_SECTIONS = [
       "agent_catalog",
@@ -106556,7 +106556,7 @@ var HELP_TOKENS = /* @__PURE__ */ new Set(["--help", "-h", "help"]);
 var MIN_WORKER_COUNT = 1;
 var MAX_WORKER_COUNT = 20;
 var VALID_TEAM_CLI_AGENT_TYPES = /* @__PURE__ */ new Set(["codebuddy", "claude", "codex", "gemini"]);
-var DEFAULT_TEAM_CLI_AGENT_TYPE = "claude";
+var DEFAULT_TEAM_CLI_AGENT_TYPE = "codebuddy";
 var TEAM_HELP = `
 Usage: omc team [N:agent-type[:role]] [--new-window] [--auto-merge] "<task description>"
        omc team status <team-name>
@@ -106758,9 +106758,9 @@ function normalizeWorkerSpecSegment(match) {
   if (VALID_TEAM_CLI_AGENT_TYPES.has(token)) {
     return { count, agentType: token };
   }
-  return { count, agentType: "claude", role: token };
+  return { count, agentType: "codebuddy", role: token };
 }
-function parseTeamArgs(tokens, defaultAgentType = "claude") {
+function parseTeamArgs(tokens, defaultAgentType = "codebuddy") {
   const args = [...tokens];
   let workerCount = 3;
   let agentTypes = [];

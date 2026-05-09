@@ -1777,7 +1777,7 @@ function buildDefaultConfig() {
     // Delegation routing configuration (opt-in feature for external model routing)
     delegationRouting: {
       enabled: false,
-      defaultProvider: "claude",
+      defaultProvider: "codebuddy",
       roles: {}
     },
     // /team role routing (Option E — /team-scoped per-role provider & model)
@@ -1968,7 +1968,7 @@ function loadEnvConfig() {
   }
   if (process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER) {
     const provider = process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER;
-    if (["claude", "codex", "gemini"].includes(provider)) {
+    if (["codebuddy", "claude", "codex", "gemini"].includes(provider)) {
       config.delegationRouting = {
         ...config.delegationRouting,
         defaultProvider: provider
@@ -2009,7 +2009,7 @@ function warnOnDeprecatedDelegationRouting(config) {
 }
 var CANONICAL_TEAM_ROLE_SET = new Set(CANONICAL_TEAM_ROLES);
 var KNOWN_AGENT_NAME_SET = new Set(KNOWN_AGENT_NAMES);
-var TEAM_ROLE_PROVIDERS = /* @__PURE__ */ new Set(["claude", "codex", "gemini"]);
+var TEAM_ROLE_PROVIDERS = /* @__PURE__ */ new Set(["codebuddy", "claude", "codex", "gemini"]);
 var TEAM_ROLE_TIERS = /* @__PURE__ */ new Set(["HIGH", "MEDIUM", "LOW"]);
 function validateTeamConfig(config) {
   const team = config.team;

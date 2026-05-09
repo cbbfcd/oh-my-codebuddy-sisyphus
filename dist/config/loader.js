@@ -140,7 +140,7 @@ export function buildDefaultConfig() {
         // Delegation routing configuration (opt-in feature for external model routing)
         delegationRouting: {
             enabled: false,
-            defaultProvider: "claude",
+            defaultProvider: "codebuddy",
             roles: {},
         },
         // /team role routing (Option E — /team-scoped per-role provider & model)
@@ -364,7 +364,7 @@ export function loadEnvConfig() {
     }
     if (process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER) {
         const provider = process.env.OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER;
-        if (["claude", "codex", "gemini"].includes(provider)) {
+        if (["codebuddy", "claude", "codex", "gemini"].includes(provider)) {
             config.delegationRouting = {
                 ...config.delegationRouting,
                 defaultProvider: provider,
@@ -414,7 +414,7 @@ function warnOnDeprecatedDelegationRouting(config) {
  */
 const CANONICAL_TEAM_ROLE_SET = new Set(CANONICAL_TEAM_ROLES);
 const KNOWN_AGENT_NAME_SET = new Set(KNOWN_AGENT_NAMES);
-const TEAM_ROLE_PROVIDERS = new Set(["claude", "codex", "gemini"]);
+const TEAM_ROLE_PROVIDERS = new Set(["codebuddy", "claude", "codex", "gemini"]);
 const TEAM_ROLE_TIERS = new Set(["HIGH", "MEDIUM", "LOW"]);
 export function validateTeamConfig(config) {
     const team = config.team;
@@ -927,8 +927,8 @@ export function generateConfigSchema() {
                     },
                     defaultProvider: {
                         type: "string",
-                        enum: ["claude", "codex", "gemini"],
-                        default: "claude",
+                        enum: ["codebuddy", "claude", "codex", "gemini"],
+                        default: "codebuddy",
                         description: "Default provider for delegation routing when no specific role mapping exists",
                     },
                     roles: {
@@ -939,7 +939,7 @@ export function generateConfigSchema() {
                             properties: {
                                 provider: {
                                     type: "string",
-                                    enum: ["claude", "codex", "gemini"],
+                                    enum: ["codebuddy", "claude", "codex", "gemini"],
                                 },
                                 tool: { type: "string", enum: ["Task"] },
                                 model: { type: "string" },
@@ -961,8 +961,8 @@ export function generateConfigSchema() {
                             maxAgents: { type: "integer", minimum: 1 },
                             defaultAgentType: {
                                 type: "string",
-                                enum: ["claude", "codex", "gemini"],
-                                default: "claude",
+                                enum: ["codebuddy", "claude", "codex", "gemini"],
+                                default: "codebuddy",
                             },
                             monitorIntervalMs: { type: "integer", minimum: 1 },
                             shutdownTimeoutMs: { type: "integer", minimum: 1 },
@@ -975,7 +975,7 @@ export function generateConfigSchema() {
                         additionalProperties: {
                             type: "object",
                             properties: {
-                                provider: { type: "string", enum: ["claude", "codex", "gemini"] },
+                                provider: { type: "string", enum: ["codebuddy", "claude", "codex", "gemini"] },
                                 model: { type: "string" },
                                 agent: { type: "string" },
                             },

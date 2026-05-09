@@ -125,14 +125,14 @@ function resolveDefault(
     };
   }
 
-  // Fall back to default provider or claude
-  const defaultProvider = config?.defaultProvider || 'claude';
+  // Fall back to default provider or codebuddy
+  const defaultProvider = config?.defaultProvider || 'codebuddy';
 
   if (defaultProvider === 'codex' || defaultProvider === 'gemini') {
     console.warn('[OMC] Codex/Gemini MCP delegation is deprecated. Use /team to coordinate CLI workers instead.');
   }
 
-  // Default to claude Task (codex/gemini default providers fall back to claude)
+  // Default to codebuddy Task (codex/gemini default providers fall back to codebuddy)
   return {
     provider: 'codebuddy',
     tool: 'Task',
