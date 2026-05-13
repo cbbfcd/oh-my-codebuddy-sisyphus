@@ -15,11 +15,11 @@
 在 CodeBuddy Code 会话中**逐行执行**以下命令：
 
 ```bash
-# 添加市场
-/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy-sisyphus
+# 添加市场（市场名为 omc）
+/plugin marketplace add cbbfcd/oh-my-codebuddy-sisyphus
 
-# 安装插件
-/plugin install oh-my-codebuddy-sisyphus
+# 安装插件（推荐显式指定市场名，避免重名冲突）
+/plugin install oh-my-codebuddy-sisyphus@omc
 ```
 
 安装完成后运行初始化：
@@ -182,14 +182,14 @@ omcb ask gemini "提出 UI 优化建议"
 /plugin
 
 # 禁用/启用插件
-/plugin disable oh-my-codebuddy
-/plugin enable oh-my-codebuddy
+/plugin disable oh-my-codebuddy-sisyphus
+/plugin enable oh-my-codebuddy-sisyphus
 
 # 更新市场
-/plugin marketplace update
+/plugin marketplace update omc
 
 # 卸载插件
-/plugin uninstall oh-my-codebuddy
+/plugin uninstall oh-my-codebuddy-sisyphus
 ```
 
 ---
@@ -263,8 +263,8 @@ export OMC_PLUGIN_ROOT=/path/to/plugin/dir
 ## 开发
 
 ```bash
-git clone https://github.com/cbbfcd/oh-my-codebuddy.git
-cd oh-my-codebuddy
+git clone https://github.com/cbbfcd/oh-my-codebuddy-sisyphus.git
+cd oh-my-codebuddy-sisyphus
 npm install --legacy-peer-deps
 npm run build
 npm test
@@ -291,7 +291,7 @@ npm update -g @tencent-ai/codebuddy-code
 ```bash
 # 清除缓存并重新安装
 rm -rf ~/.codebuddy/plugins/cache
-/plugin install oh-my-codebuddy
+/plugin install oh-my-codebuddy-sisyphus@omc
 ```
 
 ### Team 模式无法启动
