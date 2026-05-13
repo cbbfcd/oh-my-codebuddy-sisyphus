@@ -82462,8 +82462,10 @@ function readTailLines(filePath, fileSize, maxBytes) {
 }
 function extractBackgroundAgentId(content) {
   const text = typeof content === "string" ? content : content.find((c) => c.type === "text")?.text || "";
-  const match = text.match(/agentId:\s*([a-zA-Z0-9]+)/);
-  return match ? match[1] : null;
+  const claudeMatch = text.match(/agentId:\s*([a-zA-Z0-9]+)/);
+  if (claudeMatch) return claudeMatch[1];
+  const codebuddyMatch = text.match(/agent_id:\s*(\S+)/);
+  return codebuddyMatch ? codebuddyMatch[1] : null;
 }
 function parseTaskOutputResult(content) {
   const text = typeof content === "string" ? content : content.find((c) => c.type === "text")?.text || "";
@@ -82514,6 +82516,38 @@ function processEntry(entry, agentMap, latestTodos, result, maxAgentMapSize = 50
   if (!result.sessionStart && entry.timestamp) {
     result.sessionStart = timestamp;
   }
+  if (entry.type === "function_call" && entry.callId && entry.name) {
+    processContentBlock(
+      {
+        type: "tool_use",
+        id: entry.callId,
+        name: entry.name,
+        input: parseCodebuddyArguments(entry.arguments)
+      },
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize
+    );
+    return;
+  }
+  if (entry.type === "function_call_result" && entry.callId) {
+    processContentBlock(
+      {
+        type: "tool_result",
+        tool_use_id: entry.callId,
+        content: extractCodebuddyOutputText(entry.output)
+      },
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize,
+      backgroundAgentMap
+    );
+    return;
+  }
   const content = entry.message?.content;
   if (typeof content === "string") {
     if (content.includes("<task-notification>") || content.includes("<task_id>") || content.includes("<task-id>")) {
@@ -82538,118 +82572,150 @@ function processEntry(entry, agentMap, latestTodos, result, maxAgentMapSize = 50
   }
   if (!content || !Array.isArray(content)) return;
   for (const block of content) {
-    if (THINKING_PART_TYPES2.includes(
-      block.type
-    )) {
-      result.thinkingState = {
-        active: true,
-        lastSeen: timestamp
+    processContentBlock(
+      block,
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize,
+      backgroundAgentMap
+    );
+  }
+}
+function processContentBlock(block, timestamp, agentMap, latestTodos, result, maxAgentMapSize, backgroundAgentMap) {
+  if (THINKING_PART_TYPES2.includes(
+    block.type
+  )) {
+    result.thinkingState = {
+      active: true,
+      lastSeen: timestamp
+    };
+  }
+  if (block.type === "tool_use" && block.id && block.name) {
+    result.toolCallCount++;
+    result.lastToolName = block.name;
+    if (block.name === "Task" || block.name === "proxy_Task" || block.name === "Agent") {
+      result.agentCallCount++;
+      const input = block.input;
+      const agentEntry = {
+        id: block.id,
+        type: input?.subagent_type ?? "unknown",
+        model: input?.model,
+        description: input?.description,
+        status: "running",
+        startTime: timestamp
       };
-    }
-    if (block.type === "tool_use" && block.id && block.name) {
-      result.toolCallCount++;
-      result.lastToolName = block.name;
-      if (block.name === "Task" || block.name === "proxy_Task" || block.name === "Agent") {
-        result.agentCallCount++;
-        const input = block.input;
-        const agentEntry = {
-          id: block.id,
-          type: input?.subagent_type ?? "unknown",
-          model: input?.model,
-          description: input?.description,
-          status: "running",
-          startTime: timestamp
-        };
-        if (agentMap.size >= maxAgentMapSize) {
-          let oldestCompleted = null;
-          let oldestTime = Infinity;
-          for (const [id, agent] of agentMap) {
-            if (agent.status === "completed" && agent.startTime) {
-              const time = agent.startTime.getTime();
-              if (time < oldestTime) {
-                oldestTime = time;
-                oldestCompleted = id;
-              }
+      if (agentMap.size >= maxAgentMapSize) {
+        let oldestCompleted = null;
+        let oldestTime = Infinity;
+        for (const [id, agent] of agentMap) {
+          if (agent.status === "completed" && agent.startTime) {
+            const time = agent.startTime.getTime();
+            if (time < oldestTime) {
+              oldestTime = time;
+              oldestCompleted = id;
             }
           }
-          if (oldestCompleted) {
-            agentMap.delete(oldestCompleted);
-          }
         }
-        agentMap.set(block.id, agentEntry);
-      } else if (block.name === "TodoWrite" || block.name === "proxy_TodoWrite") {
-        const input = block.input;
-        if (input?.todos && Array.isArray(input.todos)) {
-          latestTodos.length = 0;
-          latestTodos.push(
-            ...input.todos.map((t) => ({
-              content: t.content,
-              status: t.status,
-              activeForm: t.activeForm
-            }))
-          );
-        }
-      } else if (block.name === "Skill" || block.name === "proxy_Skill") {
-        result.skillCallCount++;
-        const input = block.input;
-        if (input?.skill) {
-          result.lastActivatedSkill = {
-            name: input.skill,
-            args: input.args,
-            timestamp
-          };
+        if (oldestCompleted) {
+          agentMap.delete(oldestCompleted);
         }
       }
-      if (PERMISSION_TOOLS.includes(
-        block.name
-      )) {
-        pendingPermissionMap.set(block.id, {
-          toolName: block.name.replace("proxy_", ""),
-          targetSummary: extractTargetSummary(block.input, block.name),
+      agentMap.set(block.id, agentEntry);
+    } else if (block.name === "TodoWrite" || block.name === "proxy_TodoWrite") {
+      const input = block.input;
+      if (input?.todos && Array.isArray(input.todos)) {
+        latestTodos.length = 0;
+        latestTodos.push(
+          ...input.todos.map((t) => ({
+            content: t.content,
+            status: t.status,
+            activeForm: t.activeForm
+          }))
+        );
+      }
+    } else if (block.name === "Skill" || block.name === "proxy_Skill") {
+      result.skillCallCount++;
+      const input = block.input;
+      if (input?.skill) {
+        result.lastActivatedSkill = {
+          name: input.skill,
+          args: input.args,
           timestamp
-        });
+        };
       }
     }
-    if (block.type === "tool_result" && block.tool_use_id) {
-      pendingPermissionMap.delete(block.tool_use_id);
-      const agent = agentMap.get(block.tool_use_id);
-      if (agent) {
-        const blockContent = block.content;
-        const ASYNC_LAUNCH_PREFIX = "Async agent launched";
-        const startsWithAsyncLaunch = (text) => !!text && text.trimStart().startsWith(ASYNC_LAUNCH_PREFIX);
-        const isBackgroundLaunch = typeof blockContent === "string" ? startsWithAsyncLaunch(blockContent) : Array.isArray(blockContent) && blockContent.length > 0 && typeof blockContent[0] === "object" && blockContent[0] !== null && blockContent[0].type === "text" && startsWithAsyncLaunch(blockContent[0].text);
-        if (isBackgroundLaunch) {
-          if (backgroundAgentMap && blockContent) {
-            const bgAgentId = extractBackgroundAgentId(blockContent);
-            if (bgAgentId) {
-              backgroundAgentMap.set(bgAgentId, block.tool_use_id);
-            }
+    if (PERMISSION_TOOLS.includes(
+      block.name
+    )) {
+      pendingPermissionMap.set(block.id, {
+        toolName: block.name.replace("proxy_", ""),
+        targetSummary: extractTargetSummary(block.input, block.name),
+        timestamp
+      });
+    }
+  }
+  if (block.type === "tool_result" && block.tool_use_id) {
+    pendingPermissionMap.delete(block.tool_use_id);
+    const agent = agentMap.get(block.tool_use_id);
+    if (agent) {
+      const blockContent = block.content;
+      const LAUNCH_PREFIXES = ["Async agent launched", "Spawned successfully"];
+      const startsWithLaunchPrefix = (text) => {
+        if (!text) return false;
+        const trimmed = text.trimStart();
+        return LAUNCH_PREFIXES.some((p) => trimmed.startsWith(p));
+      };
+      const isBackgroundLaunch = typeof blockContent === "string" ? startsWithLaunchPrefix(blockContent) : Array.isArray(blockContent) && blockContent.length > 0 && typeof blockContent[0] === "object" && blockContent[0] !== null && blockContent[0].type === "text" && startsWithLaunchPrefix(blockContent[0].text);
+      if (isBackgroundLaunch) {
+        if (backgroundAgentMap && blockContent) {
+          const bgAgentId = extractBackgroundAgentId(blockContent);
+          if (bgAgentId) {
+            backgroundAgentMap.set(bgAgentId, block.tool_use_id);
           }
-        } else {
-          agent.status = "completed";
-          agent.endTime = timestamp;
         }
+      } else {
+        agent.status = "completed";
+        agent.endTime = timestamp;
       }
-      if (block.content) {
-        const taskOutput = parseTaskOutputResult(block.content);
-        if (taskOutput && taskOutput.status === "completed") {
-          let toolUseId;
-          if (taskOutput.toolUseId) {
-            toolUseId = taskOutput.toolUseId;
-          } else if (backgroundAgentMap) {
-            toolUseId = backgroundAgentMap.get(taskOutput.taskId);
-          }
-          if (toolUseId) {
-            const bgAgent = agentMap.get(toolUseId);
-            if (bgAgent && bgAgent.status === "running") {
-              bgAgent.status = "completed";
-              bgAgent.endTime = timestamp;
-            }
+    }
+    if (block.content) {
+      const taskOutput = parseTaskOutputResult(block.content);
+      if (taskOutput && taskOutput.status === "completed") {
+        let toolUseId;
+        if (taskOutput.toolUseId) {
+          toolUseId = taskOutput.toolUseId;
+        } else if (backgroundAgentMap) {
+          toolUseId = backgroundAgentMap.get(taskOutput.taskId);
+        }
+        if (toolUseId) {
+          const bgAgent = agentMap.get(toolUseId);
+          if (bgAgent && bgAgent.status === "running") {
+            bgAgent.status = "completed";
+            bgAgent.endTime = timestamp;
           }
         }
       }
     }
   }
+}
+function parseCodebuddyArguments(raw) {
+  if (!raw || typeof raw !== "string") return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+function extractCodebuddyOutputText(output) {
+  if (!output) return "";
+  if (typeof output === "string") return output;
+  if (typeof output === "object") {
+    const text = typeof output.text === "string" ? output.text : "";
+    return [{ type: "text", text }];
+  }
+  return "";
 }
 function extractLastRequestTokenUsage(usage) {
   if (!usage) return null;

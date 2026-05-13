@@ -344,7 +344,11 @@ function readTailLines(
 type BackgroundAgentMap = Map<string, string>;
 
 /**
- * Extract background agent ID from "Async agent launched" message
+ * Extract background agent ID from a launch-acknowledgement message.
+ *
+ * Claude Code emits:    "agentId: a8de3dd"          (camelCase, short hex)
+ * CodeBuddy Code emits: "agent_id: Explore-1@…"     (snake_case, can include
+ *                                                    dashes, @, underscores)
  */
 function extractBackgroundAgentId(
   content: string | Array<{ type?: string; text?: string }>,
@@ -354,9 +358,14 @@ function extractBackgroundAgentId(
       ? content
       : content.find((c) => c.type === "text")?.text || "";
 
-  // Pattern: "agentId: a8de3dd"
-  const match = text.match(/agentId:\s*([a-zA-Z0-9]+)/);
-  return match ? match[1] : null;
+  // Prefer Claude Code's camelCase form, fall back to CodeBuddy's snake_case.
+  // CodeBuddy IDs can contain dashes, at-signs, and underscores
+  // (e.g. "Explore-1@_auto_21094162-…"), so broaden the value character class
+  // accordingly — stop at the first whitespace since values are single-token.
+  const claudeMatch = text.match(/agentId:\s*([a-zA-Z0-9]+)/);
+  if (claudeMatch) return claudeMatch[1];
+  const codebuddyMatch = text.match(/agent_id:\s*(\S+)/);
+  return codebuddyMatch ? codebuddyMatch[1] : null;
 }
 
 /**
@@ -458,6 +467,53 @@ function processEntry(
     result.sessionStart = timestamp;
   }
 
+  // --------------------------------------------------------------------------
+  // CodeBuddy Code top-level schema: flat function_call / function_call_result
+  // entries instead of Anthropic's nested `message.content[].type:"tool_use"`.
+  //
+  // Upstream HUD was written against Claude Code and sees these as opaque —
+  // `agentMap` never populates, so the HUD hides all agent/bg/todos elements
+  // even when N subagents run in parallel (verified via live probe: 3 parallel
+  // Explore agents produced zero `agents:` output).
+  //
+  // Translate each CodeBuddy entry into the synthetic ContentBlock shape that
+  // the existing block loop below handles, then feed it through the same
+  // `processContentBlock` logic to keep behavior consistent with Claude Code.
+  // --------------------------------------------------------------------------
+  if (entry.type === "function_call" && entry.callId && entry.name) {
+    processContentBlock(
+      {
+        type: "tool_use",
+        id: entry.callId,
+        name: entry.name,
+        input: parseCodebuddyArguments(entry.arguments),
+      },
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize,
+    );
+    return;
+  }
+
+  if (entry.type === "function_call_result" && entry.callId) {
+    processContentBlock(
+      {
+        type: "tool_result",
+        tool_use_id: entry.callId,
+        content: extractCodebuddyOutputText(entry.output),
+      },
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize,
+      backgroundAgentMap,
+    );
+    return;
+  }
+
   const content = entry.message?.content;
 
   // Claude Code emits background-agent completion as a user-role message with
@@ -494,166 +550,233 @@ function processEntry(
   if (!content || !Array.isArray(content)) return;
 
   for (const block of content) {
-    // Check if this is a thinking block
+    processContentBlock(
+      block,
+      timestamp,
+      agentMap,
+      latestTodos,
+      result,
+      maxAgentMapSize,
+      backgroundAgentMap,
+    );
+  }
+}
+
+/**
+ * Process a single synthetic or real content block.
+ *
+ * Shared by both:
+ *  - the Anthropic content-block loop (`entry.message.content[]`)
+ *  - the CodeBuddy function_call / function_call_result translation path
+ *
+ * Extracted so the CodeBuddy branch can reuse the same agentMap / permission /
+ * background-launch handling without duplicating the mechanics.
+ */
+function processContentBlock(
+  block: ContentBlock,
+  timestamp: Date,
+  agentMap: Map<string, ActiveAgent>,
+  latestTodos: TodoItem[],
+  result: TranscriptData,
+  maxAgentMapSize: number,
+  backgroundAgentMap?: BackgroundAgentMap,
+): void {
+  // Check if this is a thinking block
+  if (
+    THINKING_PART_TYPES.includes(
+      block.type as (typeof THINKING_PART_TYPES)[number],
+    )
+  ) {
+    result.thinkingState = {
+      active: true,
+      lastSeen: timestamp,
+    };
+  }
+
+  // Track tool_use for Task (agents) and TodoWrite
+  if (block.type === "tool_use" && block.id && block.name) {
+    result.toolCallCount++;
+    result.lastToolName = block.name;
+    if (block.name === "Task" || block.name === "proxy_Task" || block.name === "Agent") {
+      result.agentCallCount++;
+      const input = block.input as TaskInput | undefined;
+      const agentEntry: ActiveAgent = {
+        id: block.id,
+        type: input?.subagent_type ?? "unknown",
+        model: input?.model,
+        description: input?.description,
+        status: "running",
+        startTime: timestamp,
+      };
+
+      // Bounded agent map: evict oldest completed agents if at capacity
+      if (agentMap.size >= maxAgentMapSize) {
+        // Find and remove oldest completed agent
+        let oldestCompleted: string | null = null;
+        let oldestTime = Infinity;
+        for (const [id, agent] of agentMap) {
+          if (agent.status === "completed" && agent.startTime) {
+            const time = agent.startTime.getTime();
+            if (time < oldestTime) {
+              oldestTime = time;
+              oldestCompleted = id;
+            }
+          }
+        }
+        if (oldestCompleted) {
+          agentMap.delete(oldestCompleted);
+        }
+      }
+
+      agentMap.set(block.id, agentEntry);
+    } else if (block.name === "TodoWrite" || block.name === "proxy_TodoWrite") {
+      const input = block.input as TodoWriteInput | undefined;
+      if (input?.todos && Array.isArray(input.todos)) {
+        // Replace latest todos with new ones
+        latestTodos.length = 0;
+        latestTodos.push(
+          ...input.todos.map((t) => ({
+            content: t.content,
+            status: t.status as TodoItem["status"],
+            activeForm: t.activeForm,
+          })),
+        );
+      }
+    } else if (block.name === "Skill" || block.name === "proxy_Skill") {
+      result.skillCallCount++;
+      // Track last activated skill
+      const input = block.input as SkillInput | undefined;
+      if (input?.skill) {
+        result.lastActivatedSkill = {
+          name: input.skill,
+          args: input.args,
+          timestamp: timestamp,
+        };
+      }
+    }
+
+    // Track tool_use for permission-requiring tools
     if (
-      THINKING_PART_TYPES.includes(
-        block.type as (typeof THINKING_PART_TYPES)[number],
+      PERMISSION_TOOLS.includes(
+        block.name as (typeof PERMISSION_TOOLS)[number],
       )
     ) {
-      result.thinkingState = {
-        active: true,
-        lastSeen: timestamp,
+      pendingPermissionMap.set(block.id, {
+        toolName: block.name.replace("proxy_", ""),
+        targetSummary: extractTargetSummary(block.input, block.name),
+        timestamp: timestamp,
+      });
+    }
+  }
+
+  // Track tool_result to mark agents as completed
+  if (block.type === "tool_result" && block.tool_use_id) {
+    // Clear from pending permissions when tool_result arrives
+    pendingPermissionMap.delete(block.tool_use_id);
+
+    const agent = agentMap.get(block.tool_use_id);
+    if (agent) {
+      const blockContent = block.content;
+
+      // Check if this is a background agent launch result.
+      //
+      // The real "Async agent launched successfully" notification is a
+      // short (~400B), standalone tool_result whose text STARTS with the
+      // exact phrase. A completed foreground agent result can easily
+      // contain the same phrase quoted elsewhere (e.g. an investigation
+      // report that cites a previous launch message), so a naive
+      // `.includes()` check misclassifies legitimate completions as
+      // background launches and leaves them stuck as "running" in the HUD.
+      //
+      // Require the text to START WITH the launch phrase (after trimming
+      // leading whitespace). Claude Code uses "Async agent launched";
+      // CodeBuddy Code uses "Spawned successfully".
+      const LAUNCH_PREFIXES = ["Async agent launched", "Spawned successfully"];
+      const startsWithLaunchPrefix = (text: string | undefined): boolean => {
+        if (!text) return false;
+        const trimmed = text.trimStart();
+        return LAUNCH_PREFIXES.some((p) => trimmed.startsWith(p));
       };
-    }
+      const isBackgroundLaunch =
+        typeof blockContent === "string"
+          ? startsWithLaunchPrefix(blockContent)
+          : Array.isArray(blockContent) &&
+            blockContent.length > 0 &&
+            typeof blockContent[0] === "object" &&
+            blockContent[0] !== null &&
+            (blockContent[0] as { type?: string }).type === "text" &&
+            startsWithLaunchPrefix((blockContent[0] as { text?: string }).text);
 
-    // Track tool_use for Task (agents) and TodoWrite
-    if (block.type === "tool_use" && block.id && block.name) {
-      result.toolCallCount++;
-      result.lastToolName = block.name;
-      if (block.name === "Task" || block.name === "proxy_Task" || block.name === "Agent") {
-        result.agentCallCount++;
-        const input = block.input as TaskInput | undefined;
-        const agentEntry: ActiveAgent = {
-          id: block.id,
-          type: input?.subagent_type ?? "unknown",
-          model: input?.model,
-          description: input?.description,
-          status: "running",
-          startTime: timestamp,
-        };
-
-        // Bounded agent map: evict oldest completed agents if at capacity
-        if (agentMap.size >= maxAgentMapSize) {
-          // Find and remove oldest completed agent
-          let oldestCompleted: string | null = null;
-          let oldestTime = Infinity;
-          for (const [id, agent] of agentMap) {
-            if (agent.status === "completed" && agent.startTime) {
-              const time = agent.startTime.getTime();
-              if (time < oldestTime) {
-                oldestTime = time;
-                oldestCompleted = id;
-              }
-            }
-          }
-          if (oldestCompleted) {
-            agentMap.delete(oldestCompleted);
+      if (isBackgroundLaunch) {
+        // Extract and store the background agent ID mapping
+        if (backgroundAgentMap && blockContent) {
+          const bgAgentId = extractBackgroundAgentId(blockContent);
+          if (bgAgentId) {
+            backgroundAgentMap.set(bgAgentId, block.tool_use_id);
           }
         }
-
-        agentMap.set(block.id, agentEntry);
-      } else if (block.name === "TodoWrite" || block.name === "proxy_TodoWrite") {
-        const input = block.input as TodoWriteInput | undefined;
-        if (input?.todos && Array.isArray(input.todos)) {
-          // Replace latest todos with new ones
-          latestTodos.length = 0;
-          latestTodos.push(
-            ...input.todos.map((t) => ({
-              content: t.content,
-              status: t.status as TodoItem["status"],
-              activeForm: t.activeForm,
-            })),
-          );
-        }
-      } else if (block.name === "Skill" || block.name === "proxy_Skill") {
-        result.skillCallCount++;
-        // Track last activated skill
-        const input = block.input as SkillInput | undefined;
-        if (input?.skill) {
-          result.lastActivatedSkill = {
-            name: input.skill,
-            args: input.args,
-            timestamp: timestamp,
-          };
-        }
-      }
-
-      // Track tool_use for permission-requiring tools
-      if (
-        PERMISSION_TOOLS.includes(
-          block.name as (typeof PERMISSION_TOOLS)[number],
-        )
-      ) {
-        pendingPermissionMap.set(block.id, {
-          toolName: block.name.replace("proxy_", ""),
-          targetSummary: extractTargetSummary(block.input, block.name),
-          timestamp: timestamp,
-        });
+        // Keep status as 'running'
+      } else {
+        // Foreground agent completed
+        agent.status = "completed";
+        agent.endTime = timestamp;
       }
     }
 
-    // Track tool_result to mark agents as completed
-    if (block.type === "tool_result" && block.tool_use_id) {
-      // Clear from pending permissions when tool_result arrives
-      pendingPermissionMap.delete(block.tool_use_id);
-
-      const agent = agentMap.get(block.tool_use_id);
-      if (agent) {
-        const blockContent = block.content;
-
-        // Check if this is a background agent launch result.
-        //
-        // The real "Async agent launched successfully" notification is a
-        // short (~400B), standalone tool_result whose text STARTS with the
-        // exact phrase. A completed foreground agent result can easily
-        // contain the same phrase quoted elsewhere (e.g. an investigation
-        // report that cites a previous launch message), so a naive
-        // `.includes()` check misclassifies legitimate completions as
-        // background launches and leaves them stuck as "running" in the HUD.
-        //
-        // Require the text to START WITH "Async agent launched" (after
-        // trimming leading whitespace) — nothing else qualifies.
-        const ASYNC_LAUNCH_PREFIX = "Async agent launched";
-        const startsWithAsyncLaunch = (text: string | undefined): boolean =>
-          !!text && text.trimStart().startsWith(ASYNC_LAUNCH_PREFIX);
-        const isBackgroundLaunch =
-          typeof blockContent === "string"
-            ? startsWithAsyncLaunch(blockContent)
-            : Array.isArray(blockContent) &&
-              blockContent.length > 0 &&
-              typeof blockContent[0] === "object" &&
-              blockContent[0] !== null &&
-              (blockContent[0] as { type?: string }).type === "text" &&
-              startsWithAsyncLaunch((blockContent[0] as { text?: string }).text);
-
-        if (isBackgroundLaunch) {
-          // Extract and store the background agent ID mapping
-          if (backgroundAgentMap && blockContent) {
-            const bgAgentId = extractBackgroundAgentId(blockContent);
-            if (bgAgentId) {
-              backgroundAgentMap.set(bgAgentId, block.tool_use_id);
-            }
-          }
-          // Keep status as 'running'
-        } else {
-          // Foreground agent completed
-          agent.status = "completed";
-          agent.endTime = timestamp;
+    // Check if this is a TaskOutput result showing completion
+    if (block.content) {
+      const taskOutput = parseTaskOutputResult(block.content);
+      if (taskOutput && taskOutput.status === "completed") {
+        // Prefer direct tool-use-id lookup; fall back to the legacy agentId mapping.
+        let toolUseId: string | undefined;
+        if (taskOutput.toolUseId) {
+          toolUseId = taskOutput.toolUseId;
+        } else if (backgroundAgentMap) {
+          toolUseId = backgroundAgentMap.get(taskOutput.taskId);
         }
-      }
-
-      // Check if this is a TaskOutput result showing completion
-      if (block.content) {
-        const taskOutput = parseTaskOutputResult(block.content);
-        if (taskOutput && taskOutput.status === "completed") {
-          // Prefer direct tool-use-id lookup; fall back to the legacy agentId mapping.
-          let toolUseId: string | undefined;
-          if (taskOutput.toolUseId) {
-            toolUseId = taskOutput.toolUseId;
-          } else if (backgroundAgentMap) {
-            toolUseId = backgroundAgentMap.get(taskOutput.taskId);
-          }
-          if (toolUseId) {
-            const bgAgent = agentMap.get(toolUseId);
-            if (bgAgent && bgAgent.status === "running") {
-              bgAgent.status = "completed";
-              bgAgent.endTime = timestamp;
-            }
+        if (toolUseId) {
+          const bgAgent = agentMap.get(toolUseId);
+          if (bgAgent && bgAgent.status === "running") {
+            bgAgent.status = "completed";
+            bgAgent.endTime = timestamp;
           }
         }
       }
     }
   }
+}
+
+// ============================================================================
+// CodeBuddy-specific translation helpers
+// ============================================================================
+
+/**
+ * CodeBuddy function_call entries encode tool arguments as a JSON string.
+ * Returns {} on parse failure so downstream code can treat `input` as object.
+ */
+function parseCodebuddyArguments(raw: string | undefined): unknown {
+  if (!raw || typeof raw !== "string") return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Normalize a CodeBuddy `output` field into the content shape that
+ * `processContentBlock` expects (string or text-block array).
+ */
+function extractCodebuddyOutputText(
+  output: TranscriptEntry["output"],
+): string | Array<{ type?: string; text?: string }> {
+  if (!output) return "";
+  if (typeof output === "string") return output;
+  if (typeof output === "object") {
+    const text = typeof output.text === "string" ? output.text : "";
+    return [{ type: "text", text }];
+  }
+  return "";
 }
 
 // ============================================================================
@@ -678,7 +801,9 @@ interface TranscriptUsage {
 
 interface TranscriptEntry {
   sessionId?: string;
-  timestamp?: string;
+  // Claude Code writes ISO strings; CodeBuddy Code writes epoch-ms numbers.
+  // new Date(…) accepts both, so the union keeps the Date(timestamp) call valid.
+  timestamp?: string | number;
   message?: {
     // Claude Code writes assistant/user messages with either a content-block
     // array (normal messages) OR a plain string (e.g. background-agent
@@ -687,6 +812,26 @@ interface TranscriptEntry {
     content?: ContentBlock[] | string;
     usage?: TranscriptUsage;
   };
+
+  // --------------------------------------------------------------------------
+  // CodeBuddy Code top-level schema (flat, not nested under message.content).
+  // Tool invocations and results arrive as separate jsonl entries rather than
+  // as content blocks inside an assistant/user message.
+  // --------------------------------------------------------------------------
+  /** Entry kind. CodeBuddy tool lifecycle emits "function_call" / "function_call_result". */
+  type?: string;
+  /** Tool name (only set for function_call / function_call_result entries). */
+  name?: string;
+  /** Correlates a function_call with its function_call_result. */
+  callId?: string;
+  /** JSON-encoded tool arguments on function_call entries. */
+  arguments?: string;
+  /** "completed" | "failed" | "error" on function_call_result entries. */
+  status?: string;
+  /** Tool output payload on function_call_result entries. */
+  output?:
+    | string
+    | { type?: string; text?: string; [key: string]: unknown };
 }
 
 interface ContentBlock {
