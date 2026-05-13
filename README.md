@@ -16,10 +16,10 @@
 
 ```bash
 # 添加市场
-/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy
+/plugin marketplace add https://github.com/cbbfcd/oh-my-codebuddy-sisyphus
 
 # 安装插件
-/plugin install oh-my-codebuddy
+/plugin install oh-my-codebuddy-sisyphus
 ```
 
 安装完成后运行初始化：
